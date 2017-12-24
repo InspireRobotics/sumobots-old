@@ -1,0 +1,18 @@
+.controlButton {
+    -fx-border-color:gray;
+    -fx-border-width:3;
+}
+
+.controlPane{
+	-fx-background-color:black;
+	-fx-alignment:center;
+}
+
+.controlConsole{
+	-fx-border-color:gray;
+    -fx-border-width:3;
+}
+
+.controlConsole .content {
+    -fx-background-color: 	#A9A9A9;
+}
