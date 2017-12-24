@@ -43,7 +43,6 @@ public class ArchetypalMessages {
 	/**
 	 * Creates a message for changing the time period
 	 * @param name the name of the new time period (AKA, "Game", "End", "Init", "Paused", etc)
-	 * TODO Convert this to an enum
 	 */
 	public static final Message enterNewMatchPeriod(String name){
 		Message m = new Message(MessageType.MATCH_STATE_UPDATE);

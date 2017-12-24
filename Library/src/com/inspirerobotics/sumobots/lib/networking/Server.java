@@ -15,7 +15,6 @@ import com.inspirerobotics.sumobots.lib.Resources;
  * This class handles the server socket/server stuff. 
  * @author Noah
  *
- *#TODO make this create threads for every connection
  */
 public class Server{
 	
