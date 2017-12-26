@@ -49,12 +49,7 @@ public class FieldBackend extends Thread {
 		this.setName("Backend Thread");
 		this.channel = tc;
 	}
-
-	@Override
-	public synchronized void start() {
-		super.start();
-	}
-
+	
 	/**
 	 * The function that is called after the thread is started
 	 */
