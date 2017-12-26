@@ -1,6 +1,7 @@
 package com.inspirerobotics.sumobots.lib.networking;
 
 import com.inspirerobotics.sumobots.lib.Resources;
+import com.inspirerobotics.sumobots.lib.TimePeriod;
 
 /**
  * This class helps create messages that will often follow the same pattern.
@@ -41,13 +42,13 @@ public class ArchetypalMessages {
 	}
 	
 	/**
-	 * Creates a message for changing the time period
-	 * @param name the name of the new time period (AKA, "Game", "End", "Init", "Paused", etc)
+	 * Creates a message for changing the {@link com.inspirerobotics.sumobots.lib.TimePeriod}
+	 * @param name the name of the new time period.
 	 */
-	public static final Message enterNewMatchPeriod(String name){
+	public static final Message enterNewMatchPeriod(TimePeriod t){
 		Message m = new Message(MessageType.MATCH_STATE_UPDATE);
 		m.addData("update_type", "match_period");
-		m.addData("new_period", name);
+		m.addData("new_period", t.getName());
 		return m;
 	}
 	

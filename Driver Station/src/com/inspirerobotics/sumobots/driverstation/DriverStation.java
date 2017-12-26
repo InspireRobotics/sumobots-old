@@ -6,6 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.inspirerobotics.sumobots.lib.Resources;
+import com.inspirerobotics.sumobots.lib.TimePeriod;
 import com.inspirerobotics.sumobots.lib.networking.Connection;
 import com.inspirerobotics.sumobots.lib.networking.ConnectionListener;
 import com.inspirerobotics.sumobots.lib.networking.Message;
@@ -15,6 +16,7 @@ public class DriverStation implements ConnectionListener {
 
 	private final Logger logger = Logger.getLogger(Resources.LOGGER_NAME);
 	private Connection conn;
+	private TimePeriod currentPeriod = TimePeriod.DISABLED;
 	
 	public DriverStation() {
 		logger.setLevel(Level.ALL);
@@ -48,13 +50,9 @@ public class DriverStation implements ConnectionListener {
 	private void updateMatchStatus(Message message) {
 		if(message.getData("update_type").equals("match_period")){
 			String timePeriod = (String) message.getData("new_period");
-			if(timePeriod.equals("init")){
-				logger.info("Entering new Match Period: Initialization");
-			}else if(timePeriod.equals("game")){
-				logger.info("Entering new Match Period: Game");
-			}else if(timePeriod.equals("end")){
-				logger.info("ntering new Match Period: Disable");
-			}
+			currentPeriod = TimePeriod.fromString(timePeriod);
+			
+			logger.info("Entering match period: " + currentPeriod.getName());
 		}
 	}
 

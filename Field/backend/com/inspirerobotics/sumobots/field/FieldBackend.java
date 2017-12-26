@@ -3,6 +3,7 @@ package com.inspirerobotics.sumobots.field;
 import java.util.logging.Logger;
 
 import com.inspirerobotics.sumobots.field.util.InternalLog;
+import com.inspirerobotics.sumobots.lib.TimePeriod;
 import com.inspirerobotics.sumobots.lib.concurrent.InterThreadMessage;
 import com.inspirerobotics.sumobots.lib.concurrent.ThreadChannel;
 import com.inspirerobotics.sumobots.lib.networking.ArchetypalMessages;
@@ -116,17 +117,17 @@ public class FieldBackend extends Thread {
 
 	private void initMatch() {
 		log.info("Initializing the Match!");
-		server.sendAll(ArchetypalMessages.enterNewMatchPeriod("init"));
+		server.sendAll(ArchetypalMessages.enterNewMatchPeriod(TimePeriod.INIT));
 	}
 
 	private void endMatch() {
 		log.info("Ending the Match!");
-		server.sendAll(ArchetypalMessages.enterNewMatchPeriod("end"));
+		server.sendAll(ArchetypalMessages.enterNewMatchPeriod(TimePeriod.DISABLED));
 	}
 
 	private void startMatch() {
 		log.info("Starting the Match!");
-		server.sendAll(ArchetypalMessages.enterNewMatchPeriod("game"));
+		server.sendAll(ArchetypalMessages.enterNewMatchPeriod(TimePeriod.GAME));
 	}
 
 	/**
