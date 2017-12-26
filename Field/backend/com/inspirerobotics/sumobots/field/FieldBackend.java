@@ -36,6 +36,11 @@ public class FieldBackend extends Thread {
 	private final Logger log = InternalLog.getLogger();
 	
 	/**
+	 * The current time period
+	 */
+	private TimePeriod timePeriod;
+	
+	/**
 	 * If the backend should be running
 	 */
 	private boolean running = true;
@@ -58,7 +63,7 @@ public class FieldBackend extends Thread {
 		log.fine("Initializating backend");
 		init();
 		log.info("Backend initialization has been completed. Starting main loop");
-		
+
 		while (running) {
 			// Update the Server
 			server.update();
@@ -67,18 +72,16 @@ public class FieldBackend extends Thread {
 			InterThreadMessage m = null;
 			while ((m = channel.poll()) != null) {
 				onFrontendMessageReceived(m);
-				
-				//This needs to be here to prevent other messages from being
-				//proccessed after the app is supposed to be closing
-				if(!running)
+
+				// This needs to be here to prevent other messages from being
+				// proccessed after the app is supposed to be closing
+				if (!running)
 					break;
 			}
 		}
-		
-		server.closeAll(); 
-		
-		 
-		
+
+		server.closeAll();
+
 		log.info("Backend Thread Shutdown Complete!");
 	}
 
@@ -117,16 +120,40 @@ public class FieldBackend extends Thread {
 
 	private void initMatch() {
 		log.info("Initializing the Match!");
+		timePeriod = TimePeriod.INIT;
+
+		// Lets now confirm to the frontend that we are switching time periods
+		InterThreadMessage m = new InterThreadMessage("time_period_update");
+		m.addData("new_period", TimePeriod.INIT);
+		channel.add(m);
+
+		// Lets also tell all of the driver stations to switch the time period
 		server.sendAll(ArchetypalMessages.enterNewMatchPeriod(TimePeriod.INIT));
 	}
 
 	private void endMatch() {
 		log.info("Ending the Match!");
+		timePeriod = TimePeriod.DISABLED;
+		
+		// Lets now confirm to the frontend that we are switching time periods
+		InterThreadMessage m = new InterThreadMessage("time_period_update");
+		m.addData("new_period", TimePeriod.DISABLED);
+		channel.add(m);
+
+		// Lets also tell all of the driver stations to switch the time period
 		server.sendAll(ArchetypalMessages.enterNewMatchPeriod(TimePeriod.DISABLED));
 	}
 
 	private void startMatch() {
 		log.info("Starting the Match!");
+		timePeriod = TimePeriod.GAME;
+
+		// Lets now confirm to the frontend that we are switching time periods
+		InterThreadMessage m = new InterThreadMessage("time_period_update");
+		m.addData("new_period", TimePeriod.GAME);
+		channel.add(m);
+
+		// Lets also tell all of the driver stations to switch the time period
 		server.sendAll(ArchetypalMessages.enterNewMatchPeriod(TimePeriod.GAME));
 	}
 
@@ -143,6 +170,10 @@ public class FieldBackend extends Thread {
 			}
 
 		});
+	}
+	
+	public TimePeriod getTimePeriod() {
+		return timePeriod;
 	}
 
 }
