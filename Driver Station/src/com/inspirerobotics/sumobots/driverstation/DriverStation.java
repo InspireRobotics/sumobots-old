@@ -31,13 +31,19 @@ public class DriverStation implements ConnectionListener {
 		
 		runMainLoop();
 	}
-
+	
+	/**
+	 * The Driver Station main loop
+	 */
 	private void runMainLoop() {
 		while(true){
 			conn.update();
 		}
 	}
-
+	
+	/**
+	 * When a message is recieved from the FMS
+	 */
 	@Override
 	public void recievedMessage(Message message, Connection connection) {
 		MessageType type = message.getType();
@@ -47,6 +53,10 @@ public class DriverStation implements ConnectionListener {
 		}
 	}
 	
+	/**
+	 * Updates the Driver Station on the current match status. This update would be originated by the FMS
+	 * @param message
+	 */
 	private void updateMatchStatus(Message message) {
 		if(message.getData("update_type").equals("match_period")){
 			String timePeriod = (String) message.getData("new_period");
