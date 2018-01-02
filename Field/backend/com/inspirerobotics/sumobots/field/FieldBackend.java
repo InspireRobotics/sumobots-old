@@ -62,7 +62,10 @@ public class FieldBackend extends Thread {
 		while (running) {
 			// Update the Server
 			server.update();
-
+			
+			//update the frontend about the current connections
+			sendConnectionsToFrontend();
+			
 			// While there are messages from the frontend, handle them
 			InterThreadMessage m = null;
 			while ((m = channel.poll()) != null) {
@@ -78,6 +81,16 @@ public class FieldBackend extends Thread {
 		server.closeAll();
 
 		log.info("Backend Thread Shutdown Complete!");
+	}
+	
+	/**
+	 * Sends the frontend a message with the current connections to the server
+	 */
+	private void sendConnectionsToFrontend() {
+		InterThreadMessage m = new InterThreadMessage("conn_update");
+		m.addData("connections", server.getConnections());
+		
+		channel.add(m);
 	}
 
 	/**

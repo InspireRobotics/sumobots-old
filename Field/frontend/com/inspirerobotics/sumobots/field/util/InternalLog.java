@@ -46,7 +46,7 @@ public class InternalLog {
 	private final ArrayList<String> logLines = new ArrayList<String>();
 
 	private InternalLog() {
-		logger.setLevel(Level.ALL);
+		logger.setLevel(Level.FINE);
 		
 		//Set custom logging format
 		logger.setUseParentHandlers(false);

@@ -1,11 +1,13 @@
 package com.inspirerobotics.sumobots.field;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 import com.inspirerobotics.sumobots.field.gui.RootGroup;
 import com.inspirerobotics.sumobots.field.util.InternalLog;
 import com.inspirerobotics.sumobots.lib.concurrent.InterThreadMessage;
 import com.inspirerobotics.sumobots.lib.concurrent.ThreadChannel;
+import com.inspirerobotics.sumobots.lib.networking.Connection;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -97,10 +99,20 @@ public class FieldFrontend extends Application {
 	private void onBackendMessageReceived(InterThreadMessage m) {
 		String name = m.getName();
 		
-		log.fine("Recieved Message from Backend: " + name);
+		log.finer("Recieved Message from Backend: " + name);
 
 		//Figure out what type of message it is
 		switch (name) {
+		case "conn_update":
+			Object data = m.getData("connections");
+			if(data instanceof List){
+				@SuppressWarnings("unchecked")
+				List<Connection> conn = (List<Connection>) data;
+				root.getGameTab().setConnections(conn); 
+			}
+			
+			
+			break;
 		default: //If it reaches this we don't know what it is so print a warning to the screen
 			log.warning("Unknown Message Recieved on Frontend: " + name);
 			break;

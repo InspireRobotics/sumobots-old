@@ -33,6 +33,16 @@ public class RootGroup extends TabPane {
 	private Logger log = InternalLog.getLogger();
 	
 	/**
+	 * the Game Tab
+	 */
+	private GameTab gameTab;
+	
+	/**
+	 * the Console Tab
+	 */
+	private ConsoleTab consoleTab;
+	
+	/**
 	 * Creates a new root group. This will load 
 	 * all of the GUIs tabs and components
 	 * @param ff
@@ -52,9 +62,13 @@ public class RootGroup extends TabPane {
 			log.log(Level.SEVERE, "Failed to load root.fxml", e);
 		}
 		
+		//Create the tabs
+		gameTab = new GameTab(fieldFrontend);
+		consoleTab = new ConsoleTab();
+		
 		//Add of the tabs to the GUI
-		addTab(new GameTab(fieldFrontend), "Game");
-		addTab(new ConsoleTab(), "Console");
+		addTab(gameTab, "Game");
+		addTab(consoleTab, "Console");
 	}
 	
 	/**
@@ -78,5 +92,13 @@ public class RootGroup extends TabPane {
 	public Scene toScene() {
 		return new Scene(this);
 	}
-
+	
+	public GameTab getGameTab() {
+		return gameTab;
+	}
+	
+	public ConsoleTab getConsoleTab() {
+		return consoleTab;
+	}
+	
 }

@@ -190,4 +190,8 @@ public class Connection {
 		return closed;
 	}
 	
+	public long getCurrentPing() {
+		return currentPing;
+	}
+	
 }
