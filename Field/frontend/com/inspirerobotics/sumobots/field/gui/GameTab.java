@@ -19,6 +19,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 
 public class GameTab extends AnchorPane {
@@ -35,6 +36,17 @@ public class GameTab extends AnchorPane {
 	 */
 	@FXML
 	public HBox controlPane;
+	
+	/**
+	 * The Main Border Pane with match status bar, connection table, etc.
+	 */
+	@FXML
+	public BorderPane mainBorderPane;
+	
+	/**
+	 * The match status bar. Contains match time, match number, and current period
+	 */
+	public MatchStatusBar matchStatusBar;
 
 	/**
 	 * This pane holds only the buttons at the bottom (stop, start, pause, init,
@@ -77,6 +89,11 @@ public class GameTab extends AnchorPane {
 	 * The log
 	 */
 	private Logger logger = InternalLog.getLogger();
+	
+	/**
+	 * The Status Column
+	 */
+	private TableColumn<?, ?> statusColumn;
 
 	/**
 	 * Creates a game tab and starts the game tab loop
@@ -106,6 +123,9 @@ public class GameTab extends AnchorPane {
 		
 		//initialize the table
 		initConnTable();
+		
+		//initialize the status bar
+		initStatBar();
 
 		// Run the update loop over and over again
 		Platform.runLater(new Runnable() {
@@ -119,6 +139,11 @@ public class GameTab extends AnchorPane {
 		});
 	}
 
+	private void initStatBar() {
+		matchStatusBar = new MatchStatusBar();
+		mainBorderPane.setTop(matchStatusBar);
+	}
+
 	/**
 	 * Adds the columns to the table
 	 */
@@ -128,7 +153,7 @@ public class GameTab extends AnchorPane {
 		addSimpleColumn("DS Ping", 120, "dsPing");
 		addSimpleColumn("Robot IP", 120, "robotIP");
 		addSimpleColumn("Robot Ping", 120, "robotPing");
-		addSimpleColumn("Status", 350, "status");
+		statusColumn = addSimpleColumn("Status", 350, "status");
 		
 		TableConnection ts = new TableConnection("DS-1", "196.168.0.5", "20 ms", "196.168.0.3", "35 ms", "Connected!");
 		ObservableList<TableConnection> data = FXCollections.observableArrayList(ts);
@@ -142,17 +167,21 @@ public class GameTab extends AnchorPane {
 	 * @param minWidth the min width of the tab
 	 * @param propertyName the property name of the column
 	 */
-	private void addSimpleColumn(String name, int minWidth, String propertyName){
+	private TableColumn<TableConnection, String> addSimpleColumn(String name, int minWidth, String propertyName){
 		TableColumn<TableConnection, String> col = new TableColumn<TableConnection, String>(name);
 		col.setMinWidth(minWidth);
 		col.setCellValueFactory(new PropertyValueFactory<TableConnection, String>(propertyName));
 		connTable.getColumns().add(col);
+		return col;
 	}
 	
 	/**
 	 * Updates certain aspects of the GUI
 	 */
 	private void update() {
+		//Update the match status bar
+		matchStatusBar.update();
+		
 		// Makes all of the buttons fill the panel height wise
 		initMatch.setMinHeight(controlPane.getHeight() - 5);
 		startMatch.setMinHeight(controlPane.getHeight() - 5);
@@ -161,7 +190,10 @@ public class GameTab extends AnchorPane {
 		// Makes it so the console fills all of the width left over
 		controlConsole.setMinWidth(this.getWidth() - controlButtonPane.getWidth() - 20);
 		controlConsole.setMaxWidth(this.getWidth() - controlButtonPane.getWidth() - 20);
-
+		
+		//Update the status column fill up all available room
+		statusColumn.setMinWidth(connTable.getWidth() - 830);
+		
 		// Update the console
 		List<String> list = InternalLog.getInstance().getLogLines();
 		StringBuilder sb = new StringBuilder();

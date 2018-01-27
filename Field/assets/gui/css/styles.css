@@ -16,3 +16,44 @@
 .controlConsole .content {
     -fx-background-color: 	#A9A9A9;
 }
+
+.connTable{
+   -fx-background-color: transparent;
+}
+
+.connTable:focused{
+    -fx-background-color: transparent;
+}
+
+/* Spaltenköpfe
+    Struktur column-header-background -> column-header */
+
+.connTable .column-header-background{
+    -fx-background-color: linear-gradient(#131313 0%, #424141 100%);
+}
+
+.connTable .column-header-background .filler {
+    -fx-background-color: linear-gradient(#101010 0%, #424141 100%);
+}
+
+.connTable .column-header-background .label{
+    -fx-background-color: transparent;
+    -fx-text-fill: red;
+    -fx-font-size: 12pt ;
+}
+
+.connTable .column-header {
+    -fx-background-color: transparent;
+}
+
+.connTable .table-cell{
+    -fx-text-fill: white;
+    -fx-background-color:gray;
+    -fx-border-color:black;
+}
+
+.connTable{
+    -fx-background-color: gray;
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-padding: 0.0em; /* 0 */
+}

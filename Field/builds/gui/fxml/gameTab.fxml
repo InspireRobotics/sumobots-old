@@ -45,9 +45,9 @@
             </HBox>
          </bottom>
          <center>
-            <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <BorderPane fx:id="mainBorderPane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                <bottom>
-                  <TableView fx:id="connTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+                  <TableView fx:id="connTable" prefHeight="200.0" prefWidth="200.0" styleClass="connTable" stylesheets="@../css/styles.css" BorderPane.alignment="CENTER" />
                </bottom>
             </BorderPane>
          </center>
