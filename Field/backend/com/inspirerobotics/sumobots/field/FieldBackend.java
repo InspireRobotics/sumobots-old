@@ -34,12 +34,12 @@ public class FieldBackend extends Thread {
 	 * The Log
 	 */
 	private final Logger log = InternalLog.getLogger();
-	
+
 	/**
 	 * The current time period
 	 */
 	private TimePeriod timePeriod;
-	
+
 	/**
 	 * If the backend should be running
 	 */
@@ -49,7 +49,7 @@ public class FieldBackend extends Thread {
 		this.setName("Backend Thread");
 		this.channel = tc;
 	}
-	
+
 	/**
 	 * The function that is called after the thread is started
 	 */
@@ -62,10 +62,10 @@ public class FieldBackend extends Thread {
 		while (running) {
 			// Update the Server
 			server.update();
-			
-			//update the frontend about the current connections
+
+			// update the frontend about the current connections
 			sendConnectionsToFrontend();
-			
+
 			// While there are messages from the frontend, handle them
 			InterThreadMessage m = null;
 			while ((m = channel.poll()) != null) {
@@ -82,14 +82,14 @@ public class FieldBackend extends Thread {
 
 		log.info("Backend Thread Shutdown Complete!");
 	}
-	
+
 	/**
 	 * Sends the frontend a message with the current connections to the server
 	 */
 	private void sendConnectionsToFrontend() {
 		InterThreadMessage m = new InterThreadMessage("conn_update");
 		m.addData("connections", server.getConnections());
-		
+
 		channel.add(m);
 	}
 
@@ -127,6 +127,12 @@ public class FieldBackend extends Thread {
 	}
 
 	private void initMatch() {
+		// If we are not disabled, we cannot init
+		if (timePeriod != TimePeriod.DISABLED) {
+			log.warning("Match cannot be initialized from a non-disabled state!");
+			return;
+		}
+
 		log.info("Initializing the Match!");
 		timePeriod = TimePeriod.INIT;
 
@@ -142,7 +148,7 @@ public class FieldBackend extends Thread {
 	private void endMatch() {
 		log.info("Ending the Match!");
 		timePeriod = TimePeriod.DISABLED;
-		
+
 		// Lets now confirm to the frontend that we are switching time periods
 		InterThreadMessage m = new InterThreadMessage("time_period_update");
 		m.addData("new_period", TimePeriod.DISABLED);
@@ -151,11 +157,11 @@ public class FieldBackend extends Thread {
 		// Lets also tell all of the driver stations to switch the time period
 		server.sendAll(ArchetypalMessages.enterNewMatchPeriod(TimePeriod.DISABLED));
 	}
-	
-	private void disableMatch(){
+
+	private void disableMatch() {
 		log.fine("Disabling the match!");
 		timePeriod = TimePeriod.DISABLED;
-		
+
 		// Lets now confirm to the frontend that we are switching time periods
 		InterThreadMessage m = new InterThreadMessage("time_period_update");
 		m.addData("new_period", TimePeriod.DISABLED);
@@ -166,6 +172,12 @@ public class FieldBackend extends Thread {
 	}
 
 	private void startMatch() {
+		// If we are not in init, we cannot start the game
+		if (timePeriod != TimePeriod.INIT) {
+			log.warning("Match cannot be ended from a non-initialized state!");
+			return;
+		}
+
 		log.info("Starting the Match!");
 		timePeriod = TimePeriod.GAME;
 
@@ -191,11 +203,11 @@ public class FieldBackend extends Thread {
 			}
 
 		});
-		
-		//Set to disabled
+
+		// Set to disabled
 		disableMatch();
 	}
-	
+
 	public TimePeriod getTimePeriod() {
 		return timePeriod;
 	}

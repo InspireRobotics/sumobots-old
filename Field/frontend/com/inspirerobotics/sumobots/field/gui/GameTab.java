@@ -149,11 +149,11 @@ public class GameTab extends AnchorPane {
 	 */
 	private void initConnTable() {
 		addSimpleColumn("Name", 350, "name");
-		addSimpleColumn("DS IP", 120, "dsIP");
-		addSimpleColumn("DS Ping", 120, "dsPing");
-		addSimpleColumn("Robot IP", 120, "robotIP");
-		addSimpleColumn("Robot Ping", 120, "robotPing");
-		statusColumn = addSimpleColumn("Status", 350, "status");
+		addSimpleColumn("DS IP", 200, "dsIP");
+		addSimpleColumn("DS Ping", 200, "dsPing");
+		addSimpleColumn("Robot IP", 200, "robotIP");
+		addSimpleColumn("Robot Ping", 200, "robotPing");
+		statusColumn = addSimpleColumn("Status", 200, "status");
 		
 		TableConnection ts = new TableConnection("DS-1", "196.168.0.5", "20 ms", "196.168.0.3", "35 ms", "Connected!");
 		ObservableList<TableConnection> data = FXCollections.observableArrayList(ts);

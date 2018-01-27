@@ -25,6 +25,21 @@ public class MatchStatusBar extends HBox {
 	 */
 	private TextField matchTimeBox;
 
+	/**
+	 * The internal match number
+	 */
+	private int matchNum = 0;
+	
+	/**
+	 * The internal Time
+	 */
+	private long matchTime; 
+	
+	/**
+	 * The last known time period
+	 */
+	private TimePeriod lastKnownTimePeriod;
+	
 	public MatchStatusBar() {
 		// init the match number box
 		matchNumberBox = new TextField("#250");
@@ -51,16 +66,39 @@ public class MatchStatusBar extends HBox {
 	}
 
 	public void updateStats(TimePeriod timePeriod) {
+		//If its null, the backend has yet sent the first match update 
+		//so we will assume it will be null
+		if(timePeriod == null){
+			timePeriod = TimePeriod.DISABLED;	
+		}
+	
+		//Update what state we are in
 		updateMatchStateBox(timePeriod);
+		
+		//If we are in a new time period, lets update the time and possibly number
+		if(timePeriod != lastKnownTimePeriod){
+			enterNewPeriod(timePeriod);
+			lastKnownTimePeriod = timePeriod;
+		}
+		
+		//Update Match Time/Match Number boxes
+		matchNumberBox.setText("#" + matchNum);
+		
+		String time = ""+(System.currentTimeMillis() - matchTime) / 1000;
+		matchTimeBox.setMinWidth(time.length() * 20);
+		matchTimeBox.setText(time);
+		
+	}
+
+	private void enterNewPeriod(TimePeriod timePeriod) {
+		if(timePeriod == TimePeriod.INIT){
+			matchNum++;
+		}
+		
+		matchTime = System.currentTimeMillis();
 	}
 
 	private void updateMatchStateBox(TimePeriod timePeriod) {
-		// No time period so lets default to disabled
-		if (timePeriod == null) {
-			updateMatchStateBox(TimePeriod.DISABLED);
-			return;
-		}
-
 		switch (timePeriod) {
 		case DISABLED:
 			matchStateBox.setText("Disabled");
