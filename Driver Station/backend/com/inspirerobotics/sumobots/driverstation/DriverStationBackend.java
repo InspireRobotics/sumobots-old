@@ -7,19 +7,27 @@ import java.util.logging.Logger;
 
 import com.inspirerobotics.sumobots.lib.Resources;
 import com.inspirerobotics.sumobots.lib.TimePeriod;
+import com.inspirerobotics.sumobots.lib.concurrent.ThreadChannel;
 import com.inspirerobotics.sumobots.lib.networking.Connection;
 import com.inspirerobotics.sumobots.lib.networking.ConnectionListener;
 import com.inspirerobotics.sumobots.lib.networking.Message;
 import com.inspirerobotics.sumobots.lib.networking.MessageType;
 
-public class DriverStation implements ConnectionListener {
+public class DriverStationBackend extends Thread implements ConnectionListener {
 
 	private final Logger logger = Logger.getLogger(Resources.LOGGER_NAME);
 	private Connection conn;
 	private TimePeriod currentPeriod = TimePeriod.DISABLED;
+	private ThreadChannel channel;
 	
-	public DriverStation() {
+	public DriverStationBackend(ThreadChannel tc) {
+		this.setName("Backend Thread");
+		this.channel = tc;
 		logger.setLevel(Level.ALL);
+	}
+	
+	@Override
+	public void run() {
 		try {
 			Socket socket = new Socket("localhost", Resources.SERVER_PORT);
 			conn = new Connection(socket, this);
@@ -70,7 +78,4 @@ public class DriverStation implements ConnectionListener {
 		return conn;
 	}
 	
-	public static void main(String[] args) {
-		new DriverStation();
-	}
 }
