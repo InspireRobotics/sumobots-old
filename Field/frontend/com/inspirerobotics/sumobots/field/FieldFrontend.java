@@ -5,6 +5,7 @@ import java.util.logging.Logger;
 
 import com.inspirerobotics.sumobots.field.gui.RootGroup;
 import com.inspirerobotics.sumobots.field.util.InternalLog;
+import com.inspirerobotics.sumobots.lib.TimePeriod;
 import com.inspirerobotics.sumobots.lib.concurrent.InterThreadMessage;
 import com.inspirerobotics.sumobots.lib.concurrent.ThreadChannel;
 import com.inspirerobotics.sumobots.lib.networking.Connection;
@@ -47,7 +48,12 @@ public class FieldFrontend extends Application {
 	 * The log
 	 */
 	private Logger log = InternalLog.getLogger();
-
+	
+	/**
+	 * The current time period, as last update by the Field Backend
+	 */
+	private TimePeriod timePeriod;
+	
 	@Override
 	public void start(Stage s) throws Exception {
 		//Change Thread Name
@@ -110,8 +116,10 @@ public class FieldFrontend extends Application {
 				List<Connection> conn = (List<Connection>) data;
 				root.getGameTab().setConnections(conn); 
 			}
-			
-			
+			break;
+		case "time_period_update":
+			timePeriod = (TimePeriod) m.getData("new_period");
+			log.fine("New Time Period on Frontend: " + timePeriod);
 			break;
 		default: //If it reaches this we don't know what it is so print a warning to the screen
 			log.warning("Unknown Message Recieved on Frontend: " + name);
@@ -182,6 +190,13 @@ public class FieldFrontend extends Application {
 
 	public void endMatch() {
 		threadChannel.add(new InterThreadMessage("end_match"));
+	}
+	
+	/**
+	 * The current time period, as last update by the Field Backend
+	 */
+	public TimePeriod getTimePeriod() {
+		return timePeriod;
 	}
 	
 }

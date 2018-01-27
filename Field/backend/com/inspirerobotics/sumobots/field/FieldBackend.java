@@ -151,6 +151,19 @@ public class FieldBackend extends Thread {
 		// Lets also tell all of the driver stations to switch the time period
 		server.sendAll(ArchetypalMessages.enterNewMatchPeriod(TimePeriod.DISABLED));
 	}
+	
+	private void disableMatch(){
+		log.fine("Disabling the match!");
+		timePeriod = TimePeriod.DISABLED;
+		
+		// Lets now confirm to the frontend that we are switching time periods
+		InterThreadMessage m = new InterThreadMessage("time_period_update");
+		m.addData("new_period", TimePeriod.DISABLED);
+		channel.add(m);
+
+		// Lets also tell all of the driver stations to switch the time period
+		server.sendAll(ArchetypalMessages.enterNewMatchPeriod(TimePeriod.DISABLED));
+	}
 
 	private void startMatch() {
 		log.info("Starting the Match!");
@@ -178,6 +191,9 @@ public class FieldBackend extends Thread {
 			}
 
 		});
+		
+		//Set to disabled
+		disableMatch();
 	}
 	
 	public TimePeriod getTimePeriod() {

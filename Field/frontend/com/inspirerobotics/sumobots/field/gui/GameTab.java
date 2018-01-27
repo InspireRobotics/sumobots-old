@@ -180,7 +180,8 @@ public class GameTab extends AnchorPane {
 	 */
 	private void update() {
 		//Update the match status bar
-		matchStatusBar.update();
+		matchStatusBar.updateGui();
+		matchStatusBar.updateStats(fieldFrontend.getTimePeriod());
 		
 		// Makes all of the buttons fill the panel height wise
 		initMatch.setMinHeight(controlPane.getHeight() - 5);
