@@ -13,11 +13,33 @@ import com.inspirerobotics.sumobots.lib.networking.ConnectionListener;
 import com.inspirerobotics.sumobots.lib.networking.Message;
 import com.inspirerobotics.sumobots.lib.networking.MessageType;
 
+/**
+ * The second most important class for the driver station. Handles everything 
+ * that isn't the gui. This is started from the frontend. Roles include: handling communication with 
+ * the robot and field and handling the joysticks/driving.
+ * @author Noah
+ *
+ */
 public class DriverStationBackend extends Thread implements ConnectionListener {
-
+	
+	/**
+	 * The logger for Sumobots
+	 */
 	private final Logger logger = Logger.getLogger(Resources.LOGGER_NAME);
+	
+	/**
+	 * The connection to the field
+	 */
 	private Connection conn;
+	
+	/**
+	 * The current time period on the driver station
+	 */
 	private TimePeriod currentPeriod = TimePeriod.DISABLED;
+	
+	/**
+	 * The thread channel for the frontend and backend threads
+	 */
 	private ThreadChannel channel;
 	
 	public DriverStationBackend(ThreadChannel tc) {
@@ -73,7 +95,10 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 			logger.info("Entering match period: " + currentPeriod.getName());
 		}
 	}
-
+	
+	/**
+	 * The connection to the field
+	 */
 	public Connection getConn() {
 		return conn;
 	}

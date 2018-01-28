@@ -8,6 +8,12 @@ import com.inspirerobotics.sumobots.lib.concurrent.ThreadChannel;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
+/**
+ * The main class for the driver station. Contains the main method.
+ * Roles include handling the GUI, starting the backend thread, and handling backend-frontend communication.
+ * @author Noah
+ *
+ */
 public class DriverStationFrontend extends Application{
 
 	/**
@@ -46,6 +52,7 @@ public class DriverStationFrontend extends Application{
 		backend.start();
 		log.fine("Finished starting backend thread");
 		
+		//Start the gui
 		stage.setTitle("Driver Station!");
 		stage.show();
 	}
