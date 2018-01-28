@@ -1,4 +1,4 @@
-package com.inspirerobotics.sumobots.lib.networking;
+package com.inspirerobotics.sumobots.lib.networking.connection;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -6,6 +6,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.inspirerobotics.sumobots.lib.Resources;
+import com.inspirerobotics.sumobots.lib.networking.SocketStream;
+import com.inspirerobotics.sumobots.lib.networking.message.ArchetypalMessages;
+import com.inspirerobotics.sumobots.lib.networking.message.Message;
+import com.inspirerobotics.sumobots.lib.networking.message.MessageType;
 
 public class Connection {
 	

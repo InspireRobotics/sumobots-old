@@ -8,10 +8,10 @@ import java.util.logging.Logger;
 import com.inspirerobotics.sumobots.lib.Resources;
 import com.inspirerobotics.sumobots.lib.TimePeriod;
 import com.inspirerobotics.sumobots.lib.concurrent.ThreadChannel;
-import com.inspirerobotics.sumobots.lib.networking.Connection;
-import com.inspirerobotics.sumobots.lib.networking.ConnectionListener;
-import com.inspirerobotics.sumobots.lib.networking.Message;
-import com.inspirerobotics.sumobots.lib.networking.MessageType;
+import com.inspirerobotics.sumobots.lib.networking.connection.Connection;
+import com.inspirerobotics.sumobots.lib.networking.connection.ConnectionListener;
+import com.inspirerobotics.sumobots.lib.networking.message.Message;
+import com.inspirerobotics.sumobots.lib.networking.message.MessageType;
 
 /**
  * The second most important class for the driver station. Handles everything 

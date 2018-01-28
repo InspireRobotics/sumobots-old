@@ -1,4 +1,6 @@
-package com.inspirerobotics.sumobots.lib.networking;
+package com.inspirerobotics.sumobots.lib.networking.connection;
+
+import com.inspirerobotics.sumobots.lib.networking.message.Message;
 
 /**
  * The listener for a connection

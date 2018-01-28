@@ -1,7 +1,5 @@
 package com.inspirerobotics.sumobots.lib.concurrent;
 
-import java.util.HashMap;
-
 /**
  * Used by the {@link ThreadChannel} to send messages over threads
  * @author Noah
@@ -17,29 +15,26 @@ public class InterThreadMessage {
 	/**
 	 * The data in the message
 	 */
-	private final HashMap<String, Object> data = new HashMap<String, Object>();
-
+	private final Object data;
+	
 	public InterThreadMessage(String name) {
 		super();
 		this.name = name;
+		this.data = null;
 	}
 	
-	/**
-	 * Adds data to the message
-	 * @param key the name of data
-	 * @param value the value of the data
-	 */
-	public void addData(String key, Object value){
-		data.put(key, value);
+	public InterThreadMessage(String name, Object data) {
+		super();
+		this.name = name;
+		this.data = data;
 	}
 	
 	/**
 	 * Gets data from the message 
-	 * @param key the name of the data
 	 * @return the data found in the message
 	 */
-	public Object getData(String key){
-		return data.get(key);
+	public Object getData(){
+		return data;
 	}
 	
 	public String getName() {

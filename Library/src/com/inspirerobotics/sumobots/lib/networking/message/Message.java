@@ -1,4 +1,4 @@
-package com.inspirerobotics.sumobots.lib.networking;
+package com.inspirerobotics.sumobots.lib.networking.message;
 
 import java.util.HashMap;
 

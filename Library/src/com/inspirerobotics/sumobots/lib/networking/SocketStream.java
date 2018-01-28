@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 
 import com.inspirerobotics.sumobots.lib.Resources;
 
-class SocketStream {
+public class SocketStream {
 	
 	/**
 	 * The reader for the socket

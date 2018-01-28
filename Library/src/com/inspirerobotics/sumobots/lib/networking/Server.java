@@ -10,6 +10,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.inspirerobotics.sumobots.lib.Resources;
+import com.inspirerobotics.sumobots.lib.networking.connection.Connection;
+import com.inspirerobotics.sumobots.lib.networking.connection.ConnectionListener;
+import com.inspirerobotics.sumobots.lib.networking.message.ArchetypalMessages;
+import com.inspirerobotics.sumobots.lib.networking.message.Message;
 
 /**
  * This class handles the server socket/server stuff. 
@@ -36,11 +40,9 @@ public class Server{
 	 */
 	private final ConnectionListener cl;
 	
-	
-	
 	/**
 	 * Creates a new server
-	 * @param cl The {@link com.inspirerobotics.sumobots.lib.networking.ConnectionListener} for everything connected to the server
+	 * @param cl The {@link com.inspirerobotics.sumobots.lib.networking.connection.ConnectionListener} for everything connected to the server
 	 */
 	public Server(ConnectionListener cl) {
 		serverSocket = createServerSocket();

@@ -6,11 +6,11 @@ import com.inspirerobotics.sumobots.field.util.InternalLog;
 import com.inspirerobotics.sumobots.lib.TimePeriod;
 import com.inspirerobotics.sumobots.lib.concurrent.InterThreadMessage;
 import com.inspirerobotics.sumobots.lib.concurrent.ThreadChannel;
-import com.inspirerobotics.sumobots.lib.networking.ArchetypalMessages;
-import com.inspirerobotics.sumobots.lib.networking.Connection;
-import com.inspirerobotics.sumobots.lib.networking.ConnectionListener;
-import com.inspirerobotics.sumobots.lib.networking.Message;
 import com.inspirerobotics.sumobots.lib.networking.Server;
+import com.inspirerobotics.sumobots.lib.networking.connection.Connection;
+import com.inspirerobotics.sumobots.lib.networking.connection.ConnectionListener;
+import com.inspirerobotics.sumobots.lib.networking.message.ArchetypalMessages;
+import com.inspirerobotics.sumobots.lib.networking.message.Message;
 
 /**
  * This handles all of the backend stuff (basically everything but the GUI).
@@ -87,8 +87,7 @@ public class FieldBackend extends Thread {
 	 * Sends the frontend a message with the current connections to the server
 	 */
 	private void sendConnectionsToFrontend() {
-		InterThreadMessage m = new InterThreadMessage("conn_update");
-		m.addData("connections", server.getConnections());
+		InterThreadMessage m = new InterThreadMessage("conn_update", server.getConnections());
 
 		channel.add(m);
 	}
@@ -137,8 +136,7 @@ public class FieldBackend extends Thread {
 		timePeriod = TimePeriod.INIT;
 
 		// Lets now confirm to the frontend that we are switching time periods
-		InterThreadMessage m = new InterThreadMessage("time_period_update");
-		m.addData("new_period", TimePeriod.INIT);
+		InterThreadMessage m = new InterThreadMessage("time_period_update", TimePeriod.INIT);
 		channel.add(m);
 
 		// Lets also tell all of the driver stations to switch the time period
@@ -150,8 +148,7 @@ public class FieldBackend extends Thread {
 		timePeriod = TimePeriod.DISABLED;
 
 		// Lets now confirm to the frontend that we are switching time periods
-		InterThreadMessage m = new InterThreadMessage("time_period_update");
-		m.addData("new_period", TimePeriod.DISABLED);
+		InterThreadMessage m = new InterThreadMessage("time_period_update", TimePeriod.DISABLED);
 		channel.add(m);
 
 		// Lets also tell all of the driver stations to switch the time period
@@ -163,8 +160,7 @@ public class FieldBackend extends Thread {
 		timePeriod = TimePeriod.DISABLED;
 
 		// Lets now confirm to the frontend that we are switching time periods
-		InterThreadMessage m = new InterThreadMessage("time_period_update");
-		m.addData("new_period", TimePeriod.DISABLED);
+		InterThreadMessage m = new InterThreadMessage("time_period_update", TimePeriod.DISABLED);
 		channel.add(m);
 
 		// Lets also tell all of the driver stations to switch the time period
@@ -182,8 +178,7 @@ public class FieldBackend extends Thread {
 		timePeriod = TimePeriod.GAME;
 
 		// Lets now confirm to the frontend that we are switching time periods
-		InterThreadMessage m = new InterThreadMessage("time_period_update");
-		m.addData("new_period", TimePeriod.GAME);
+		InterThreadMessage m = new InterThreadMessage("time_period_update", TimePeriod.GAME);
 		channel.add(m);
 
 		// Lets also tell all of the driver stations to switch the time period

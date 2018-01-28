@@ -8,7 +8,7 @@ import com.inspirerobotics.sumobots.field.util.InternalLog;
 import com.inspirerobotics.sumobots.lib.TimePeriod;
 import com.inspirerobotics.sumobots.lib.concurrent.InterThreadMessage;
 import com.inspirerobotics.sumobots.lib.concurrent.ThreadChannel;
-import com.inspirerobotics.sumobots.lib.networking.Connection;
+import com.inspirerobotics.sumobots.lib.networking.connection.Connection;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -110,7 +110,7 @@ public class FieldFrontend extends Application {
 		//Figure out what type of message it is
 		switch (name) {
 		case "conn_update":
-			Object data = m.getData("connections");
+			Object data = m.getData();
 			if(data instanceof List){
 				@SuppressWarnings("unchecked")
 				List<Connection> conn = (List<Connection>) data;
@@ -118,7 +118,7 @@ public class FieldFrontend extends Application {
 			}
 			break;
 		case "time_period_update":
-			timePeriod = (TimePeriod) m.getData("new_period");
+			timePeriod = (TimePeriod) m.getData();
 			log.fine("New Time Period on Frontend: " + timePeriod);
 			break;
 		default: //If it reaches this we don't know what it is so print a warning to the screen

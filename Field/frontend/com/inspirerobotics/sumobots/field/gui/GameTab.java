@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 
 import com.inspirerobotics.sumobots.field.FieldFrontend;
 import com.inspirerobotics.sumobots.field.util.InternalLog;
-import com.inspirerobotics.sumobots.lib.networking.Connection;
+import com.inspirerobotics.sumobots.lib.networking.connection.Connection;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -150,9 +150,9 @@ public class GameTab extends AnchorPane {
 	private void initConnTable() {
 		addSimpleColumn("Name", 350, "name");
 		addSimpleColumn("DS IP", 200, "dsIP");
-		addSimpleColumn("DS Ping", 200, "dsPing");
+		addSimpleColumn("DS Ping", 150, "dsPing");
 		addSimpleColumn("Robot IP", 200, "robotIP");
-		addSimpleColumn("Robot Ping", 200, "robotPing");
+		addSimpleColumn("Robot Ping", 150, "robotPing");
 		statusColumn = addSimpleColumn("Status", 200, "status");
 		
 		TableConnection ts = new TableConnection("DS-1", "196.168.0.5", "20 ms", "196.168.0.3", "35 ms", "Connected!");
@@ -193,7 +193,8 @@ public class GameTab extends AnchorPane {
 		controlConsole.setMaxWidth(this.getWidth() - controlButtonPane.getWidth() - 20);
 		
 		//Update the status column fill up all available room
-		statusColumn.setMinWidth(connTable.getWidth() - 830);
+		statusColumn.setMinWidth(connTable.getWidth() - 1050);
+		statusColumn.setMaxWidth(connTable.getWidth() - 1050);
 		
 		// Update the console
 		List<String> list = InternalLog.getInstance().getLogLines();

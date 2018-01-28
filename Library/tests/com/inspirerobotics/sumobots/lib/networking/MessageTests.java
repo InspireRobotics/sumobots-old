@@ -3,6 +3,8 @@ package com.inspirerobotics.sumobots.lib.networking;
 import org.junit.Test;
 
 import com.inspirerobotics.sumobots.lib.Resources;
+import com.inspirerobotics.sumobots.lib.networking.message.Message;
+import com.inspirerobotics.sumobots.lib.networking.message.MessageType;
 
 import static org.junit.Assert.assertEquals;
 
