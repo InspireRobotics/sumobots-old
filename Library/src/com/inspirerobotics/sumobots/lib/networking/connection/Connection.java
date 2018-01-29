@@ -129,7 +129,9 @@ public class Connection {
 			sendMessage(ArchetypalMessages.pong());
 		}else if(messageType == MessageType.PONG){
 			currentPing = System.currentTimeMillis() - lastPingTime;
-			logger.fine("Ping: " + currentPing);
+			
+			if(currentPing > 25)
+				logger.info("High Ping on connection, " + connectionName);
 		}else if(messageType == MessageType.STREAM_TERMINATED) {
 			try {
 				close();
