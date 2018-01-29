@@ -114,7 +114,7 @@ public class ConsoleTab extends AnchorPane {
 	/**
 	 * Updates certain aspects of the GUI
 	 */
-	private void update() {
+	void update() {
 
 		updateButtons();
 		

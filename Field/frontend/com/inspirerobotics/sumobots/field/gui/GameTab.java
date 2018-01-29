@@ -6,10 +6,8 @@ import java.util.logging.Logger;
 
 import com.inspirerobotics.sumobots.field.FieldFrontend;
 import com.inspirerobotics.sumobots.field.util.InternalLog;
-import com.inspirerobotics.sumobots.lib.TimePeriod;
 import com.inspirerobotics.sumobots.lib.networking.connection.Connection;
 
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -131,17 +129,6 @@ public class GameTab extends AnchorPane {
 
 		// initialize the status bar
 		initStatBar();
-
-		// Run the update loop over and over again
-		Platform.runLater(new Runnable() {
-
-			@Override
-			public void run() {
-				update();
-				Platform.runLater(this);
-			}
-
-		});
 	}
 
 	private void initStatBar() {
@@ -254,7 +241,7 @@ public class GameTab extends AnchorPane {
 	/**
 	 * Updates certain aspects of the GUI
 	 */
-	private void update() {
+	void update() {
 		// Update the match status bar
 		matchStatusBar.updateGui();
 		matchStatusBar.updateStats(fieldFrontend.getTimePeriod());

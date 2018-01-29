@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 import com.inspirerobotics.sumobots.field.FieldFrontend;
 import com.inspirerobotics.sumobots.field.util.InternalLog;
 
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Tab;
@@ -65,12 +66,36 @@ public class RootGroup extends TabPane {
 		//Create the tabs
 		gameTab = new GameTab(fieldFrontend);
 		consoleTab = new ConsoleTab();
-		
+	
 		//Add of the tabs to the GUI
 		addTab(gameTab, "Game");
 		addTab(consoleTab, "Console");
+		
+		
+		//Start internal loop
+		Platform.runLater(new Runnable() {
+
+			@Override
+			public void run() {
+				internalUpdate();
+				Platform.runLater(this);
+			}
+			
+		});
 	}
 	
+	/**
+	 * Updates the tab that is currently open
+	 */
+	protected void internalUpdate() {
+		int index = this.getSelectionModel().getSelectedIndex();
+		if(index == 0) {
+			gameTab.update();
+		}else {
+			consoleTab.update();
+		}
+	}
+
 	/**
 	 * Adds a tab to the GUI
 	 * 
