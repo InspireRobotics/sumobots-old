@@ -2,6 +2,7 @@ package com.inspirerobotics.sumobots.driverstation;
 
 import java.util.logging.Logger;
 
+import com.inspirerobotics.sumobots.driverstation.gui.MainScene;
 import com.inspirerobotics.sumobots.lib.Resources;
 import com.inspirerobotics.sumobots.lib.concurrent.InterThreadMessage;
 import com.inspirerobotics.sumobots.lib.concurrent.ThreadChannel;
@@ -42,6 +43,11 @@ public class DriverStationFrontend extends Application {
 	 */
 	private Stage stage;
 
+	/**
+	 * The main scene
+	 */
+	private MainScene mainScene;
+
 	@Override
 	public void start(Stage s) throws Exception {
 		stage = s;
@@ -61,9 +67,50 @@ public class DriverStationFrontend extends Application {
 		// Init the Gui
 		initGui();
 
+		// Start the internal loop
+		Platform.runLater(new Runnable() {
+
+			@Override
+			public void run() {
+				update();
+				Platform.runLater(this);
+			}
+
+		});
+
+	}
+
+	protected void update() {
+		// While there are messages from the frontend, handle them
+		InterThreadMessage m = null;
+		while ((m = threadChannel.poll()) != null) {
+			onBackendMessageReceived(m);
+		}
+	}
+
+	private void onBackendMessageReceived(InterThreadMessage m) {
+		String name = m.getName();
+		
+		log.finer("Recieved Message from Backend: " + name);
+
+		//Figure out what type of message it is
+		switch (name) {
+		case "new_name":
+			String data = (String) m.getData();
+			mainScene.setName(data);
+			break;
+		default: //If it reaches this we don't know what it is so print a warning to the screen
+			log.warning("Unknown Message Recieved on Frontend: " + name);
+			break;
+		}
 	}
 
 	private void initGui() {
+		// Create the gui
+		mainScene = MainScene.build();
+
+		// Setup the stage
+		stage.setScene(mainScene.toScene());
 		stage.setTitle("Driver Station!");
 		stage.show();
 

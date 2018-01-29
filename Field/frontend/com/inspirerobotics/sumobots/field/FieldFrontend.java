@@ -154,6 +154,7 @@ public class FieldFrontend extends Application {
 				log.info("Application Window has been closed");
 				threadChannel.add(new InterThreadMessage("exit_app"));
 				log.info("Closing down Frontend Thread...");
+				stage.hide();
 				Platform.exit();
 			}
 

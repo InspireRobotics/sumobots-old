@@ -2,6 +2,7 @@ package com.inspirerobotics.sumobots.driverstation;
 
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -11,6 +12,7 @@ import com.inspirerobotics.sumobots.lib.concurrent.InterThreadMessage;
 import com.inspirerobotics.sumobots.lib.concurrent.ThreadChannel;
 import com.inspirerobotics.sumobots.lib.networking.connection.Connection;
 import com.inspirerobotics.sumobots.lib.networking.connection.ConnectionListener;
+import com.inspirerobotics.sumobots.lib.networking.message.ArchetypalMessages;
 import com.inspirerobotics.sumobots.lib.networking.message.Message;
 import com.inspirerobotics.sumobots.lib.networking.message.MessageType;
 
@@ -53,12 +55,20 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 	 */
 	private boolean running;
 
+	/**
+	 * The name of the current driver station
+	 */
+	private String name = "";
+	
 	public DriverStationBackend(ThreadChannel tc) {
 		this.setName("Backend Thread");
 		this.channel = tc;
 		logger.setLevel(Level.ALL);
 	}
-
+	
+	/**
+	 * Inits the socket, and sets a random name for the driver station
+	 */
 	@Override
 	public void run() {
 		try {
@@ -67,7 +77,9 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
+		
+		setDriverStationName("DS-" + new Random().nextInt(10000));
+		
 		logger.info("Finished initialization! Starting main loop");
 
 		runMainLoop();
@@ -96,7 +108,11 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 			}
 		}
 	}
-
+	
+	/**
+	 * When a message is recieved by the frontend
+	 * @param m the message recieved
+	 */
 	private void onFrontendMessageReceived(InterThreadMessage m) {
 		String name = m.getName();
 
@@ -128,6 +144,12 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 		}
 	}
 
+	public void setDriverStationName(String n) {
+		channel.add(new InterThreadMessage("new_name", n));
+		name = n;
+		conn.sendMessage(ArchetypalMessages.setName(name));
+	}
+	
 	/**
 	 * Updates the Driver Station on the current match status. This update would be
 	 * originated by the FMS

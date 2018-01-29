@@ -6,14 +6,18 @@ import java.util.logging.Logger;
 
 import com.inspirerobotics.sumobots.field.FieldFrontend;
 import com.inspirerobotics.sumobots.field.util.InternalLog;
+import com.inspirerobotics.sumobots.lib.TimePeriod;
 import com.inspirerobotics.sumobots.lib.networking.connection.Connection;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
@@ -21,28 +25,29 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.util.Callback;
 
 public class GameTab extends AnchorPane {
 
 	/**
-	 * The FieldFrontened object. This handles all events happening on the
-	 * Frontend (and ones being passed to the backend).
+	 * The FieldFrontened object. This handles all events happening on the Frontend
+	 * (and ones being passed to the backend).
 	 */
 	private FieldFrontend fieldFrontend;
 
 	/**
-	 * The pane at the bottom of the screen. Holds the overall match controls
-	 * (stop, start), console, and other options
+	 * The pane at the bottom of the screen. Holds the overall match controls (stop,
+	 * start), console, and other options
 	 */
 	@FXML
 	public HBox controlPane;
-	
+
 	/**
 	 * The Main Border Pane with match status bar, connection table, etc.
 	 */
 	@FXML
 	public BorderPane mainBorderPane;
-	
+
 	/**
 	 * The match status bar. Contains match time, match number, and current period
 	 */
@@ -78,7 +83,7 @@ public class GameTab extends AnchorPane {
 	 */
 	@FXML
 	public TextArea controlConsole;
-	
+
 	/**
 	 * The tab with the current connections
 	 */
@@ -89,7 +94,7 @@ public class GameTab extends AnchorPane {
 	 * The log
 	 */
 	private Logger logger = InternalLog.getLogger();
-	
+
 	/**
 	 * The Status Column
 	 */
@@ -99,8 +104,8 @@ public class GameTab extends AnchorPane {
 	 * Creates a game tab and starts the game tab loop
 	 * 
 	 * @param ff
-	 *            the varaible to the FieldFrontend. See {@link #fieldFrontend}
-	 *            for its purpose
+	 *            the varaible to the FieldFrontend. See {@link #fieldFrontend} for
+	 *            its purpose
 	 */
 	public GameTab(FieldFrontend ff) {
 		this.fieldFrontend = ff;
@@ -120,11 +125,11 @@ public class GameTab extends AnchorPane {
 
 		// Temporary Text. Will be removed once logging is set up
 		controlConsole.setText("Error: No Robot Detected");
-		
-		//initialize the table
+
+		// initialize the table
 		initConnTable();
-		
-		//initialize the status bar
+
+		// initialize the status bar
 		initStatBar();
 
 		// Run the update loop over and over again
@@ -153,36 +158,107 @@ public class GameTab extends AnchorPane {
 		addSimpleColumn("DS Ping", 150, "dsPing");
 		addSimpleColumn("Robot IP", 200, "robotIP");
 		addSimpleColumn("Robot Ping", 150, "robotPing");
+		addButtonColumn("Disable", 125, "action", new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent event) {
+				System.out.println(event.hashCode());
+			}
+			
+		});
 		statusColumn = addSimpleColumn("Status", 200, "status");
-		
-		TableConnection ts = new TableConnection("DS-1", "196.168.0.5", "20 ms", "196.168.0.3", "35 ms", "Connected!");
+
+		TableConnection ts = new TableConnection("DS-1", "196.168.0.5", "20 ms", "196.168.0.3", "35 ms", "Connected!",
+				"");
 		ObservableList<TableConnection> data = FXCollections.observableArrayList(ts);
-		
+
 		connTable.setItems(data);
 	}
-	
+
 	/**
 	 * Adds a generic column to the connection table
-	 * @param name the name to be shown to the user
-	 * @param minWidth the min width of the tab
-	 * @param propertyName the property name of the column
+	 * 
+	 * @param name
+	 *            the name to be shown to the user
+	 * @param minWidth
+	 *            the min width of the tab
+	 * @param propertyName
+	 *            the property name of the column
 	 */
-	private TableColumn<TableConnection, String> addSimpleColumn(String name, int minWidth, String propertyName){
+	private TableColumn<TableConnection, String> addSimpleColumn(String name, int minWidth, String propertyName) {
 		TableColumn<TableConnection, String> col = new TableColumn<TableConnection, String>(name);
 		col.setMinWidth(minWidth);
+		col.setMaxWidth(minWidth);
 		col.setCellValueFactory(new PropertyValueFactory<TableConnection, String>(propertyName));
 		connTable.getColumns().add(col);
 		return col;
 	}
-	
+
+	/**
+	 * Adds a column to the connection table with a buttom
+	 * 
+	 * @param name
+	 *            the name to be shown to the user
+	 * @param minWidth
+	 *            the min width of the tab
+	 * @param propertyName
+	 *            the property name of the column
+	 */
+	private TableColumn<TableConnection, String> addButtonColumn(String name, int minWidth, String propertyName,
+			EventHandler<ActionEvent> event) {
+		TableColumn<TableConnection, String> col = new TableColumn<TableConnection, String>(name);
+		col.setMinWidth(minWidth);
+		col.setMaxWidth(minWidth);
+		col.setCellValueFactory(new PropertyValueFactory<TableConnection, String>(propertyName));
+
+		Callback<TableColumn<TableConnection, String>, TableCell<TableConnection, String>> cellFactory = new Callback<TableColumn<TableConnection, String>, TableCell<TableConnection, String>>() {
+			@Override
+			public TableCell<TableConnection, String> call(final TableColumn<TableConnection, String> param) {
+				final TableCell<TableConnection, String> cell = new TableCell<TableConnection, String>() {
+
+					Button btn = new Button(name);
+
+					@Override
+					public void updateItem(String item, boolean empty) {
+						super.updateItem(item, empty);
+						if (empty) {
+							setGraphic(null);
+							setText(null);
+						} else {
+							if (item.equals("")) {
+								setGraphic(null);
+								setText(null);
+								return;
+							}
+							
+							btn.setText(item);
+							btn.setMaxHeight(10);
+							btn.setOnAction(event);
+							btn.setMinWidth(minWidth - 8);
+							btn.setMaxWidth(minWidth - 8);
+							setGraphic(btn);
+							setText(null);
+						}
+					}
+				};
+				return cell;
+			}
+		};
+
+		col.setCellFactory(cellFactory);
+
+		connTable.getColumns().add(col);
+		return null;
+	}
+
 	/**
 	 * Updates certain aspects of the GUI
 	 */
 	private void update() {
-		//Update the match status bar
+		// Update the match status bar
 		matchStatusBar.updateGui();
 		matchStatusBar.updateStats(fieldFrontend.getTimePeriod());
-		
+
 		// Makes all of the buttons fill the panel height wise
 		initMatch.setMinHeight(controlPane.getHeight() - 5);
 		startMatch.setMinHeight(controlPane.getHeight() - 5);
@@ -191,16 +267,16 @@ public class GameTab extends AnchorPane {
 		// Makes it so the console fills all of the width left over
 		controlConsole.setMinWidth(this.getWidth() - controlButtonPane.getWidth() - 20);
 		controlConsole.setMaxWidth(this.getWidth() - controlButtonPane.getWidth() - 20);
-		
-		//Update the status column fill up all available room
-		statusColumn.setMinWidth(connTable.getWidth() - 1050);
-		statusColumn.setMaxWidth(connTable.getWidth() - 1050);
-		
+
+		// Update the status column fill up all available room
+		statusColumn.setMinWidth(connTable.getWidth() - 1175);
+		statusColumn.setMaxWidth(connTable.getWidth() - 1175);
+
 		// Update the console
 		List<String> list = InternalLog.getInstance().getLogLines();
 		StringBuilder sb = new StringBuilder();
-		
-		//toArray() prevents ConcurrentModificationException
+
+		// toArray() prevents ConcurrentModificationException
 		for (Object obj : list.toArray()) {
 			String string = (String) obj;
 			if (!string.contains("FINE") && !string.contains("FINER"))
@@ -213,31 +289,34 @@ public class GameTab extends AnchorPane {
 		}
 
 	}
-	
+
 	/**
 	 * Sets the connections in the connection table
-	 * @param conns the connections
+	 * 
+	 * @param conns
+	 *            the connections
 	 */
-	public void setConnections(List<Connection> conns){
+	public void setConnections(List<Connection> conns) {
 		ObservableList<TableConnection> data = FXCollections.observableArrayList();
-		
-		//Add every connection to the table
+
+		// Add every connection to the table
 		for (Connection conn : conns) {
-			String name = null;
+			String name = conn.getConnectionName();
 			String dsIP = conn.getSocket().getRemoteSocketAddress().toString();
 			String dsPing = conn.getCurrentPing() + " ms";
 			String robotIP = "null";
 			String robotPing = "null";
-			String status = conn.isClosed() ? "Closed!":"Open!";
-			TableConnection tc = new TableConnection(name, dsIP, dsPing, robotIP, robotPing, status);
+			String status = conn.isClosed() ? "Closed!" : "Open!";
+			TableConnection tc = new TableConnection(name, dsIP, dsPing, robotIP, robotPing, status, "Disable");
 			data.add(tc);
 		}
-		
-		//If the size is zero, add a blank row to make sure the "no content" notice doesn't show up
-		if(data.size() == 0){
-			data.add(new TableConnection("", "", "", "", "", ""));
+
+		// If the size is zero, add a blank row to make sure the "no content" notice
+		// doesn't show up
+		if (data.size() == 0) {
+			data.add(new TableConnection("", "", "", "", "", "", ""));
 		}
-		
+
 		connTable.setItems(data);
 	}
 

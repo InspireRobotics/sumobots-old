@@ -198,7 +198,7 @@ public class FieldBackend extends Thread {
 				log.info("Recieved Message: " + message);
 			}
 
-		});
+		}, "Field");
 
 		// Set to disabled
 		disableMatch();

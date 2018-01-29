@@ -41,13 +41,19 @@ public class Server{
 	private final ConnectionListener cl;
 	
 	/**
+	 * The name to set the connection
+	 */
+	private final String name;
+	
+	/**
 	 * Creates a new server
 	 * @param cl The {@link com.inspirerobotics.sumobots.lib.networking.connection.ConnectionListener} for everything connected to the server
 	 */
-	public Server(ConnectionListener cl) {
+	public Server(ConnectionListener cl, String name) {
 		serverSocket = createServerSocket();
 		log.info("Started Server on " + serverSocket.getInetAddress() + " on port " + serverSocket.getLocalPort());
 		this.cl = cl;
+		this.name = name;
 	}
 	
 	/**
@@ -92,6 +98,7 @@ public class Server{
 				
 				//imediately send a request to verify the library version
 				c.sendMessage(ArchetypalMessages.libraryVersion(false));
+				c.sendMessage(ArchetypalMessages.setName(name));
 				connections.add(c);
 				log.info("Found Connection: " + s.getInetAddress() + "\t"+s.getLocalAddress());
 			}

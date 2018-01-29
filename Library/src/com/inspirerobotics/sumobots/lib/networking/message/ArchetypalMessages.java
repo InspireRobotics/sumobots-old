@@ -56,5 +56,11 @@ public class ArchetypalMessages {
 		Message m = new Message(MessageType.STREAM_TERMINATED);
 		return m;
 	}
+
+	public static Message setName(String name) {
+		Message m = new Message(MessageType.SET_NAME);
+		m.addData("name", name);
+		return m;
+	}
 	
 }

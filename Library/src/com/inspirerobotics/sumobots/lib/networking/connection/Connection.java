@@ -44,9 +44,14 @@ public class Connection {
 	private long lastPingTime = 0;
 	
 	/**
-	 * 
+	 * the current ping
 	 */
 	private long currentPing;
+	
+	/**
+	 * the name of the opponent connection
+	 */
+	private String connectionName = "";
 	
 	/**
 	 * Creates a connection with the Socket and Listener provided
@@ -131,6 +136,8 @@ public class Connection {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+		}else if(messageType == MessageType.SET_NAME) {
+			connectionName = (String) message.getData("name");
 		}
 	}
 	
@@ -215,6 +222,10 @@ public class Connection {
 	
 	public long getCurrentPing() {
 		return currentPing;
+	}
+	
+	public String getConnectionName() {
+		return connectionName;
 	}
 	
 }
