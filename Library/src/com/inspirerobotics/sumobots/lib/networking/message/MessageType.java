@@ -19,6 +19,7 @@ public enum MessageType {
 	PONG("PONG", "Return form of a Ping message", true),
 	LIB_VERSION("LIB_VERSION", "Used to check the library version", true),
 	MATCH_STATE_UPDATE("MATCH_STATE_UPDATE", "Used to update the state of a match", false),
+	STREAM_TERMINATED("STREAM_TERMINATED", "Used to terminate the stream", true),
 	UNKNOWN("UNKNOWN", "A Malformed message", true);
 	
 	/**

@@ -51,5 +51,10 @@ public class ArchetypalMessages {
 		m.addData("new_period", t.getName());
 		return m;
 	}
+
+	public static Message terminatedConnection() {
+		Message m = new Message(MessageType.STREAM_TERMINATED);
+		return m;
+	}
 	
 }

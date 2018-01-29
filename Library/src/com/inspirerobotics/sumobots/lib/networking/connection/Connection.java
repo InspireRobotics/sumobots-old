@@ -125,6 +125,12 @@ public class Connection {
 		}else if(messageType == MessageType.PONG){
 			currentPing = System.currentTimeMillis() - lastPingTime;
 			logger.fine("Ping: " + currentPing);
+		}else if(messageType == MessageType.STREAM_TERMINATED) {
+			try {
+				close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	
@@ -166,6 +172,19 @@ public class Connection {
 		stream.close();
 		socket.close();
 	}
+
+	/**
+	 * Peacefully ends the stream. Used when nothing went wrong but we need to end the connection
+	 */
+	public void endConnection() {
+		sendMessage(ArchetypalMessages.terminatedConnection());
+		
+		try {
+			close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	/**
 	 * Closes the socket and streams
@@ -191,7 +210,7 @@ public class Connection {
 	}
 	
 	public boolean isClosed() {
-		return closed;
+		return closed || stream.isClosed();
 	}
 	
 	public long getCurrentPing() {

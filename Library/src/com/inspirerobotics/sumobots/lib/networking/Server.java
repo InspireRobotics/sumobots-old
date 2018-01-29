@@ -120,7 +120,7 @@ public class Server{
 	public void closeAll() {
 		try {
 			for (Connection socket : connections) {
-				socket.close();
+				socket.endConnection();
 			}
 			serverSocket.close();
 		} catch (IOException e) {

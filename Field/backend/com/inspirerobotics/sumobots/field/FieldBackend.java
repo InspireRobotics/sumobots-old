@@ -116,6 +116,7 @@ public class FieldBackend extends Thread {
 			break;
 		case "exit_app":
 			log.info("Exiting Backend Thread!");
+			server.closeAll();
 			running = false;
 			break;
 		default: // If it reaches this we don't know what it is so print a
