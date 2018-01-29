@@ -59,13 +59,13 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 	 * The name of the current driver station
 	 */
 	private String name = "";
-	
+
 	public DriverStationBackend(ThreadChannel tc) {
 		this.setName("Backend Thread");
 		this.channel = tc;
 		logger.setLevel(Level.ALL);
 	}
-	
+
 	/**
 	 * Inits the socket, and sets a random name for the driver station
 	 */
@@ -77,9 +77,9 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
+
 		setDriverStationName("DS-" + new Random().nextInt(10000));
-		
+
 		logger.info("Finished initialization! Starting main loop");
 
 		runMainLoop();
@@ -90,7 +90,7 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 	 */
 	private void runMainLoop() {
 		running = true;
-		
+
 		while (running) {
 			conn.update();
 			if (conn.isClosed())
@@ -108,10 +108,12 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 			}
 		}
 	}
-	
+
 	/**
 	 * When a message is recieved by the frontend
-	 * @param m the message recieved
+	 * 
+	 * @param m
+	 *            the message recieved
 	 */
 	private void onFrontendMessageReceived(InterThreadMessage m) {
 		String name = m.getName();
@@ -149,7 +151,7 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 		name = n;
 		conn.sendMessage(ArchetypalMessages.setName(name));
 	}
-	
+
 	/**
 	 * Updates the Driver Station on the current match status. This update would be
 	 * originated by the FMS
@@ -157,12 +159,13 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 	 * @param message
 	 */
 	private void updateMatchStatus(Message message) {
-		if (message.getData("update_type").equals("match_period")) {
-			String timePeriod = (String) message.getData("new_period");
-			currentPeriod = TimePeriod.fromString(timePeriod);
+		String timePeriod = (String) message.getData("new_period");
+		currentPeriod = TimePeriod.fromString(timePeriod);
 
-			logger.info("Entering match period: " + currentPeriod.getName());
-		}
+		// Send the new period to the gui
+		channel.add(new InterThreadMessage("new_period", currentPeriod));
+
+		logger.info("Entering match period: " + currentPeriod.getName());
 	}
 
 	/**

@@ -4,6 +4,7 @@ import java.util.logging.Logger;
 
 import com.inspirerobotics.sumobots.driverstation.gui.MainScene;
 import com.inspirerobotics.sumobots.lib.Resources;
+import com.inspirerobotics.sumobots.lib.TimePeriod;
 import com.inspirerobotics.sumobots.lib.concurrent.InterThreadMessage;
 import com.inspirerobotics.sumobots.lib.concurrent.ThreadChannel;
 
@@ -80,6 +81,9 @@ public class DriverStationFrontend extends Application {
 
 	}
 
+	/**
+	 * Updates the frontend and checks for messages from the backend
+	 */
 	protected void update() {
 		// While there are messages from the frontend, handle them
 		InterThreadMessage m = null;
@@ -96,15 +100,22 @@ public class DriverStationFrontend extends Application {
 		//Figure out what type of message it is
 		switch (name) {
 		case "new_name":
-			String data = (String) m.getData();
-			mainScene.setName(data);
+			String newName = (String) m.getData();
+			mainScene.setName(newName);
+			break;
+		case "new_period":
+			TimePeriod newPeriod = (TimePeriod) m.getData();
+			stage.setTitle("DS: " + newPeriod.toString());
 			break;
 		default: //If it reaches this we don't know what it is so print a warning to the screen
 			log.warning("Unknown Message Recieved on Frontend: " + name);
 			break;
 		}
 	}
-
+	
+	/**
+	 * Inits the GUI, and creates the onCloseRequest handler
+	 */
 	private void initGui() {
 		// Create the gui
 		mainScene = MainScene.build();

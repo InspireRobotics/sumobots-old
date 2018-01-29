@@ -47,7 +47,6 @@ public class ArchetypalMessages {
 	 */
 	public static final Message enterNewMatchPeriod(TimePeriod t){
 		Message m = new Message(MessageType.MATCH_STATE_UPDATE);
-		m.addData("update_type", "match_period");
 		m.addData("new_period", t.getName());
 		return m;
 	}

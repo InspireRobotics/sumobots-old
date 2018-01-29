@@ -7,7 +7,6 @@ import java.util.logging.Logger;
 
 import com.inspirerobotics.sumobots.field.util.InternalLog;
 
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -98,24 +97,12 @@ public class ConsoleTab extends AnchorPane {
 		infoButton.setStyle("-fx-background-color:red");
 		fineButton.setStyle("-fx-background-color:red");
 		finerButton.setStyle("-fx-background-color:red");
-		
-		// Run the update loop over and over again
-		Platform.runLater(new Runnable() {
-
-			@Override
-			public void run() {
-				update();
-				Platform.runLater(this);
-			}
-
-		});
 	}
 
 	/**
 	 * Updates certain aspects of the GUI
 	 */
 	void update() {
-
 		updateButtons();
 		
 		// Update the console
