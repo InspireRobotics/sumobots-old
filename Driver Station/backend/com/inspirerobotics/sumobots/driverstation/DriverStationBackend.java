@@ -71,18 +71,39 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 	 */
 	@Override
 	public void run() {
-		try {
-			Socket socket = new Socket("localhost", Resources.SERVER_PORT);
-			conn = new Connection(socket, this);
-		} catch (IOException e) {
-			e.printStackTrace();
+		running = true;
+		channel.add(new InterThreadMessage("conn_status", false));
+		
+		//Connect to the server, wait 3 seconds if we fail and try again
+		while (running) {
+			pollMessages();
+			
+			try {
+				Socket socket = new Socket("localhost", Resources.SERVER_PORT);
+				conn = new Connection(socket, this);
+				break;
+			} catch (IOException e) {
+				logger.info("Failed to connect! Waiting 3 seconds...");
+				
+				try {
+					Thread.sleep(3000);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+			}
 		}
-
+		
+		//If we closed the application while trying to connect, 
+		//exit and don't run the main loop
+		if(!running) {
+			shutdown();
+			return;
+		}
+		
+		//We are now connected, lets start transfering messages...
 		setDriverStationName("DS-" + new Random().nextInt(10000));
-
-		logger.info("Finished initialization! Starting main loop");
+		logger.info("Established Field-DS Connection! Starting main loop");
 		channel.add(new InterThreadMessage("conn_status", true));
-
 
 		runMainLoop();
 	}
@@ -91,7 +112,6 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 	 * The Driver Station main loop
 	 */
 	private void runMainLoop() {
-		running = true;
 
 		while (running) {
 			conn.update();
@@ -100,21 +120,27 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 				running = false;
 				break;
 			}
-			
-			// While there are messages from the frontend, handle them
-			InterThreadMessage m = null;
-			while ((m = channel.poll()) != null) {
-				onFrontendMessageReceived(m);
-
-				// This needs to be here to prevent other messages from being
-				// proccessed after the app is supposed to be closing
-				if (!running)
-					break;
-			}
+			pollMessages();
 		}
 		
 		logger.info("Backend Shutdown...");
 		shutdown();
+	}
+
+	/**
+	 * Checks and handles any messages recieved by the frontend 
+	 */
+	private void pollMessages() {
+		// While there are messages from the frontend, handle them
+		InterThreadMessage m = null;
+		while ((m = channel.poll()) != null) {
+			onFrontendMessageReceived(m);
+
+			// This needs to be here to prevent other messages from being
+			// proccessed after the app is supposed to be closing
+			if (!running)
+				return;
+		}
 	}
 
 	/**
@@ -142,14 +168,14 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 	}
 
 	/*
-	 * Shuts down the backend - closes the connections and
-	 * stops running
+	 * Shuts down the backend - closes the connections and stops running
 	 */
 	public void shutdown() {
-		conn.endConnection();
+		if(conn != null)
+			conn.endConnection();
 		running = false;
 	}
-	
+
 	/**
 	 * When a message is recieved from the FMS
 	 */
