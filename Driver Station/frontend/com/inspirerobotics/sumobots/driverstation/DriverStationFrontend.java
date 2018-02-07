@@ -114,6 +114,9 @@ public class DriverStationFrontend extends Application {
 			stage.setTitle("DS: " + newPeriod.toString());
 			controller.enterNewPeriod(newPeriod);
 			break;
+		case "conn_status":
+			controller.setConnectionStatus((boolean) m.getData());
+			break;
 		default: //If it reaches this we don't know what it is so print a warning to the screen
 			log.warning("Unknown Message Recieved on Frontend: " + name);
 			break;

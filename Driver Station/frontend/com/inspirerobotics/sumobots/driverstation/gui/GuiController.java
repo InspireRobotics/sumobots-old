@@ -23,6 +23,13 @@ public class GuiController{
 	public TextField statusLabel;
 	
 	/**
+	 * The text field that displays the 
+	 * status of the DS-Field connection
+	 */
+	@FXML
+	public TextField connectedLabel;
+	
+	/**
 	 * Initializes the GUI controller and elements
 	 */
 	public void init() {
@@ -30,6 +37,7 @@ public class GuiController{
 		statusLabel.setMaxHeight(85);
 		
 		enterNewPeriod(TimePeriod.DISABLED);
+		setConnectionStatus(false);
 	}
 	
 	/**
@@ -38,6 +46,16 @@ public class GuiController{
 	 */
 	public void setName(String newName) {
 		nameLabel.setText("Name: " + newName);
+	}
+	
+	public void setConnectionStatus(boolean connected) {
+		if(connected) {
+			connectedLabel.setText("Connected!");
+			connectedLabel.setStyle("-fx-background-color:green");
+		}else {
+			connectedLabel.setText("Not Connected!");
+			connectedLabel.setStyle("-fx-background-color:red");
+		}
 	}
 
 	/**

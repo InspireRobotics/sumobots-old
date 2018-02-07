@@ -81,6 +81,8 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 		setDriverStationName("DS-" + new Random().nextInt(10000));
 
 		logger.info("Finished initialization! Starting main loop");
+		channel.add(new InterThreadMessage("conn_status", true));
+
 
 		runMainLoop();
 	}
@@ -94,11 +96,11 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 		while (running) {
 			conn.update();
 			if (conn.isClosed()) {
-				Platform.exit();
+				channel.add(new InterThreadMessage("conn_status", false));
 				running = false;
 				break;
 			}
-
+			
 			// While there are messages from the frontend, handle them
 			InterThreadMessage m = null;
 			while ((m = channel.poll()) != null) {
@@ -110,6 +112,9 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 					break;
 			}
 		}
+		
+		logger.info("Backend Shutdown...");
+		shutdown();
 	}
 
 	/**
@@ -127,8 +132,7 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 		switch (name) {
 		case "exit_app":
 			logger.info("Exiting Backend Thread!");
-			conn.endConnection();
-			running = false;
+			shutdown();
 			break;
 		default: // If it reaches this we don't know what it is so print a
 					// warning to the screen
@@ -137,6 +141,15 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 		}
 	}
 
+	/*
+	 * Shuts down the backend - closes the connections and
+	 * stops running
+	 */
+	public void shutdown() {
+		conn.endConnection();
+		running = false;
+	}
+	
 	/**
 	 * When a message is recieved from the FMS
 	 */

@@ -9,10 +9,15 @@
    <children>
       <BorderPane id="root" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
-            <TextField id="statusBar" fx:id="statusLabel" alignment="CENTER" styleClass="stdTextfield" text="This" BorderPane.alignment="CENTER" />
+            <TextField id="statusBar" fx:id="statusLabel" alignment="CENTER" editable="false" styleClass="stdTextfield" text="State: DISABLED" BorderPane.alignment="CENTER" />
          </top>
          <bottom>
-            <TextField fx:id="nameLabel" alignment="CENTER" styleClass="stdTextfield" text="Name: DS 1243" BorderPane.alignment="CENTER" />
+            <HBox alignment="CENTER_LEFT">
+               <children>
+                  <TextField fx:id="nameLabel" alignment="CENTER" editable="false" styleClass="stdTextfield" text="Name: DS 1243" BorderPane.alignment="CENTER" HBox.hgrow="ALWAYS" />
+                  <TextField fx:id="connectedLabel" alignment="CENTER" editable="false" layoutX="10.0" layoutY="10.0" styleClass="stdTextfield" text="Connected?" />
+               </children>
+            </HBox>
          </bottom>
       </BorderPane>
    </children>
