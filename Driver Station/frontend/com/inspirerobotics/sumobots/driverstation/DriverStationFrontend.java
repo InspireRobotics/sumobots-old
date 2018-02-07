@@ -2,6 +2,7 @@ package com.inspirerobotics.sumobots.driverstation;
 
 import java.util.logging.Logger;
 
+import com.inspirerobotics.sumobots.driverstation.gui.GuiController;
 import com.inspirerobotics.sumobots.driverstation.gui.MainScene;
 import com.inspirerobotics.sumobots.lib.Resources;
 import com.inspirerobotics.sumobots.lib.TimePeriod;
@@ -48,6 +49,11 @@ public class DriverStationFrontend extends Application {
 	 * The main scene
 	 */
 	private MainScene mainScene;
+	
+	/**
+	 *  The GUIs controller
+	 */
+	private GuiController controller = new GuiController();
 
 	@Override
 	public void start(Stage s) throws Exception {
@@ -101,11 +107,12 @@ public class DriverStationFrontend extends Application {
 		switch (name) {
 		case "new_name":
 			String newName = (String) m.getData();
-			mainScene.setName(newName);
+			controller.setName(newName);
 			break;
 		case "new_period":
 			TimePeriod newPeriod = (TimePeriod) m.getData();
 			stage.setTitle("DS: " + newPeriod.toString());
+			controller.enterNewPeriod(newPeriod);
 			break;
 		default: //If it reaches this we don't know what it is so print a warning to the screen
 			log.warning("Unknown Message Recieved on Frontend: " + name);
@@ -118,7 +125,7 @@ public class DriverStationFrontend extends Application {
 	 */
 	private void initGui() {
 		// Create the gui
-		mainScene = MainScene.build();
+		mainScene = new MainScene(controller);
 
 		// Setup the stage
 		stage.setScene(mainScene.toScene());

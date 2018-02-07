@@ -93,8 +93,11 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 
 		while (running) {
 			conn.update();
-			if (conn.isClosed())
+			if (conn.isClosed()) {
 				Platform.exit();
+				running = false;
+				break;
+			}
 
 			// While there are messages from the frontend, handle them
 			InterThreadMessage m = null;

@@ -1,47 +1,41 @@
 package com.inspirerobotics.sumobots.driverstation.gui;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import com.inspirerobotics.sumobots.lib.Resources;
+
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.AnchorPane;
 
-public class MainScene{
-
-	/**
-	 * The group for all of the componenets
-	 */
-	private final Group group = new Group();
+public class MainScene extends AnchorPane{
 	
-	private FlowPane pane = new FlowPane();
+	private static final String FXML_PATH = "/fxml/root.fxml";
 	
-	/**
-	 * The name text box
-	 */
-	private TextField nameTextBox = new TextField();
+	private Logger log = Logger.getLogger(Resources.LOGGER_NAME);
 	
-	/**
-	 * The set name button
-	 */
-	private Button setName = new Button("Set Name");
-	
-	public MainScene() {
-		pane.getChildren().addAll(nameTextBox, setName);
-		group.getChildren().add(pane);
+	public MainScene(GuiController controller) {
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(FXML_PATH));
+		fxmlLoader.setController(controller);
+		fxmlLoader.setRoot(this);
 		
-		setName("");
+		//Actually load the GUI
+		try {
+			fxmlLoader.load();
+			controller.init();
+		} catch (IOException e) {
+			log.log(Level.SEVERE, "Failed to load root.fxml", e);
+		}
 	}
 	
-	public void setName(String s) {
-		nameTextBox.setText(s);
-	}
-	
-	public static MainScene build() {
-		return new MainScene();
-	}
 
 	public Scene toScene() {
-		return new Scene(group);
+		Group g = new Group();
+		g.getChildren().add(this);
+		return new Scene(g);
 	}
 	
 }

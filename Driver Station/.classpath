@@ -2,6 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="backend"/>
 	<classpathentry kind="src" path="frontend"/>
+	<classpathentry kind="src" path="assets"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Library"/>
 	<classpathentry kind="output" path="builds"/>
