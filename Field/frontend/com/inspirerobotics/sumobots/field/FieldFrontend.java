@@ -178,7 +178,8 @@ public class FieldFrontend extends Application {
 	/*
 	 * GUI Methods
 	 * 
-	 * These methods are generally called by the GUI
+	 * These methods are generally called by the GUI. These will
+	 * send messages to the backend
 	 */
 
 	public void startMatch() {
@@ -191,6 +192,10 @@ public class FieldFrontend extends Application {
 
 	public void endMatch() {
 		threadChannel.add(new InterThreadMessage("end_match"));
+	}
+	
+	public void closeAll() {
+		threadChannel.add(new InterThreadMessage("close_all"));
 	}
 	
 	/**

@@ -33,9 +33,15 @@ public class MainScene extends AnchorPane{
 	
 
 	public Scene toScene() {
-		Group g = new Group();
-		g.getChildren().add(this);
-		return new Scene(g);
+		AnchorPane ap = new AnchorPane();
+		
+		AnchorPane.setTopAnchor(this, 0.0);
+		AnchorPane.setBottomAnchor(this, 0.0);
+		AnchorPane.setLeftAnchor(this, 0.0);
+		AnchorPane.setRightAnchor(this, 0.0);
+		
+		ap.getChildren().add(this);
+		return new Scene(ap);
 	}
 	
 }

@@ -16,8 +16,6 @@ import com.inspirerobotics.sumobots.lib.networking.message.ArchetypalMessages;
 import com.inspirerobotics.sumobots.lib.networking.message.Message;
 import com.inspirerobotics.sumobots.lib.networking.message.MessageType;
 
-import javafx.application.Platform;
-
 /**
  * The second most important class for the driver station. Handles everything
  * that isn't the gui. This is started from the frontend. Roles include:
@@ -73,18 +71,31 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 	public void run() {
 		running = true;
 		channel.add(new InterThreadMessage("conn_status", false));
-		
-		//Connect to the server, wait 3 seconds if we fail and try again
+
+		connect();
+
+		// If we closed the application while trying to connect,
+		// exit and don't run the main loop
+		if (!running) {
+			shutdown();
+			return;
+		}
+
+		runMainLoop();
+	}
+
+	private void connect() {
+		// Connect to the server, wait 3 seconds if we fail and try again
 		while (running) {
 			pollMessages();
-			
+
 			try {
 				Socket socket = new Socket("localhost", Resources.SERVER_PORT);
 				conn = new Connection(socket, this);
 				break;
 			} catch (IOException e) {
 				logger.info("Failed to connect! Waiting 3 seconds...");
-				
+
 				try {
 					Thread.sleep(3000);
 				} catch (InterruptedException e1) {
@@ -92,20 +103,11 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 				}
 			}
 		}
-		
-		//If we closed the application while trying to connect, 
-		//exit and don't run the main loop
-		if(!running) {
-			shutdown();
-			return;
-		}
-		
-		//We are now connected, lets start transfering messages...
+
+		// We are now connected, lets start transfering messages...
 		setDriverStationName("DS-" + new Random().nextInt(10000));
 		logger.info("Established Field-DS Connection! Starting main loop");
 		channel.add(new InterThreadMessage("conn_status", true));
-
-		runMainLoop();
 	}
 
 	/**
@@ -117,18 +119,17 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 			conn.update();
 			if (conn.isClosed()) {
 				channel.add(new InterThreadMessage("conn_status", false));
-				running = false;
-				break;
+				connect();
 			}
 			pollMessages();
 		}
-		
+
 		logger.info("Backend Shutdown...");
 		shutdown();
 	}
 
 	/**
-	 * Checks and handles any messages recieved by the frontend 
+	 * Checks and handles any messages recieved by the frontend
 	 */
 	private void pollMessages() {
 		// While there are messages from the frontend, handle them
@@ -171,7 +172,7 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 	 * Shuts down the backend - closes the connections and stops running
 	 */
 	public void shutdown() {
-		if(conn != null)
+		if (conn != null)
 			conn.endConnection();
 		running = false;
 	}

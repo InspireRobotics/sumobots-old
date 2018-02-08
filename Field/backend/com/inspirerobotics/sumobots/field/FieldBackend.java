@@ -78,7 +78,7 @@ public class FieldBackend extends Thread {
 			}
 		}
 
-		server.closeAll();
+		server.closeServer();
 
 		log.info("Backend Thread Shutdown Complete!");
 	}
@@ -116,8 +116,11 @@ public class FieldBackend extends Thread {
 			break;
 		case "exit_app":
 			log.info("Exiting Backend Thread!");
-			server.closeAll();
+			server.closeServer();
 			running = false;
+			break;
+		case "close_all":
+			server.removeAll();
 			break;
 		default: // If it reaches this we don't know what it is so print a
 					// warning to the screen

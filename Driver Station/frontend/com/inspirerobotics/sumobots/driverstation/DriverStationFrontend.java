@@ -134,7 +134,7 @@ public class DriverStationFrontend extends Application {
 		stage.setScene(mainScene.toScene());
 		stage.setTitle("Driver Station!");
 		stage.show();
-
+		
 		// When we close the window, close the app
 		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
 

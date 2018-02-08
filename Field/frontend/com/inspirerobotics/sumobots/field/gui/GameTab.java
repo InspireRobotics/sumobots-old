@@ -19,10 +19,12 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.ToolBar;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 
 public class GameTab extends AnchorPane {
@@ -97,7 +99,17 @@ public class GameTab extends AnchorPane {
 	 * The Status Column
 	 */
 	private TableColumn<?, ?> statusColumn;
+	
+	/**
+	 * The toolbar with options 
+	 */
+	private ToolBar toolbar;
 
+	/*
+	 * Toolbar buttons
+	 */
+	private Button closeAllTB, emergencyStopTB;
+	
 	/**
 	 * Creates a game tab and starts the game tab loop
 	 * 
@@ -131,9 +143,33 @@ public class GameTab extends AnchorPane {
 		initStatBar();
 	}
 
+	/*
+	 * Inits the stat bar
+	 */
 	private void initStatBar() {
 		matchStatusBar = new MatchStatusBar();
-		mainBorderPane.setTop(matchStatusBar);
+		
+		initToolbar();
+		toolbar = new ToolBar(emergencyStopTB, closeAllTB);
+		
+		VBox vbox = new VBox();
+		vbox.getChildren().addAll(matchStatusBar, toolbar);
+		
+		mainBorderPane.setTop(vbox);
+	}
+
+	private void initToolbar() {
+		emergencyStopTB = new Button("Emergency Stop");
+		
+		closeAllTB = new Button("Close All DS Connections");
+		closeAllTB.setOnAction(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent arg0) {
+				fieldFrontend.closeAll();
+			}
+		});
+
 	}
 
 	/**

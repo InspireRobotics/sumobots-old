@@ -115,7 +115,15 @@ public class RootGroup extends TabPane {
 	 * @return a scene with this as the root
 	 */
 	public Scene toScene() {
-		return new Scene(this);
+		AnchorPane p = new AnchorPane();
+		
+		AnchorPane.setTopAnchor(this, 0.0);
+		AnchorPane.setBottomAnchor(this, 0.0);
+		AnchorPane.setLeftAnchor(this, 0.0);
+		AnchorPane.setRightAnchor(this, 0.0);
+		
+		p.getChildren().add(this);
+		return new Scene(p);
 	}
 	
 	public GameTab getGameTab() {
