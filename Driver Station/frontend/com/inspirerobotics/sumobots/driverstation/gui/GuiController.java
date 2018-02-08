@@ -4,7 +4,6 @@ import com.inspirerobotics.sumobots.lib.TimePeriod;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
-import javafx.stage.Stage;
 
 /**
  * The main controller for the gui

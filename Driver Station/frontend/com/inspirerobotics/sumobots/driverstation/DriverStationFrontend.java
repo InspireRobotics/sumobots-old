@@ -84,7 +84,6 @@ public class DriverStationFrontend extends Application {
 			}
 
 		});
-
 	}
 
 	/**

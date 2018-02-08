@@ -119,6 +119,15 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 			conn.update();
 			if (conn.isClosed()) {
 				channel.add(new InterThreadMessage("conn_status", false));
+				
+				logger.info("Lost Connection to Field! Waiting 2.5 seconds before reconnecting...");
+				
+				try {
+					Thread.sleep(2500);
+				} catch (InterruptedException e1) {
+					e1.printStackTrace();
+				}
+				
 				connect();
 			}
 			pollMessages();

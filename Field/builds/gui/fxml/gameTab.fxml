@@ -45,11 +45,15 @@
             </HBox>
          </bottom>
          <center>
-            <BorderPane fx:id="mainBorderPane" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
-               <bottom>
-                  <TableView fx:id="connTable" prefHeight="200.0" prefWidth="200.0" styleClass="connTable" stylesheets="@../css/styles.css" BorderPane.alignment="CENTER" />
-               </bottom>
-            </BorderPane>
+            <AnchorPane>
+               <children>
+                  <BorderPane fx:id="mainBorderPane" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" BorderPane.alignment="CENTER">
+                     <bottom>
+                        <TableView fx:id="connTable" prefHeight="200.0" prefWidth="200.0" styleClass="connTable" stylesheets="@../css/styles.css" BorderPane.alignment="CENTER" />
+                     </bottom>
+                  </BorderPane>
+               </children>
+            </AnchorPane>
          </center>
       </BorderPane>
    </children>

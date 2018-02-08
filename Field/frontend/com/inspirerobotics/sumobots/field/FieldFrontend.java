@@ -143,8 +143,8 @@ public class FieldFrontend extends Application {
 	private void initStage(Stage stage) {
 		stage.setTitle("SumoBots FMS");
 		stage.setAlwaysOnTop(false);
-		stage.setMinWidth(500);
-		stage.setMinHeight(800);
+		stage.setMinWidth(700);
+		stage.setMinHeight(400);
 
 		// When we close the window, close the app
 		stage.setOnCloseRequest(new EventHandler<WindowEvent>() {

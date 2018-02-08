@@ -7,7 +7,6 @@ import java.util.logging.Logger;
 import com.inspirerobotics.sumobots.lib.Resources;
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 
