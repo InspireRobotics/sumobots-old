@@ -122,11 +122,26 @@ public class FieldBackend extends Thread {
 		case "close_all":
 			server.removeAll();
 			break;
+		case "e-stop":
+			eStop();
+			break;
 		default: // If it reaches this we don't know what it is so print a
 					// warning to the screen
 			log.warning("Unknown Message Recieved on Backend: " + name);
 			break;
 		}
+	}
+
+	private void eStop() {
+		log.info("EStopping the Match!");
+		timePeriod = TimePeriod.ESTOPPED;
+
+		// Lets now confirm to the frontend that we are switching time periods
+		InterThreadMessage m = new InterThreadMessage("time_period_update", TimePeriod.ESTOPPED);
+		channel.add(m);
+
+		// Lets also tell all of the driver stations to switch the time period
+		server.sendAll(ArchetypalMessages.enterNewMatchPeriod(TimePeriod.ESTOPPED));
 	}
 
 	private void initMatch() {
@@ -148,6 +163,12 @@ public class FieldBackend extends Thread {
 	}
 
 	private void endMatch() {
+		// If we are not disabled, we cannot init
+		if (timePeriod == TimePeriod.ESTOPPED) {
+			log.warning("Match cannot be ended from e-stop!");
+			return;
+		}
+
 		log.info("Ending the Match!");
 		timePeriod = TimePeriod.DISABLED;
 

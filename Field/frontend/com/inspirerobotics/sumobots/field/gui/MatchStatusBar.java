@@ -115,6 +115,11 @@ public class MatchStatusBar extends HBox {
 			matchStateBox.setStyle(
 					"-fx-background-color:orange;-fx-text-fill: white;-fx-font-size: 28;-fx-alignment: center;");
 			break;
+		case ESTOPPED:
+			matchStateBox.setText("E-STOPPED");
+			matchStateBox.setStyle(
+					"-fx-background-color:black;-fx-text-fill: white;-fx-font-size: 28;-fx-alignment: center;");
+			break;
 		}
 	}
 

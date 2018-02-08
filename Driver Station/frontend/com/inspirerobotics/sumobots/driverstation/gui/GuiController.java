@@ -75,6 +75,9 @@ public class GuiController{
 		case INIT:
 			statusLabel.setStyle("-fx-background-color:orange;");
 			break;
+		case ESTOPPED:
+			statusLabel.setStyle("-fx-background-color:black;");
+
 		default:
 			break;
 		}

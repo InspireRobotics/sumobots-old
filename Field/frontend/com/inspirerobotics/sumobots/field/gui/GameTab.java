@@ -99,9 +99,9 @@ public class GameTab extends AnchorPane {
 	 * The Status Column
 	 */
 	private TableColumn<?, ?> statusColumn;
-	
+
 	/**
-	 * The toolbar with options 
+	 * The toolbar with options
 	 */
 	private ToolBar toolbar;
 
@@ -109,7 +109,7 @@ public class GameTab extends AnchorPane {
 	 * Toolbar buttons
 	 */
 	private Button closeAllTB, emergencyStopTB;
-	
+
 	/**
 	 * Creates a game tab and starts the game tab loop
 	 * 
@@ -148,22 +148,29 @@ public class GameTab extends AnchorPane {
 	 */
 	private void initStatBar() {
 		matchStatusBar = new MatchStatusBar();
-		
+
 		initToolbar();
 		toolbar = new ToolBar(emergencyStopTB, closeAllTB);
-		
+
 		VBox vbox = new VBox();
 		vbox.getChildren().addAll(matchStatusBar, toolbar);
-		
+
 		mainBorderPane.setTop(vbox);
 	}
 
 	private void initToolbar() {
 		emergencyStopTB = new Button("Emergency Stop");
-		
+		emergencyStopTB.setOnAction(new EventHandler<ActionEvent>() {
+
+			@Override
+			public void handle(ActionEvent arg0) {
+				fieldFrontend.eStop();
+			}
+		});
+
 		closeAllTB = new Button("Close All DS Connections");
 		closeAllTB.setOnAction(new EventHandler<ActionEvent>() {
-			
+
 			@Override
 			public void handle(ActionEvent arg0) {
 				fieldFrontend.closeAll();
@@ -187,7 +194,7 @@ public class GameTab extends AnchorPane {
 			public void handle(ActionEvent event) {
 				System.out.println(event.hashCode());
 			}
-			
+
 		});
 		statusColumn = addSimpleColumn("Status", 200, "status");
 
@@ -253,7 +260,7 @@ public class GameTab extends AnchorPane {
 								setText(null);
 								return;
 							}
-							
+
 							btn.setText(item);
 							btn.setMaxHeight(10);
 							btn.setOnAction(event);

@@ -22,7 +22,11 @@ public enum TimePeriod {
 	/**
 	 * During the game
 	 */
-	GAME("game");
+	GAME("game"),
+	/*
+	 * Emergency Stopped. Used for rare circumstances
+	 */
+	ESTOPPED("estopped");
 	
 	private final String name;
 	

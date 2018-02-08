@@ -194,6 +194,10 @@ public class FieldFrontend extends Application {
 		threadChannel.add(new InterThreadMessage("end_match"));
 	}
 	
+	public void eStop() {
+		threadChannel.add(new InterThreadMessage("e-stop"));
+	}
+	
 	public void closeAll() {
 		threadChannel.add(new InterThreadMessage("close_all"));
 	}
