@@ -15,6 +15,7 @@ import com.inspirerobotics.sumobots.lib.networking.connection.ConnectionListener
 import com.inspirerobotics.sumobots.lib.networking.message.ArchetypalMessages;
 import com.inspirerobotics.sumobots.lib.networking.message.Message;
 import com.inspirerobotics.sumobots.lib.networking.message.MessageType;
+import com.inspirerobotics.sumobots.lib.networking.tables.NetworkTable;
 
 /**
  * The second most important class for the driver station. Handles everything
@@ -57,6 +58,12 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 	 * The name of the current driver station
 	 */
 	private String name = "";
+	
+	/*
+	 * the DS Network Table
+	 */
+	private NetworkTable table = new NetworkTable();
+	
 
 	public DriverStationBackend(ThreadChannel tc) {
 		this.setName("Backend Thread");
@@ -92,6 +99,7 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 			try {
 				Socket socket = new Socket("localhost", Resources.SERVER_PORT);
 				conn = new Connection(socket, this);
+				conn.setBindedTable(table);
 				break;
 			} catch (IOException e) {
 				logger.info("Failed to connect! Waiting 3 seconds...");
@@ -105,6 +113,7 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 		}
 
 		// We are now connected, lets start transfering messages...
+		table.put("Test", "data");
 		setDriverStationName("DS-" + new Random().nextInt(10000));
 		logger.info("Established Field-DS Connection! Starting main loop");
 		channel.add(new InterThreadMessage("conn_status", true));
@@ -130,6 +139,7 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 				
 				connect();
 			}
+			
 			pollMessages();
 		}
 

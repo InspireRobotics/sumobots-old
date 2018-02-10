@@ -52,7 +52,7 @@ public class InternalLog {
 		logger.setUseParentHandlers(false);
 		logger.addHandler(new Handler(){
 			
-			private final MessageFormat messageFormat = new MessageFormat("[{3,date,hh:mm:ss:SS} {2} {6}.{5}()] {1}: {4} \n");
+			private final MessageFormat messageFormat = new MessageFormat("[{3,date,hh:mm:ss:SS} {2} {6}.{5}()] {1}: {4}\t {7}\n");
 			
 			@Override
 			public void close() throws SecurityException {
@@ -66,7 +66,7 @@ public class InternalLog {
 
 			@Override
 			public void publish(LogRecord record) {
-				Object[] arguments = new Object[7];
+				Object[] arguments = new Object[8];
 //		        arguments[0] = record.getLoggerName();
 		        arguments[1] = record.getLevel();
 		        arguments[2] = Thread.currentThread().getName();
@@ -74,6 +74,9 @@ public class InternalLog {
 		        arguments[4] = record.getMessage();
 		        arguments[5] = record.getSourceMethodName();
 		        arguments[6] = record.getSourceClassName();
+		        arguments[7] = record.getThrown();
+		        if(arguments[7] == null)
+		        	arguments[7] = "";
 		        
 		        String format = messageFormat.format(arguments);
 		        logLines.add(format);

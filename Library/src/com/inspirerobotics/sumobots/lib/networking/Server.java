@@ -40,7 +40,7 @@ public class Server {
 	 * The ConnectionListener for everything connected to the server
 	 */
 	private final ConnectionListener cl;
-
+	
 	/**
 	 * The name to set the connection
 	 */
@@ -53,6 +53,7 @@ public class Server {
 	 *            The
 	 *            {@link com.inspirerobotics.sumobots.lib.networking.connection.ConnectionListener}
 	 *            for everything connected to the server
+	 * @param internalTable 
 	 */
 	public Server(ConnectionListener cl, String name) {
 		serverSocket = createServerSocket();

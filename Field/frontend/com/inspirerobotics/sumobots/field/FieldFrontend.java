@@ -1,5 +1,6 @@
 package com.inspirerobotics.sumobots.field;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -53,6 +54,7 @@ public class FieldFrontend extends Application {
 	 * The current time period, as last update by the Field Backend
 	 */
 	private TimePeriod timePeriod;
+
 	
 	@Override
 	public void start(Stage s) throws Exception {
@@ -113,7 +115,7 @@ public class FieldFrontend extends Application {
 			Object data = m.getData();
 			if(data instanceof List){
 				@SuppressWarnings("unchecked")
-				List<Connection> conn = (List<Connection>) data;
+				ArrayList<Connection> conn = (ArrayList<Connection>) data;
 				root.getGameTab().setConnections(conn); 
 			}
 			break;

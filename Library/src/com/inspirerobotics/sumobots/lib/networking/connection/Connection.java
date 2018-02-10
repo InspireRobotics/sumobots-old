@@ -10,6 +10,7 @@ import com.inspirerobotics.sumobots.lib.networking.SocketStream;
 import com.inspirerobotics.sumobots.lib.networking.message.ArchetypalMessages;
 import com.inspirerobotics.sumobots.lib.networking.message.Message;
 import com.inspirerobotics.sumobots.lib.networking.message.MessageType;
+import com.inspirerobotics.sumobots.lib.networking.tables.NetworkTable;
 
 public class Connection {
 	
@@ -43,6 +44,11 @@ public class Connection {
 	 */
 	private long lastPingTime = 0;
 	
+	/*
+	 * The time since the network table updates were sent
+	 */
+	private long lastNetworkTime = 0;
+	
 	/**
 	 * the current ping
 	 */
@@ -52,6 +58,16 @@ public class Connection {
 	 * the name of the opponent connection
 	 */
 	private String connectionName = "";
+	
+	/*
+	 * The network table
+	 */
+	private NetworkTable table = new NetworkTable();
+	
+	/*
+	 * The binded network table
+	 */
+	private NetworkTable bindedTable;
 	
 	/**
 	 * Creates a connection with the Socket and Listener provided
@@ -83,6 +99,11 @@ public class Connection {
 		if(System.currentTimeMillis() - lastPingTime > 1000){
 			lastPingTime = System.currentTimeMillis();
 			sendMessage(ArchetypalMessages.ping());
+		}
+		
+		if(System.currentTimeMillis() - lastNetworkTime > 250) {
+			if(bindedTable != null)
+				bindedTable.sendUpdates(this);
 		}
 		
 		if(stream.isClosed()){
@@ -140,6 +161,8 @@ public class Connection {
 			}
 		}else if(messageType == MessageType.SET_NAME) {
 			connectionName = (String) message.getData("name");
+		}else if(messageType == MessageType.UPDATE_NTWK_TABLE) {
+			table.updateFrom(message);
 		}
 	}
 	
@@ -203,6 +226,28 @@ public class Connection {
 		stream.close();
 		socket.close();
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Connection other = (Connection) obj;
+		if (connectionName == null) {
+			if (other.connectionName != null)
+				return false;
+		} else if (!connectionName.equals(other.connectionName))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return this.getConnectionName() == null ? this.getConnectionName():"Unnamed Connection";
+	}
 	
 	/**
 	 * Creates a connection with the Socket and Listener provided
@@ -212,6 +257,14 @@ public class Connection {
 	 */
 	public static Connection fromSocket(Socket s, ConnectionListener l){
 		return new Connection(s, l);
+	}
+	
+	public void setBindedTable(NetworkTable bindedTable) {
+		this.bindedTable = bindedTable;
+	}
+	
+	public NetworkTable getTable() {
+		return table;
 	}
 
 	public Socket getSocket() {

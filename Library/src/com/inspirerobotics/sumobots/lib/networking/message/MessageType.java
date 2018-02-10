@@ -21,6 +21,7 @@ public enum MessageType {
 	MATCH_STATE_UPDATE("MATCH_STATE_UPDATE", "Used to update the state of a match", false),
 	STREAM_TERMINATED("STREAM_TERMINATED", "Used to terminate the stream", true),
 	SET_NAME("SET_NAME", "Sets the name of the socket connected", true),
+	UPDATE_NTWK_TABLE("UPDATE_NTWK_TABLE", "Updates the Network Table", true),
 	UNKNOWN("UNKNOWN", "A Malformed message", true);
 	
 	/**

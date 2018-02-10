@@ -44,7 +44,7 @@ public class FieldBackend extends Thread {
 	 * If the backend should be running
 	 */
 	private boolean running = true;
-
+	
 	public FieldBackend(ThreadChannel tc) {
 		this.setName("Backend Thread");
 		this.channel = tc;

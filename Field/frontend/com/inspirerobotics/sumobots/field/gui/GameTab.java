@@ -1,5 +1,7 @@
 package com.inspirerobotics.sumobots.field.gui;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,6 +17,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -109,6 +112,17 @@ public class GameTab extends AnchorPane {
 	 * Toolbar buttons
 	 */
 	private Button closeAllTB, emergencyStopTB;
+	
+	/**
+	 * The button that selects the netwTable
+	 */
+	@FXML
+	private ChoiceBox<String> netwTableSelector;
+	
+	/*
+	 * The connections in the Network Table Selector
+	 */
+	private ArrayList<Connection> connsInTable = new ArrayList<Connection>();
 
 	/**
 	 * Creates a game tab and starts the game tab loop
@@ -326,7 +340,51 @@ public class GameTab extends AnchorPane {
 	 * @param conns
 	 *            the connections
 	 */
-	public void setConnections(List<Connection> conns) {
+	@SuppressWarnings("unchecked")
+	public void setConnections(ArrayList<Connection> conns) {
+		//Update Network Table Selector		
+		ArrayList<Connection> connsListed = (ArrayList<Connection>) this.connsInTable.clone();
+		ArrayList<Connection> connsIter = (ArrayList<Connection>) conns.clone();
+		
+		//Add in all unlisted conns, and remove the ones
+		//That are already there. Now the only elements left in
+		//conns listed are those that are still listed
+		//but not in the list passed
+		for (Iterator<Connection> iterator = connsIter.iterator(); iterator.hasNext();) {
+			Connection connection = (Connection) iterator.next();
+			
+			boolean alreadyListed = false;
+			
+			for (Connection c : connsListed) {
+				if(connection.getConnectionName().equals(c.getConnectionName())) {
+					alreadyListed = true;
+					break;
+				}
+			}
+			
+			if(!alreadyListed) {
+				//If the name is null, don't add it yet
+				if(connection.getConnectionName() != null) {
+					if(!connection.getConnectionName().equals("")) {
+						netwTableSelector.getItems().add(connection.getConnectionName());
+						connsInTable.add(connection);
+						logger.fine("Found Network Table: " + connection.getConnectionName());
+					}
+				}
+			}else {
+				connsListed.remove(connection);
+			}
+		}
+		
+		//Remove all of the things left, because they are no longer connected
+		for (Connection connection : connsListed) {
+			connsInTable.remove(netwTableSelector.getItems().indexOf(connection.getConnectionName()));
+			boolean removed = netwTableSelector.getItems().remove(connection.getConnectionName());
+			logger.fine("Lost Network Table: " + connection.getConnectionName());
+			logger.fine("Network Table removed: " + removed);
+		}
+				
+		//Update Connection Table
 		ObservableList<TableConnection> data = FXCollections.observableArrayList();
 
 		// Add every connection to the table
