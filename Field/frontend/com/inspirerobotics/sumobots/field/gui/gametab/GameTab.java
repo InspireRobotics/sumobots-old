@@ -167,6 +167,7 @@ public class GameTab extends AnchorPane {
 		
 		//Add internal network table
 		netwTableSelector.getItems().add("Internal Table");
+		netwTableSelector.getSelectionModel().select(0);
 	}
 
 	/*
@@ -179,7 +180,7 @@ public class GameTab extends AnchorPane {
 		// Initialize the toolbar
 		initToolbar();
 		toolbar = new ToolBar(emergencyStopTB, closeAllTB);
-		toolbar.setStyle("-fx-background-color:gray");
+		toolbar.setStyle("-fx-background-color:#2a2a2a");
 
 		// Create the layout
 		VBox vbox = new VBox();

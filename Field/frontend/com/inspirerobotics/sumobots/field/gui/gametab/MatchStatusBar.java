@@ -41,21 +41,16 @@ public class MatchStatusBar extends HBox {
 	private TimePeriod lastKnownTimePeriod;
 
 	public MatchStatusBar() {
-		String style = "-fx-background-color:gray;-fx-text-fill: white; -fx-font-size: 24;-fx-alignment: center;" + 
-			"-fx-border-radius: 0 0 0 0;-fx-background-radius: 0 0 0 0;";
-
+		// init the match number box and match time box
+		String style = "-fx-background-color:#2a2a2a;-fx-text-fill: white; -fx-font-size: 24;-fx-alignment: center;" + 
+				"-fx-border-radius: 0 0 0 0;-fx-background-radius: 0 0 0 0;";
 		
-		// init the match number box
 		matchNumberBox = new TextField("#250");
 		matchNumberBox.setStyle(style);
 		matchNumberBox.setMinWidth(cornerBoxSize);
 		matchNumberBox.setMaxWidth(cornerBoxSize);
 		matchNumberBox.setMinHeight(stdHeight);
 
-		// init the match state box
-		matchStateBox = new TextField("Game Active");
-		matchStateBox.setMinHeight(stdHeight);
-		matchStateBox.setStyle("-fx-background-color:green;-fx-text-fill: white;-fx-font-size: 28;-fx-alignment: center;");
 
 		matchTimeBox = new TextField("1:12");
 		matchTimeBox.setStyle(style);
@@ -63,6 +58,14 @@ public class MatchStatusBar extends HBox {
 		matchTimeBox.setMaxWidth(cornerBoxSize);
 		matchTimeBox.setMinHeight(stdHeight);
 
+		// init the match state box
+		style = "-fx-background-color:green;-fx-text-fill: white;-fx-font-size: 28;-fx-alignment: center;" + 
+				"-fx-border-radius: 0 0 0 0;-fx-background-radius: 0 0 0 0;";
+		
+		matchStateBox = new TextField("Game Active");
+		matchStateBox.setMinHeight(stdHeight);
+		matchStateBox.setStyle("-fx-background-color:green;-fx-text-fill: white;-fx-font-size: 28;-fx-alignment: center;");
+		
 		this.getChildren().addAll(matchNumberBox, matchStateBox, matchTimeBox);
 	}
 
