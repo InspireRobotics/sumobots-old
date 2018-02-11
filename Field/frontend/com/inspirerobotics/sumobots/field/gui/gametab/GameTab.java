@@ -107,11 +107,6 @@ public class GameTab extends AnchorPane {
 	private Logger logger = InternalLog.getLogger();
 
 	/**
-	 * The Status Column
-	 */
-	private TableColumn<?, ?> statusColumn;
-
-	/**
 	 * The toolbar with options
 	 */
 	private ToolBar toolbar;
@@ -126,6 +121,12 @@ public class GameTab extends AnchorPane {
 	 */
 	@FXML
 	private ChoiceBox<String> netwTableSelector;
+	
+	/**
+	 * The internal network table
+	 */
+	@FXML
+	private NetworkTable internalNetwTable;
 
 	/*
 	 * The connections in the Network Table Selector
@@ -163,6 +164,9 @@ public class GameTab extends AnchorPane {
 
 		// initialize the status bar
 		initStatBar();
+		
+		//Add internal network table
+		netwTableSelector.getItems().add("Internal Table");
 	}
 
 	/*
@@ -175,6 +179,7 @@ public class GameTab extends AnchorPane {
 		// Initialize the toolbar
 		initToolbar();
 		toolbar = new ToolBar(emergencyStopTB, closeAllTB);
+		toolbar.setStyle("-fx-background-color:gray");
 
 		// Create the layout
 		VBox vbox = new VBox();
@@ -229,7 +234,7 @@ public class GameTab extends AnchorPane {
 			}
 
 		});
-		statusColumn = addSimpleConnColumn("Status", 200, "status");
+		addSimpleConnColumn("Status", 200, "status");
 		ObservableList<TableConnection> data = FXCollections.observableArrayList();
 
 		connTable.setItems(data);
@@ -247,8 +252,6 @@ public class GameTab extends AnchorPane {
 	 */
 	private TableColumn<NetworkTableEntry, String> addSimpleNetworkColumn(String name, int minWidth, String propertyName) {
 		TableColumn<NetworkTableEntry, String> col = new TableColumn<NetworkTableEntry, String>(name);
-		col.setMinWidth(minWidth);
-		col.setMaxWidth(minWidth);
 		col.setCellValueFactory(new PropertyValueFactory<NetworkTableEntry, String>(propertyName));
 
 		netwTable.getColumns().add(col);
@@ -267,8 +270,6 @@ public class GameTab extends AnchorPane {
 	 */
 	private TableColumn<TableConnection, String> addSimpleConnColumn(String name, int minWidth, String propertyName) {
 		TableColumn<TableConnection, String> col = new TableColumn<TableConnection, String>(name);
-		col.setMinWidth(minWidth);
-		col.setMaxWidth(minWidth);
 		col.setCellValueFactory(new PropertyValueFactory<TableConnection, String>(propertyName));
 
 		connTable.getColumns().add(col);
@@ -287,8 +288,6 @@ public class GameTab extends AnchorPane {
 	 */
 	private TableColumn<TableConnection, String> addButtonColumn(String name, int minWidth, String propertyName, EventHandler<ActionEvent> event) {
 		TableColumn<TableConnection, String> col = new TableColumn<TableConnection, String>(name);
-		col.setMinWidth(minWidth);
-		col.setMaxWidth(minWidth);
 		col.setCellValueFactory(new PropertyValueFactory<TableConnection, String>(propertyName));
 
 		// Create the cell factory for the buttons
@@ -353,10 +352,6 @@ public class GameTab extends AnchorPane {
 		controlConsole.setMinWidth(this.getWidth() - controlButtonPane.getWidth() - 20);
 		controlConsole.setMaxWidth(this.getWidth() - controlButtonPane.getWidth() - 20);
 
-		// Update the status column fill up all available room
-		statusColumn.setMinWidth(connTable.getWidth() - 1175);
-		statusColumn.setMaxWidth(connTable.getWidth() - 1175);
-
 		// Update the console
 		List<String> list = InternalLog.getInstance().getLogLines();
 		StringBuilder sb = new StringBuilder();
@@ -401,6 +396,11 @@ public class GameTab extends AnchorPane {
 			if(c.getConnectionName().equals(netwTableName)) {
 				table = c.getTable();
 				break;
+			}
+		}
+		if(netwTableName != null) {
+			if(netwTableName.equals("Internal Table")) {
+				table = internalNetwTable;
 			}
 		}
 		
@@ -494,11 +494,15 @@ public class GameTab extends AnchorPane {
 
 		connTable.setItems(data);
 	}
+	
+	public void setInternalNetwTable(NetworkTable internalNetwTable) {
+		this.internalNetwTable = internalNetwTable;
+	}
 
 	/*
 	 * CONTROLLER METHODS
 	 */
-
+	
 	/**
 	 * When the Start Button is pressed
 	 */

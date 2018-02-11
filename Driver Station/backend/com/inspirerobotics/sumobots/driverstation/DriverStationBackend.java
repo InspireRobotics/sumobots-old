@@ -151,7 +151,9 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 		if(conn != null) {
 			table.put("ping", conn.getCurrentPing() + " ms");
 			table.put("connection name", conn.getConnectionName());
+			table.put("ip", conn.getSocket().getLocalAddress().toString());
 		}
+		table.put("Logger Level", ""+ logger.getLevel());
 		table.put("Name", name);
 		table.put("Time Period", ""+currentPeriod);
 		

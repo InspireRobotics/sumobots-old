@@ -29,22 +29,25 @@ public class MatchStatusBar extends HBox {
 	 * The internal match number
 	 */
 	private int matchNum = 0;
-	
+
 	/**
 	 * The internal Time
 	 */
-	private long matchTime; 
-	
+	private long matchTime;
+
 	/**
 	 * The last known time period
 	 */
 	private TimePeriod lastKnownTimePeriod;
-	
+
 	public MatchStatusBar() {
+		String style = "-fx-background-color:gray;-fx-text-fill: white; -fx-font-size: 24;-fx-alignment: center;" + 
+			"-fx-border-radius: 0 0 0 0;-fx-background-radius: 0 0 0 0;";
+
+		
 		// init the match number box
 		matchNumberBox = new TextField("#250");
-		matchNumberBox
-				.setStyle("-fx-background-color:gray;-fx-text-fill: white; -fx-font-size: 24;-fx-alignment: center;");
+		matchNumberBox.setStyle(style);
 		matchNumberBox.setMinWidth(cornerBoxSize);
 		matchNumberBox.setMaxWidth(cornerBoxSize);
 		matchNumberBox.setMinHeight(stdHeight);
@@ -52,12 +55,10 @@ public class MatchStatusBar extends HBox {
 		// init the match state box
 		matchStateBox = new TextField("Game Active");
 		matchStateBox.setMinHeight(stdHeight);
-		matchStateBox
-				.setStyle("-fx-background-color:green;-fx-text-fill: white;-fx-font-size: 28;-fx-alignment: center;");
+		matchStateBox.setStyle("-fx-background-color:green;-fx-text-fill: white;-fx-font-size: 28;-fx-alignment: center;");
 
 		matchTimeBox = new TextField("1:12");
-		matchTimeBox
-				.setStyle("-fx-background-color:gray;-fx-text-fill: white; -fx-font-size: 24;-fx-alignment: center;");
+		matchTimeBox.setStyle(style);
 		matchTimeBox.setMinWidth(cornerBoxSize);
 		matchTimeBox.setMaxWidth(cornerBoxSize);
 		matchTimeBox.setMinHeight(stdHeight);
@@ -66,35 +67,35 @@ public class MatchStatusBar extends HBox {
 	}
 
 	public void updateStats(TimePeriod timePeriod) {
-		//If its null, the backend has yet sent the first match update 
-		//so we will assume it will be null
-		if(timePeriod == null){
-			timePeriod = TimePeriod.DISABLED;	
+		// If its null, the backend has yet sent the first match update
+		// so we will assume it will be null
+		if (timePeriod == null) {
+			timePeriod = TimePeriod.DISABLED;
 		}
-	
-		//Update what state we are in
+
+		// Update what state we are in
 		updateMatchStateBox(timePeriod);
-		
-		//If we are in a new time period, lets update the time and possibly number
-		if(timePeriod != lastKnownTimePeriod){
+
+		// If we are in a new time period, lets update the time and possibly number
+		if (timePeriod != lastKnownTimePeriod) {
 			enterNewPeriod(timePeriod);
 			lastKnownTimePeriod = timePeriod;
 		}
-		
-		//Update Match Time/Match Number boxes
+
+		// Update Match Time/Match Number boxes
 		matchNumberBox.setText("#" + matchNum);
-		
-		String time = ""+(System.currentTimeMillis() - matchTime) / 1000;
+
+		String time = "" + (System.currentTimeMillis() - matchTime) / 1000;
 		matchTimeBox.setMinWidth(time.length() * 20);
 		matchTimeBox.setText(time);
-		
+
 	}
 
 	private void enterNewPeriod(TimePeriod timePeriod) {
-		if(timePeriod == TimePeriod.INIT){
+		if (timePeriod == TimePeriod.INIT) {
 			matchNum++;
 		}
-		
+
 		matchTime = System.currentTimeMillis();
 	}
 
@@ -102,23 +103,19 @@ public class MatchStatusBar extends HBox {
 		switch (timePeriod) {
 		case DISABLED:
 			matchStateBox.setText("Disabled");
-			matchStateBox
-					.setStyle("-fx-background-color:red;-fx-text-fill: white;-fx-font-size: 28;-fx-alignment: center;");
+			matchStateBox.setStyle("-fx-background-color:red;-fx-text-fill: white;-fx-font-size: 28;-fx-alignment: center;");
 			break;
 		case GAME:
 			matchStateBox.setText("In Game");
-			matchStateBox.setStyle(
-					"-fx-background-color:green;-fx-text-fill: white;-fx-font-size: 28;-fx-alignment: center;");
+			matchStateBox.setStyle("-fx-background-color:green;-fx-text-fill: white;-fx-font-size: 28;-fx-alignment: center;");
 			break;
 		case INIT:
 			matchStateBox.setText("Initialization");
-			matchStateBox.setStyle(
-					"-fx-background-color:orange;-fx-text-fill: white;-fx-font-size: 28;-fx-alignment: center;");
+			matchStateBox.setStyle("-fx-background-color:orange;-fx-text-fill: white;-fx-font-size: 28;-fx-alignment: center;");
 			break;
 		case ESTOPPED:
 			matchStateBox.setText("E-STOPPED");
-			matchStateBox.setStyle(
-					"-fx-background-color:black;-fx-text-fill: white;-fx-font-size: 28;-fx-alignment: center;");
+			matchStateBox.setStyle("-fx-background-color:black;-fx-text-fill: white;-fx-font-size: 28;-fx-alignment: center;");
 			break;
 		}
 	}

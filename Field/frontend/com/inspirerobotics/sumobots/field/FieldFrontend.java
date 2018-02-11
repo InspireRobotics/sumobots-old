@@ -10,6 +10,7 @@ import com.inspirerobotics.sumobots.lib.TimePeriod;
 import com.inspirerobotics.sumobots.lib.concurrent.InterThreadMessage;
 import com.inspirerobotics.sumobots.lib.concurrent.ThreadChannel;
 import com.inspirerobotics.sumobots.lib.networking.connection.Connection;
+import com.inspirerobotics.sumobots.lib.networking.tables.NetworkTable;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -106,7 +107,6 @@ public class FieldFrontend extends Application {
 
 	private void onBackendMessageReceived(InterThreadMessage m) {
 		String name = m.getName();
-		
 		log.finer("Recieved Message from Backend: " + name);
 
 		//Figure out what type of message it is
@@ -122,6 +122,9 @@ public class FieldFrontend extends Application {
 		case "time_period_update":
 			timePeriod = (TimePeriod) m.getData();
 			log.fine("New Time Period on Frontend: " + timePeriod);
+			break;
+		case "update_internal_table":
+			root.getGameTab().setInternalNetwTable((NetworkTable) m.getData());
 			break;
 		default: //If it reaches this we don't know what it is so print a warning to the screen
 			log.warning("Unknown Message Recieved on Frontend: " + name);

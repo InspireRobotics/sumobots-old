@@ -11,6 +11,7 @@ import com.inspirerobotics.sumobots.lib.networking.connection.Connection;
 import com.inspirerobotics.sumobots.lib.networking.connection.ConnectionListener;
 import com.inspirerobotics.sumobots.lib.networking.message.ArchetypalMessages;
 import com.inspirerobotics.sumobots.lib.networking.message.Message;
+import com.inspirerobotics.sumobots.lib.networking.tables.NetworkTable;
 
 /**
  * This handles all of the backend stuff (basically everything but the GUI).
@@ -45,6 +46,11 @@ public class FieldBackend extends Thread {
 	 */
 	private boolean running = true;
 	
+	/**
+	 * The internal network table
+	 */
+	private NetworkTable internalNetworkTable = new NetworkTable();
+	
 	public FieldBackend(ThreadChannel tc) {
 		this.setName("Backend Thread");
 		this.channel = tc;
@@ -65,6 +71,10 @@ public class FieldBackend extends Thread {
 
 			// update the frontend about the current connections
 			sendConnectionsToFrontend();
+			
+			//Update the frontend network table
+			updateInternalTable();
+			channel.add(new InterThreadMessage("update_internal_table", this.internalNetworkTable.clone()));
 
 			// While there are messages from the frontend, handle them
 			InterThreadMessage m = null;
@@ -81,6 +91,14 @@ public class FieldBackend extends Thread {
 		server.closeServer();
 
 		log.info("Backend Thread Shutdown Complete!");
+	}
+
+	/**
+	 * Updates the internal table on the Frontend
+	 */
+	private void updateInternalTable() {
+		internalNetworkTable.put("IP", "" + server.getServerSocket().getLocalSocketAddress());
+		internalNetworkTable.put("Port", ""+server.getServerSocket().getLocalPort());
 	}
 
 	/**
