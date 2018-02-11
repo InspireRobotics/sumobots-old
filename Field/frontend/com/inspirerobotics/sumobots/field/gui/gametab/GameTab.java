@@ -1,14 +1,16 @@
-package com.inspirerobotics.sumobots.field.gui;
+package com.inspirerobotics.sumobots.field.gui.gametab;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.inspirerobotics.sumobots.field.FieldFrontend;
 import com.inspirerobotics.sumobots.field.util.InternalLog;
 import com.inspirerobotics.sumobots.lib.networking.connection.Connection;
+import com.inspirerobotics.sumobots.lib.networking.tables.NetworkTable;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -94,6 +96,12 @@ public class GameTab extends AnchorPane {
 	public TableView<TableConnection> connTable;
 
 	/**
+	 * The table to view NetworkTables
+	 */
+	@FXML
+	public TableView<NetworkTableEntry> netwTable;
+
+	/**
 	 * The log
 	 */
 	private Logger logger = InternalLog.getLogger();
@@ -112,13 +120,13 @@ public class GameTab extends AnchorPane {
 	 * Toolbar buttons
 	 */
 	private Button closeAllTB, emergencyStopTB;
-	
+
 	/**
 	 * The button that selects the netwTable
 	 */
 	@FXML
 	private ChoiceBox<String> netwTableSelector;
-	
+
 	/*
 	 * The connections in the Network Table Selector
 	 */
@@ -151,7 +159,7 @@ public class GameTab extends AnchorPane {
 		controlConsole.setText("Error: No Robot Detected");
 
 		// initialize the table
-		initConnTable();
+		initTables();
 
 		// initialize the status bar
 		initStatBar();
@@ -161,17 +169,23 @@ public class GameTab extends AnchorPane {
 	 * Inits the stat bar
 	 */
 	private void initStatBar() {
+		// Create the bar that displays match number, time period, and time
 		matchStatusBar = new MatchStatusBar();
 
+		// Initialize the toolbar
 		initToolbar();
 		toolbar = new ToolBar(emergencyStopTB, closeAllTB);
 
+		// Create the layout
 		VBox vbox = new VBox();
 		vbox.getChildren().addAll(matchStatusBar, toolbar);
 
 		mainBorderPane.setTop(vbox);
 	}
 
+	/**
+	 * Creates the toolbar that has options
+	 */
 	private void initToolbar() {
 		emergencyStopTB = new Button("Emergency Stop");
 		emergencyStopTB.setOnAction(new EventHandler<ActionEvent>() {
@@ -194,14 +208,19 @@ public class GameTab extends AnchorPane {
 	}
 
 	/**
-	 * Adds the columns to the table
+	 * Adds the columns to the tables
 	 */
-	private void initConnTable() {
-		addSimpleColumn("Name", 350, "name");
-		addSimpleColumn("DS IP", 200, "dsIP");
-		addSimpleColumn("DS Ping", 150, "dsPing");
-		addSimpleColumn("Robot IP", 200, "robotIP");
-		addSimpleColumn("Robot Ping", 150, "robotPing");
+	private void initTables() {
+		// Network Table
+		addSimpleNetworkColumn("Key", 200, "key");
+		addSimpleNetworkColumn("Value", 500, "value");
+
+		// Conn Table
+		addSimpleConnColumn("Name", 350, "name");
+		addSimpleConnColumn("DS IP", 200, "dsIP");
+		addSimpleConnColumn("DS Ping", 150, "dsPing");
+		addSimpleConnColumn("Robot IP", 200, "robotIP");
+		addSimpleConnColumn("Robot Ping", 150, "robotPing");
 		addButtonColumn("Disable", 125, "action", new EventHandler<ActionEvent>() {
 
 			@Override
@@ -210,13 +229,30 @@ public class GameTab extends AnchorPane {
 			}
 
 		});
-		statusColumn = addSimpleColumn("Status", 200, "status");
-
-		TableConnection ts = new TableConnection("DS-1", "196.168.0.5", "20 ms", "196.168.0.3", "35 ms", "Connected!",
-				"");
-		ObservableList<TableConnection> data = FXCollections.observableArrayList(ts);
+		statusColumn = addSimpleConnColumn("Status", 200, "status");
+		ObservableList<TableConnection> data = FXCollections.observableArrayList();
 
 		connTable.setItems(data);
+	}
+
+	/**
+	 * Adds a generic column to the network table
+	 * 
+	 * @param name
+	 *            the name to be shown to the user
+	 * @param minWidth
+	 *            the min width of the tab
+	 * @param propertyName
+	 *            the property name of the column
+	 */
+	private TableColumn<NetworkTableEntry, String> addSimpleNetworkColumn(String name, int minWidth, String propertyName) {
+		TableColumn<NetworkTableEntry, String> col = new TableColumn<NetworkTableEntry, String>(name);
+		col.setMinWidth(minWidth);
+		col.setMaxWidth(minWidth);
+		col.setCellValueFactory(new PropertyValueFactory<NetworkTableEntry, String>(propertyName));
+
+		netwTable.getColumns().add(col);
+		return col;
 	}
 
 	/**
@@ -229,11 +265,12 @@ public class GameTab extends AnchorPane {
 	 * @param propertyName
 	 *            the property name of the column
 	 */
-	private TableColumn<TableConnection, String> addSimpleColumn(String name, int minWidth, String propertyName) {
+	private TableColumn<TableConnection, String> addSimpleConnColumn(String name, int minWidth, String propertyName) {
 		TableColumn<TableConnection, String> col = new TableColumn<TableConnection, String>(name);
 		col.setMinWidth(minWidth);
 		col.setMaxWidth(minWidth);
 		col.setCellValueFactory(new PropertyValueFactory<TableConnection, String>(propertyName));
+
 		connTable.getColumns().add(col);
 		return col;
 	}
@@ -248,13 +285,13 @@ public class GameTab extends AnchorPane {
 	 * @param propertyName
 	 *            the property name of the column
 	 */
-	private TableColumn<TableConnection, String> addButtonColumn(String name, int minWidth, String propertyName,
-			EventHandler<ActionEvent> event) {
+	private TableColumn<TableConnection, String> addButtonColumn(String name, int minWidth, String propertyName, EventHandler<ActionEvent> event) {
 		TableColumn<TableConnection, String> col = new TableColumn<TableConnection, String>(name);
 		col.setMinWidth(minWidth);
 		col.setMaxWidth(minWidth);
 		col.setCellValueFactory(new PropertyValueFactory<TableConnection, String>(propertyName));
 
+		// Create the cell factory for the buttons
 		Callback<TableColumn<TableConnection, String>, TableCell<TableConnection, String>> cellFactory = new Callback<TableColumn<TableConnection, String>, TableCell<TableConnection, String>>() {
 			@Override
 			public TableCell<TableConnection, String> call(final TableColumn<TableConnection, String> param) {
@@ -265,16 +302,20 @@ public class GameTab extends AnchorPane {
 					@Override
 					public void updateItem(String item, boolean empty) {
 						super.updateItem(item, empty);
+
+						// If its empty, don't show anything
 						if (empty) {
 							setGraphic(null);
 							setText(null);
 						} else {
+							// If the button is black, dont show anything
 							if (item.equals("")) {
 								setGraphic(null);
 								setText(null);
 								return;
 							}
 
+							// Show the button
 							btn.setText(item);
 							btn.setMaxHeight(10);
 							btn.setOnAction(event);
@@ -298,7 +339,7 @@ public class GameTab extends AnchorPane {
 	/**
 	 * Updates certain aspects of the GUI
 	 */
-	void update() {
+	public void update() {
 		// Update the match status bar
 		matchStatusBar.updateGui();
 		matchStatusBar.updateStats(fieldFrontend.getTimePeriod());
@@ -340,51 +381,97 @@ public class GameTab extends AnchorPane {
 	 * @param conns
 	 *            the connections
 	 */
-	@SuppressWarnings("unchecked")
 	public void setConnections(ArrayList<Connection> conns) {
-		//Update Network Table Selector		
+		updateNetworkTableSelector(conns);
+		updateNetworkTable(conns);
+		updateConnectionTable(conns);
+	}
+	
+	/**
+	 * Update the network table
+	 */
+	private void updateNetworkTable(ArrayList<Connection> conns) {
+		// Update Connection Table
+		ObservableList<NetworkTableEntry> data = FXCollections.observableArrayList();
+		
+		NetworkTable table = null;
+		String netwTableName = netwTableSelector.getSelectionModel().getSelectedItem();
+		
+		for (Connection c : conns) {
+			if(c.getConnectionName().equals(netwTableName)) {
+				table = c.getTable();
+				break;
+			}
+		}
+		
+		if(table != null) {
+			for (Entry<String, String> e : table.entrySet()) {
+				data.add(new NetworkTableEntry(e.getKey(), e.getValue()));
+			}
+		}
+
+		// If the size is zero, add a blank row to make sure the "no content" notice
+		// doesn't show up
+		if (data.size() == 0) {
+			data.add(new NetworkTableEntry("", ""));
+		}
+
+		netwTable.setItems(data);
+	}
+
+	@SuppressWarnings("unchecked")
+	private void updateNetworkTableSelector(ArrayList<Connection> conns) {
+		// Update Network Table Selector
 		ArrayList<Connection> connsListed = (ArrayList<Connection>) this.connsInTable.clone();
 		ArrayList<Connection> connsIter = (ArrayList<Connection>) conns.clone();
-		
-		//Add in all unlisted conns, and remove the ones
-		//That are already there. Now the only elements left in
-		//conns listed are those that are still listed
-		//but not in the list passed
+
+		// Add in all unlisted conns, and remove the ones
+		// That are already there. Now the only elements left in
+		// conns listed are those that are still listed
+		// but not in the list passed
 		for (Iterator<Connection> iterator = connsIter.iterator(); iterator.hasNext();) {
 			Connection connection = (Connection) iterator.next();
-			
+
 			boolean alreadyListed = false;
-			
+
+			// Check if the Connection was already listed in the selector
 			for (Connection c : connsListed) {
-				if(connection.getConnectionName().equals(c.getConnectionName())) {
+				if (connection.getConnectionName().equals(c.getConnectionName())) {
 					alreadyListed = true;
 					break;
 				}
 			}
-			
-			if(!alreadyListed) {
-				//If the name is null, don't add it yet
-				if(connection.getConnectionName() != null) {
-					if(!connection.getConnectionName().equals("")) {
+
+			// If its not listed, add it the to the selector
+			if (!alreadyListed) {
+				// If the name is null or empty, don't add it yet
+				if (connection.getConnectionName() != null) {
+					if (!connection.getConnectionName().equals("")) {
 						netwTableSelector.getItems().add(connection.getConnectionName());
 						connsInTable.add(connection);
 						logger.fine("Found Network Table: " + connection.getConnectionName());
 					}
 				}
-			}else {
+			} else { // If its already there, remove it from the list but don't add it
 				connsListed.remove(connection);
 			}
 		}
-		
-		//Remove all of the things left, because they are no longer connected
+
+		// Remove all of the things left, because they are no longer connected
 		for (Connection connection : connsListed) {
 			connsInTable.remove(netwTableSelector.getItems().indexOf(connection.getConnectionName()));
 			boolean removed = netwTableSelector.getItems().remove(connection.getConnectionName());
 			logger.fine("Lost Network Table: " + connection.getConnectionName());
 			logger.fine("Network Table removed: " + removed);
 		}
-				
-		//Update Connection Table
+
+	}
+
+	/**
+	 * Adds the data to the connection table
+	 */
+	private void updateConnectionTable(ArrayList<Connection> conns) {
+		// Update Connection Table
 		ObservableList<TableConnection> data = FXCollections.observableArrayList();
 
 		// Add every connection to the table

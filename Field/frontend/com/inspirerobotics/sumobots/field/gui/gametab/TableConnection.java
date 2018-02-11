@@ -1,4 +1,4 @@
-package com.inspirerobotics.sumobots.field.gui;
+package com.inspirerobotics.sumobots.field.gui.gametab;
 
 import javafx.beans.property.SimpleStringProperty;
 

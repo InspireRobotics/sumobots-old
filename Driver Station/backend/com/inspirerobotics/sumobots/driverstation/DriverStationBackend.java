@@ -95,7 +95,7 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 		// Connect to the server, wait 3 seconds if we fail and try again
 		while (running) {
 			pollMessages();
-
+			
 			try {
 				Socket socket = new Socket("localhost", Resources.SERVER_PORT);
 				conn = new Connection(socket, this);
@@ -113,7 +113,6 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 		}
 
 		// We are now connected, lets start transfering messages...
-		table.put("Test", "data");
 		setDriverStationName("DS-" + new Random().nextInt(10000));
 		logger.info("Established Field-DS Connection! Starting main loop");
 		channel.add(new InterThreadMessage("conn_status", true));
@@ -140,11 +139,22 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 				connect();
 			}
 			
+			updateNetworkTable();
 			pollMessages();
 		}
 
 		logger.info("Backend Shutdown...");
 		shutdown();
+	}
+
+	private void updateNetworkTable() {
+		if(conn != null) {
+			table.put("ping", conn.getCurrentPing() + " ms");
+			table.put("connection name", conn.getConnectionName());
+		}
+		table.put("Name", name);
+		table.put("Time Period", ""+currentPeriod);
+		
 	}
 
 	/**

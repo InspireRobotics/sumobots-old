@@ -104,6 +104,8 @@ public class Connection {
 		if(System.currentTimeMillis() - lastNetworkTime > 250) {
 			if(bindedTable != null)
 				bindedTable.sendUpdates(this);
+			
+			lastNetworkTime = System.currentTimeMillis();
 		}
 		
 		if(stream.isClosed()){

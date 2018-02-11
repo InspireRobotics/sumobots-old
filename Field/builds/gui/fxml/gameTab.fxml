@@ -61,11 +61,8 @@
                                           <ChoiceBox fx:id="netwTableSelector" prefWidth="150.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                        </children>
                                     </AnchorPane>
-                                    <TableView prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS">
-                                      <columns>
-                                        <TableColumn prefWidth="75.0" text="C1" />
-                                        <TableColumn prefWidth="75.0" text="C2" />
-                                      </columns>
+                                    <TableView fx:id="netwTable" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" VBox.vgrow="ALWAYS">
+                                   
                                     </TableView>
                                  </children>
                               </VBox>

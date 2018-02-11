@@ -5,6 +5,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.inspirerobotics.sumobots.field.FieldFrontend;
+import com.inspirerobotics.sumobots.field.gui.gametab.GameTab;
 import com.inspirerobotics.sumobots.field.util.InternalLog;
 
 import javafx.application.Platform;
