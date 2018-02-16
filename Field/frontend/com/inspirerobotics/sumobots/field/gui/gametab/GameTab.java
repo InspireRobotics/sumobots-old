@@ -290,6 +290,8 @@ public class GameTab extends AnchorPane {
 	private TableColumn<TableConnection, String> addButtonColumn(String name, int minWidth, String propertyName, EventHandler<ActionEvent> event) {
 		TableColumn<TableConnection, String> col = new TableColumn<TableConnection, String>(name);
 		col.setCellValueFactory(new PropertyValueFactory<TableConnection, String>(propertyName));
+		col.setMaxWidth(minWidth);
+		col.setMinWidth(minWidth);
 
 		// Create the cell factory for the buttons
 		Callback<TableColumn<TableConnection, String>, TableCell<TableConnection, String>> cellFactory = new Callback<TableColumn<TableConnection, String>, TableCell<TableConnection, String>>() {
@@ -460,7 +462,8 @@ public class GameTab extends AnchorPane {
 
 		// Remove all of the things left, because they are no longer connected
 		for (Connection connection : connsListed) {
-			connsInTable.remove(netwTableSelector.getItems().indexOf(connection.getConnectionName()));
+			if(netwTableSelector.getItems().contains(connection.getConnectionName()))
+				connsInTable.remove(netwTableSelector.getItems().indexOf(connection.getConnectionName()));
 			boolean removed = netwTableSelector.getItems().remove(connection.getConnectionName());
 			logger.fine("Lost Network Table: " + connection.getConnectionName());
 			logger.fine("Network Table removed: " + removed);
