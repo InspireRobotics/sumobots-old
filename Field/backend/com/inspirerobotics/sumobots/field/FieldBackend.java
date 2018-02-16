@@ -143,10 +143,23 @@ public class FieldBackend extends Thread {
 		case "e-stop":
 			eStop();
 			break;
+		case "disable_ds":
+			disableDS((String) m.getData());
 		default: // If it reaches this we don't know what it is so print a
 					// warning to the screen
 			log.warning("Unknown Message Recieved on Backend: " + name);
 			break;
+		}
+	}
+	
+	/**
+	 * Disables a specific DS
+	 */
+	private void disableDS(String name) {
+		for (Connection c : server.getConnections()) {
+			if(c.getConnectionName().equals(name)) {
+				c.sendMessage(ArchetypalMessages.enterNewMatchPeriod(TimePeriod.DISABLED));
+			}
 		}
 	}
 

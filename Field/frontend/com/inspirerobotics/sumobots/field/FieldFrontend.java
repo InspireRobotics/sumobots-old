@@ -50,27 +50,25 @@ public class FieldFrontend extends Application {
 	 * The log
 	 */
 	private Logger log = InternalLog.getLogger();
-	
+
 	/**
 	 * The current time period, as last update by the Field Backend
 	 */
 	private TimePeriod timePeriod;
 
-	
 	@Override
 	public void start(Stage s) throws Exception {
-		//Change Thread Name
+		// Change Thread Name
 		Thread.currentThread().setName("Frontend Thread");
-		
+
 		// Create the thread channel
 		threadChannel = new ThreadChannel();
-		
-		//Create the backend thread
+
+		// Create the backend thread
 		log.fine("Starting backend thread");
 		fieldBackend = new FieldBackend(threadChannel.createPair());
 		fieldBackend.start();
 		log.fine("Finished starting backend thread");
-		
 
 		// Init the stage(AKA "Window") and then add the GUI elements
 		log.fine("Creating the GUI");
@@ -81,8 +79,8 @@ public class FieldFrontend extends Application {
 
 		// Now that the stage is created show it on the screen
 		stage.show();
-		
-		//We are now done with initialization
+
+		// We are now done with initialization
 		log.info("Frontend initialization complete. Starting main loop");
 
 		// Start the internal loop
@@ -109,14 +107,14 @@ public class FieldFrontend extends Application {
 		String name = m.getName();
 		log.finer("Recieved Message from Backend: " + name);
 
-		//Figure out what type of message it is
+		// Figure out what type of message it is
 		switch (name) {
 		case "conn_update":
 			Object data = m.getData();
-			if(data instanceof List){
+			if (data instanceof List) {
 				@SuppressWarnings("unchecked")
 				ArrayList<Connection> conn = (ArrayList<Connection>) data;
-				root.getGameTab().setConnections(conn); 
+				root.getGameTab().setConnections(conn);
 			}
 			break;
 		case "time_period_update":
@@ -126,7 +124,7 @@ public class FieldFrontend extends Application {
 		case "update_internal_table":
 			root.getGameTab().setInternalNetwTable((NetworkTable) m.getData());
 			break;
-		default: //If it reaches this we don't know what it is so print a warning to the screen
+		default: // If it reaches this we don't know what it is so print a warning to the screen
 			log.warning("Unknown Message Recieved on Frontend: " + name);
 			break;
 		}
@@ -183,8 +181,8 @@ public class FieldFrontend extends Application {
 	/*
 	 * GUI Methods
 	 * 
-	 * These methods are generally called by the GUI. These will
-	 * send messages to the backend
+	 * These methods are generally called by the GUI. These will send messages to
+	 * the backend
 	 */
 
 	public void startMatch() {
@@ -198,20 +196,24 @@ public class FieldFrontend extends Application {
 	public void endMatch() {
 		threadChannel.add(new InterThreadMessage("end_match"));
 	}
-	
+
 	public void eStop() {
 		threadChannel.add(new InterThreadMessage("e-stop"));
 	}
-	
+
 	public void closeAll() {
 		threadChannel.add(new InterThreadMessage("close_all"));
 	}
-	
+
+	public void disable(String name) {
+		threadChannel.add(new InterThreadMessage("disable_ds", name));
+	}
+
 	/**
 	 * The current time period, as last update by the Field Backend
 	 */
 	public TimePeriod getTimePeriod() {
 		return timePeriod;
 	}
-	
+
 }

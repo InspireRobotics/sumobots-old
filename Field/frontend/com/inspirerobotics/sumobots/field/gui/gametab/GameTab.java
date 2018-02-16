@@ -231,7 +231,9 @@ public class GameTab extends AnchorPane {
 
 			@Override
 			public void handle(ActionEvent event) {
-				System.out.println(event.hashCode());
+				String name = (String) event.getSource();
+				logger.info("Disabling " + name);
+				fieldFrontend.disable(name);
 			}
 
 		});
@@ -287,7 +289,7 @@ public class GameTab extends AnchorPane {
 	 * @param propertyName
 	 *            the property name of the column
 	 */
-	private TableColumn<TableConnection, String> addButtonColumn(String name, int minWidth, String propertyName, EventHandler<ActionEvent> event) {
+	private TableColumn<TableConnection, String> addButtonColumn(String name, int minWidth, String propertyName, EventHandler<ActionEvent> handler) {
 		TableColumn<TableConnection, String> col = new TableColumn<TableConnection, String>(name);
 		col.setCellValueFactory(new PropertyValueFactory<TableConnection, String>(propertyName));
 		col.setMaxWidth(minWidth);
@@ -310,7 +312,7 @@ public class GameTab extends AnchorPane {
 							setGraphic(null);
 							setText(null);
 						} else {
-							// If the button is black, dont show anything
+							// If the button is blank, dont show anything
 							if (item.equals("")) {
 								setGraphic(null);
 								setText(null);
@@ -318,9 +320,16 @@ public class GameTab extends AnchorPane {
 							}
 
 							// Show the button
-							btn.setText(item);
+							btn.setText(item.split(";")[1]);
 							btn.setMaxHeight(10);
-							btn.setOnAction(event);
+							btn.setOnAction(new EventHandler<ActionEvent>() {
+
+								@Override
+								public void handle(ActionEvent e) {
+									handler.handle(new ActionEvent(item.split(";")[0], ActionEvent.NULL_SOURCE_TARGET));
+								}
+								
+							});
 							btn.setMinWidth(minWidth - 8);
 							btn.setMaxWidth(minWidth - 8);
 							setGraphic(btn);
@@ -486,7 +495,7 @@ public class GameTab extends AnchorPane {
 			String robotIP = "null";
 			String robotPing = "null";
 			String status = conn.isClosed() ? "Closed!" : "Open!";
-			TableConnection tc = new TableConnection(name, dsIP, dsPing, robotIP, robotPing, status, "Disable");
+			TableConnection tc = new TableConnection(name, dsIP, dsPing, robotIP, robotPing, status, name+";Disable");
 			data.add(tc);
 		}
 
