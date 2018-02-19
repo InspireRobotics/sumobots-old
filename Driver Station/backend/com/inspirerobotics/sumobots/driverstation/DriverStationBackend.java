@@ -58,12 +58,11 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 	 * The name of the current driver station
 	 */
 	private String name = "";
-	
+
 	/*
 	 * the DS Network Table
 	 */
 	private NetworkTable table = new NetworkTable();
-	
 
 	public DriverStationBackend(ThreadChannel tc) {
 		this.setName("Backend Thread");
@@ -95,7 +94,7 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 		// Connect to the server, wait 3 seconds if we fail and try again
 		while (running) {
 			pollMessages();
-			
+
 			try {
 				Socket socket = new Socket("localhost", Resources.SERVER_PORT);
 				conn = new Connection(socket, this);
@@ -127,19 +126,19 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 			conn.update();
 			if (conn.isClosed()) {
 				channel.add(new InterThreadMessage("conn_status", false));
-				
+
 				logger.info("Lost Connection to Field! Waiting 2.5 seconds before reconnecting...");
 				updateMatchStatus(ArchetypalMessages.enterNewMatchPeriod(TimePeriod.DISABLED));
-				
+
 				try {
 					Thread.sleep(2500);
 				} catch (InterruptedException e1) {
 					e1.printStackTrace();
 				}
-				
+
 				connect();
 			}
-			
+
 			updateNetworkTable();
 			pollMessages();
 		}
@@ -149,15 +148,15 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 	}
 
 	private void updateNetworkTable() {
-		if(conn != null) {
+		if (conn != null) {
 			table.put("ping", conn.getCurrentPing() + " ms");
 			table.put("connection name", conn.getConnectionName());
 			table.put("ip", conn.getSocket().getLocalAddress().toString());
 		}
-		table.put("Logger Level", ""+ logger.getLevel());
+		table.put("Logger Level", "" + logger.getLevel());
 		table.put("Name", name);
-		table.put("Time Period", ""+currentPeriod);
-		
+		table.put("Time Period", "" + currentPeriod);
+
 	}
 
 	/**
