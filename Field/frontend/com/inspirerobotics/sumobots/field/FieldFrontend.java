@@ -15,6 +15,8 @@ import com.inspirerobotics.sumobots.lib.networking.tables.NetworkTable;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -136,6 +138,21 @@ public class FieldFrontend extends Application {
 	private void initGUI() {
 		root = new RootGroup(this);
 		stage.setScene(root.toScene());
+		
+		stage.addEventFilter(KeyEvent.KEY_PRESSED, k -> {
+			log.finer("Key Pressed: " + k.getCode());
+			if(this.timePeriod == TimePeriod.GAME) {
+				if(k.getCode() == KeyCode.SPACE) {
+					eStop();
+		            k.consume();
+				}
+				
+				if(k.getCode() == KeyCode.ENTER) {
+					endMatch();
+					k.consume();
+				}
+			}
+	    });
 	}
 
 	/**
