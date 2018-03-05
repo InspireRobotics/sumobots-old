@@ -7,6 +7,8 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.omg.CORBA.portable.IndirectionException;
+
 import com.inspirerobotics.sumobots.field.FieldFrontend;
 import com.inspirerobotics.sumobots.field.util.InternalLog;
 import com.inspirerobotics.sumobots.lib.networking.connection.Connection;
@@ -471,11 +473,18 @@ public class GameTab extends AnchorPane {
 
 		// Remove all of the things left, because they are no longer connected
 		for (Connection connection : connsListed) {
-			if(netwTableSelector.getItems().contains(connection.getConnectionName()))
-				connsInTable.remove(netwTableSelector.getItems().indexOf(connection.getConnectionName()));
-			boolean removed = netwTableSelector.getItems().remove(connection.getConnectionName());
-			logger.fine("Lost Network Table: " + connection.getConnectionName());
-			logger.fine("Network Table removed: " + removed);
+			
+			try {
+				if(netwTableSelector.getItems().contains(connection.getConnectionName()))
+					connsInTable.remove(netwTableSelector.getItems().indexOf(connection.getConnectionName()));
+				
+
+				boolean removed = netwTableSelector.getItems().remove(connection.getConnectionName());
+				logger.fine("Lost Network Table: " + connection.getConnectionName());
+				logger.fine("Network Table removed: " + removed);
+			}catch(IndexOutOfBoundsException e) {
+				logger.warning("GUI Error: Couldn't remove Network Table " + connection.getConnectionName());
+			}
 		}
 
 	}
