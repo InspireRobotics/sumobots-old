@@ -1,0 +1,2 @@
+# The Field
+The field is the central hub for SumoBots in field mode. The Fields main job is to communicate between all of the driver stations. When driver stations are configured for field mode they will try to connect to the field at 192.168.1.1:4283. The field will need to be a static ip configured at that address for this to work.
