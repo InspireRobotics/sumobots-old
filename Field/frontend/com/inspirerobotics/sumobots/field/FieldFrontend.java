@@ -19,6 +19,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import sun.audio.AudioPlayer;
 
 /**
  * This is the main class for the Application. This starts the
@@ -122,6 +123,13 @@ public class FieldFrontend extends Application {
 		case "time_period_update":
 			timePeriod = (TimePeriod) m.getData();
 			log.fine("New Time Period on Frontend: " + timePeriod);
+			
+			if(timePeriod == TimePeriod.GAME) {
+				AudioEffect.play("start.wav");
+			}else if(timePeriod == TimePeriod.ESTOPPED) {
+				AudioEffect.play("estop.wav");
+			}
+			
 			break;
 		case "update_internal_table":
 			root.getGameTab().setInternalNetwTable((NetworkTable) m.getData());
