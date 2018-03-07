@@ -114,7 +114,7 @@ public class GameTab extends AnchorPane {
 	/*
 	 * Toolbar buttons
 	 */
-	private Button closeAllTB, emergencyStopTB;
+	private Button emergencyStopTB;
 
 	/**
 	 * The button that selects the netwTable
@@ -179,7 +179,7 @@ public class GameTab extends AnchorPane {
 
 		// Initialize the toolbar
 		initToolbar();
-		toolbar = new ToolBar(emergencyStopTB, closeAllTB);
+		toolbar = new ToolBar(emergencyStopTB);
 		toolbar.setStyle("-fx-background-color:#2a2a2a");
 
 		// Create the layout
@@ -201,16 +201,6 @@ public class GameTab extends AnchorPane {
 				fieldFrontend.eStop();
 			}
 		});
-
-		closeAllTB = new Button("Close All DS Connections");
-		closeAllTB.setOnAction(new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent arg0) {
-				fieldFrontend.closeAll();
-			}
-		});
-
 	}
 
 	/**
