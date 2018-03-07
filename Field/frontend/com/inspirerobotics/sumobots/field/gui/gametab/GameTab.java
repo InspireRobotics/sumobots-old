@@ -7,8 +7,6 @@ import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.omg.CORBA.portable.IndirectionException;
-
 import com.inspirerobotics.sumobots.field.FieldFrontend;
 import com.inspirerobotics.sumobots.field.util.InternalLog;
 import com.inspirerobotics.sumobots.lib.networking.connection.Connection;
