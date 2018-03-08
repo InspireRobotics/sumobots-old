@@ -14,7 +14,7 @@ public class Resources {
 	 * <p><b>2nd Number</b>: the minor version
 	 * <p><b>3rd Number</b>: the revision number
 	 */
-	public static final String LIBRARY_VERSION = "0.1.0";
+	public static final String LIBRARY_VERSION = "0.2.0";
 	
 	/**
 	 * The name of the logger used throughout the library
