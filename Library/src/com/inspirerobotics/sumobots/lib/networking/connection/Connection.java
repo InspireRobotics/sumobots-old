@@ -141,11 +141,28 @@ public class Connection {
 			String libraryVersion = (String) message.getData("version");
 			boolean isResponse = Boolean.valueOf((String) message.getData("is_response"));
 	
-			if(libraryVersion.equals(Resources.LIBRARY_VERSION)){
-				logger.fine("Library Version matches for " + socket.getInetAddress());
-				if(isResponse){
-				}else{
+			if (libraryVersion.equals(Resources.LIBRARY_VERSION)) {
+				String logMessage = String.format("Library Version(%s) matches for %s",
+						Resources.LIBRARY_VERSION, socket.getInetAddress().toString());
+				
+				logger.fine(logMessage);
+				if (!isResponse) {
 					sendMessage(ArchetypalMessages.libraryVersion(true));
+				}
+			} else {
+				String errorMessage = String.format("Library versions don't match! This Version: %s, Connection Version: %s",
+						Resources.LIBRARY_VERSION, libraryVersion);
+
+				logger.severe(errorMessage);
+
+				if (!isResponse) {
+					sendMessage(ArchetypalMessages.libraryVersion(true));
+				}
+				
+				try {
+					this.close();
+				} catch (IOException e) {
+					e.printStackTrace();
 				}
 			}
 		}else if(messageType == MessageType.PING){
