@@ -1,27 +1,12 @@
 package com.inspirerobotics.sumobots.lib.networking.message;
 
+import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
-import com.inspirerobotics.sumobots.lib.Resources;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
-/**
- * This class creates and parses messages. Messages always follow the same
- * format. 
- * 
- *<b>Message Format:</b>
- * 
- * <p>[EOB] = End Of Block character 
- * <p>[US] = Unit Seperator
- * <p>[EOT] = End of Transmission
- * <p>
- * Message with no data: NAME[EOB][EOT]
- * <p>
- * Message with two pieces of data:
- * <p>
- * NAME[EOB]key1[US]value1[EOB]key2[US]value[EOB][EOT]
- * 
- * @author Noah
- */
 public class Message {
 
 	/**
@@ -52,42 +37,18 @@ public class Message {
 	 * @return the message create
 	 */
 	public static Message fromString(String string) {
-		MessageType m = MessageType.fromString(string);
-
-		// Remove everything except the data
-		String dataString = string.substring(string.indexOf(Resources.EOB) + 1);
-		HashMap<String, String> data = parseData(dataString);
-
-		// Now that we have the data and type create the message object
-		Message message = new Message(m);
-		message.data = data;
-
-		return message;
-	}
-
-	private static HashMap<String, String> parseData(String dataString) {
-		// Split every block of data into a string
-		String[] sets = dataString.split(Resources.EOB);
-		HashMap<String, String> data = new HashMap<String, String>();
-
-		// Parse every block of data
-		for (String string : sets) {
-			if(string.isEmpty())
-				break;
-			
-			if (string.contains(Resources.US)) {
-				int indexOfUS = string.indexOf(Resources.US);
-				String key = string.subSequence(0, indexOfUS).toString();
-				String value = string.substring(indexOfUS + 1);
-				data.put(key, value);
-
-			} else {
-				System.out.println("Malformed Data: " + string);
-			}
+		Type mapType = new TypeToken<HashMap<String, String>>(){}.getType();  
+		HashMap<String, String> json = new Gson().fromJson(string, mapType);
+		
+		Message m = new Message(MessageType.fromString(json.get("message_type")));
+		
+		for (Entry<String, String> o : json.entrySet()) {
+			m.addData(o.getKey(), o.getValue());
 		}
-
-		return data;
+		
+		return null;
 	}
+
 
 	public HashMap<String, String> getDataSet() {
 		return data;
@@ -119,15 +80,15 @@ public class Message {
 	 * 
 	 * @return
 	 */
-	public String getFormatedData() {
-		StringBuilder sb = new StringBuilder();
-
-		for (String key : data.keySet()) {
-			Object value = data.get(key);
-			sb.append(key + Resources.US + value + Resources.EOB);
-		}
-
-		return sb.toString();
+	public String toJSONString() {
+		HashMap<String, String> jsonValues = new HashMap<String, String>();
+		Gson gson = new Gson();
+		
+		jsonValues.putAll(data);
+		
+		jsonValues.put("message_type", type.getName());
+		
+		return gson.toJson(jsonValues);
 	}
 
 }

@@ -199,13 +199,15 @@ public class Connection {
 	 * @param m
 	 */
 	public void sendMessage(Message m){
-		sendMessage(m.getType(), m.getFormatedData());
+		writeRaw(m.toJSONString());
+
 	}
 	
 	/**
 	 * Sends a message over the socket with the data attached
 	 * @param m
 	 */
+	@Deprecated
 	public void sendMessage(MessageType m, String data){
 		writeRaw(m.getName() + Resources.EOB + data);
 	}
