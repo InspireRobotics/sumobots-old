@@ -159,11 +159,19 @@ public class Connection {
 					sendMessage(ArchetypalMessages.libraryVersion(true));
 				}
 				
+<<<<<<< HEAD
 				try {
 					this.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+=======
+//				try {
+//					this.close();
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
+>>>>>>> e8a149827dbf6aab932b9f3b97830dd0c5f6043a
 			}
 		}else if(messageType == MessageType.PING){
 			sendMessage(ArchetypalMessages.pong());
