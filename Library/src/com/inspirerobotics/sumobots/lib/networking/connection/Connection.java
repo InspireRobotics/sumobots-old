@@ -203,15 +203,6 @@ public class Connection {
 
 	}
 	
-	/**
-	 * Sends a message over the socket with the data attached
-	 * @param m
-	 */
-	@Deprecated
-	public void sendMessage(MessageType m, String data){
-		writeRaw(m.getName() + Resources.EOB + data);
-	}
-	
 	private String getNextMessage(){
 		return stream.getNextMessage();
 	}
