@@ -41,11 +41,6 @@ public class Resources {
 	
 	/**End of Transmission*/
 	public static final String EOT = String.valueOf((char) 4);
-	/**End of Transmission Block*/
-	public static final String EOB = String.valueOf((char) 23);
-	/**Unit Seperator*/
-	public static final String US = String.valueOf((char) 31);
-	
 	/*
 	 * Misc Stuff
 	 */
