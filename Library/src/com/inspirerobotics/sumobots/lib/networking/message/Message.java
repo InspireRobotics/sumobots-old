@@ -46,7 +46,7 @@ public class Message {
 			m.addData(o.getKey(), o.getValue());
 		}
 		
-		return null;
+		return m;
 	}
 
 

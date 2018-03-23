@@ -1,7 +1,5 @@
 package com.inspirerobotics.sumobots.lib.networking.message;
 
-import com.inspirerobotics.sumobots.lib.Resources;
-
 /**
  * This enum is used for holding the message type
  * 
@@ -67,15 +65,13 @@ public enum MessageType {
 	 * @return
 	 */
 	public static MessageType fromString(String message){
-		//If the message contains data then get rid of it
-		if(message.contains(Resources.EOB))
-			message = message.subSequence(0, message.indexOf(Resources.EOB)).toString();
 		for (MessageType m : MessageType.values()) {
-			if(m.getName().equals(message) && !message.equals(UNKNOWN.getName()))
+			if(m.getName().equals(message)) {
 				return m;
+			}
 		}
-		System.out.println("Found Unknown Message: " + message);
-		return UNKNOWN;
+		
+		return MessageType.UNKNOWN;
 	}
 	
 	/**
