@@ -461,18 +461,9 @@ public class GameTab extends AnchorPane {
 
 		// Remove all of the things left, because they are no longer connected
 		for (Connection connection : connsListed) {
-			
-			try {
-				if(netwTableSelector.getItems().contains(connection.getConnectionName()))
-					connsInTable.remove(netwTableSelector.getItems().indexOf(connection.getConnectionName()));
-				
-
-				boolean removed = netwTableSelector.getItems().remove(connection.getConnectionName());
-				logger.fine("Lost Network Table: " + connection.getConnectionName());
-				logger.fine("Network Table removed: " + removed);
-			}catch(IndexOutOfBoundsException e) {
-				logger.warning("GUI Error: Couldn't remove Network Table " + connection.getConnectionName());
-			}
+			connsInTable.remove(connection);
+			netwTableSelector.getItems().remove(connection.getConnectionName());
+			logger.warning("Lost networking table? "  + connection.getConnectionName());
 		}
 
 	}
