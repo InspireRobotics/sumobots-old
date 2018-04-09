@@ -19,7 +19,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
-import sun.audio.AudioPlayer;
 
 /**
  * This is the main class for the Application. This starts the

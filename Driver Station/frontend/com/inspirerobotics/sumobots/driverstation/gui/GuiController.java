@@ -35,6 +35,8 @@ public class GuiController{
 	public void init() {
 		statusLabel.setMinHeight(85);
 		statusLabel.setMaxHeight(85);
+		statusLabel.setFocusTraversable(false);
+		nameLabel.setFocusTraversable(false);
 		
 		enterNewPeriod(TimePeriod.DISABLED);
 		setConnectionStatus(false);

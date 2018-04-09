@@ -1,5 +1,6 @@
 package com.inspirerobotics.sumobots.driverstation;
 
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.inspirerobotics.sumobots.driverstation.gui.GuiController;
@@ -12,6 +13,8 @@ import com.inspirerobotics.sumobots.lib.concurrent.ThreadChannel;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -44,7 +47,7 @@ public class DriverStationFrontend extends Application {
 	 * The stage for the GUIs
 	 */
 	private Stage stage;
-
+	
 	/**
 	 * The main scene
 	 */
@@ -54,6 +57,8 @@ public class DriverStationFrontend extends Application {
 	 *  The GUIs controller
 	 */
 	private GuiController controller = new GuiController();
+	
+	private static final boolean nonFieldMode = DriverStationBackend.nonFieldMode;
 
 	@Override
 	public void start(Stage s) throws Exception {
@@ -90,6 +95,7 @@ public class DriverStationFrontend extends Application {
 	 * Updates the frontend and checks for messages from the backend
 	 */
 	protected void update() {
+		log.setLevel(Level.ALL);
 		// While there are messages from the frontend, handle them
 		InterThreadMessage m = null;
 		while ((m = threadChannel.poll()) != null) {
@@ -146,6 +152,30 @@ public class DriverStationFrontend extends Application {
 			}
 
 		});
+		
+		stage.addEventFilter(KeyEvent.KEY_PRESSED, k -> {
+			log.info("Key Pressed: " + k.getCode());
+			if(k.getCode() == KeyCode.DIGIT1 && nonFieldMode) {
+				threadChannel.add(new InterThreadMessage("new_state", TimePeriod.INIT));
+				return;
+			}
+			
+			if(k.getCode() == KeyCode.DIGIT2 && nonFieldMode) {
+				threadChannel.add(new InterThreadMessage("new_state", TimePeriod.GAME));
+				return;
+			}
+			
+			if(k.getCode() == KeyCode.SPACE && nonFieldMode) {
+				threadChannel.add(new InterThreadMessage("new_state", TimePeriod.ESTOPPED));
+				return;
+			}
+			
+			if(k.getCode() == KeyCode.ENTER && nonFieldMode) {
+				threadChannel.add(new InterThreadMessage("new_state", TimePeriod.DISABLED));
+				return;
+			}
+	    });
+
 	}
 
 	public static void main(String[] args) {

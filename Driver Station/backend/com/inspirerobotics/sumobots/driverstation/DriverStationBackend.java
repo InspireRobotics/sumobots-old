@@ -29,6 +29,11 @@ import com.inspirerobotics.sumobots.lib.networking.tables.NetworkTable;
 public class DriverStationBackend extends Thread implements ConnectionListener {
 
 	/**
+	 * If the DS is in non-field mode
+	 */
+	public static final boolean nonFieldMode = true;
+	
+	/**
 	 * The logger for Sumobots
 	 */
 	private final Logger logger = Logger.getLogger(Resources.LOGGER_NAME);
@@ -94,11 +99,18 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 		// Connect to the server, wait 3 seconds if we fail and try again
 		while (running) {
 			pollMessages();
-
+			
+			
+			if(nonFieldMode) {
+				conn = new EmptyConnection();
+				break;
+			}
+			
 			try {
 				Socket socket = new Socket("localhost", Resources.SERVER_PORT);
 				conn = new Connection(socket, this);
 				conn.setBindedTable(table);
+				logger.info("Found connection!");
 				break;
 			} catch (IOException e) {
 				logger.info("Failed to connect! Waiting 3 seconds...");
@@ -110,7 +122,12 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 				}
 			}
 		}
-
+		
+		//If we aren't running, exit!
+		if(!running) {
+			return;
+		}
+		
 		// We are now connected, lets start transfering messages...
 		setDriverStationName("DS-" + new Random().nextInt(10000));
 		logger.info("Established Field-DS Connection! Starting main loop");
@@ -149,10 +166,13 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 
 	private void updateNetworkTable() {
 		if (conn != null) {
-			table.put("ping", conn.getCurrentPing() + " ms");
-			table.put("connection name", conn.getConnectionName());
-			table.put("ip", conn.getSocket().getLocalAddress().toString());
+			if(conn.getSocket() != null) {
+				table.put("ping", conn.getCurrentPing() + " ms");
+				table.put("connection name", conn.getConnectionName());
+				table.put("ip", conn.getSocket().getLocalAddress().toString());
+			}
 		}
+		
 		table.put("Logger Level", "" + logger.getLevel());
 		table.put("Name", name);
 		table.put("Time Period", "" + currentPeriod);
@@ -192,6 +212,8 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 			logger.info("Exiting Backend Thread!");
 			shutdown();
 			break;
+		case "new_state":
+			updateMatchStatus(ArchetypalMessages.enterNewMatchPeriod((TimePeriod) m.getData()));
 		default: // If it reaches this we don't know what it is so print a
 					// warning to the screen
 			logger.warning("Unknown Message Recieved on Backend: " + name);

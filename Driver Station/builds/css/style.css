@@ -7,3 +7,10 @@
 	-fx-text-fill: white;
 	-fx-font-size:24;
 }
+
+#console{
+	-fx-background-color:#6a6a6a;
+	-fx-border-color:white;
+	-fx-text-fill: white;
+	-fx-font-size:24;
+}

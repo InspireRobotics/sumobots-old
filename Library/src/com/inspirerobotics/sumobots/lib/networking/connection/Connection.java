@@ -84,6 +84,8 @@ public class Connection {
 			this.stream = new SocketStream(socket);
 		}catch (IOException e) {
 			logger.log(Level.SEVERE, "Failed to create connection from socket", e);
+		}catch(NullPointerException e) {
+			
 		}
 	}
 	
