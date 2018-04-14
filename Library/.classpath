@@ -9,5 +9,6 @@
 			<attribute name="javadoc_location" value="jar:platform:/resource/Library/libs/gson/gson-2.8.2-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="libs/toml/jtoml-1.0.0.jar"/>
 	<classpathentry kind="output" path="builds"/>
 </classpath>
