@@ -10,6 +10,7 @@ import com.inspirerobotics.sumobots.lib.Resources;
 import com.inspirerobotics.sumobots.lib.TimePeriod;
 import com.inspirerobotics.sumobots.lib.concurrent.InterThreadMessage;
 import com.inspirerobotics.sumobots.lib.concurrent.ThreadChannel;
+import com.inspirerobotics.sumobots.lib.config.Config;
 import com.inspirerobotics.sumobots.lib.networking.connection.Connection;
 import com.inspirerobotics.sumobots.lib.networking.connection.ConnectionListener;
 import com.inspirerobotics.sumobots.lib.networking.message.ArchetypalMessages;
@@ -31,7 +32,7 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 	/**
 	 * If the DS is in non-field mode
 	 */
-	public static final boolean nonFieldMode = true;
+	public static final boolean nonFieldMode = false;
 	
 	/**
 	 * The logger for Sumobots
@@ -42,6 +43,11 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 	 * The connection to the field
 	 */
 	private Connection conn;
+	
+	/**
+	 * The config for the Driver Station
+	 */
+	private Config config;
 
 	/**
 	 * The current time period on the driver station
@@ -80,9 +86,12 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 	 */
 	@Override
 	public void run() {
+		logger.setLevel(Level.FINE);
+		loadConfig();
+		
 		running = true;
 		channel.add(new InterThreadMessage("conn_status", false));
-
+		
 		connect();
 
 		// If we closed the application while trying to connect,
@@ -95,6 +104,10 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 		runMainLoop();
 	}
 
+	private void loadConfig() {
+		config = new Config("DriverStation");
+	}
+	
 	private void connect() {
 		// Connect to the server, wait 3 seconds if we fail and try again
 		while (running) {
@@ -107,7 +120,7 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 			}
 			
 			try {
-				Socket socket = new Socket("localhost", Resources.SERVER_PORT);
+				Socket socket = new Socket(getFieldIp(), Resources.SERVER_PORT);
 				conn = new Connection(socket, this);
 				conn.setBindedTable(table);
 				logger.info("Found connection!");
@@ -129,9 +142,28 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 		}
 		
 		// We are now connected, lets start transfering messages...
-		setDriverStationName("DS-" + new Random().nextInt(10000));
+		generateDriverStationName();
 		logger.info("Established Field-DS Connection! Starting main loop");
 		channel.add(new InterThreadMessage("conn_status", true));
+	}
+	
+	private String getFieldIp() {
+		if(config != null) {
+			if(config.getString("fieldIP") != null) {
+				return config.getString("fieldIP");
+			}
+		}
+		return "localhost";
+	}
+
+	private void generateDriverStationName() {
+		if(config != null) {
+			if(config.getString("name") != null) {
+				setDriverStationName("DS-" + config.getString("name"));
+				return;
+			}
+		}
+		setDriverStationName("DS-" + new Random().nextInt(10000));
 	}
 
 	/**
