@@ -1,6 +1,7 @@
 package com.inspirerobotics.sumobots.lib.networking;
 
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
@@ -123,7 +124,7 @@ public class Server {
 	 */
 	private ServerSocket createServerSocket() {
 		try {
-			ServerSocket socket = new ServerSocket(Resources.SERVER_PORT);
+			ServerSocket socket = new ServerSocket(Resources.SERVER_PORT, 20, InetAddress.getByName("0.0.0.0"));
 			socket.setSoTimeout(Resources.SOCKET_TIMEOUT);
 			return socket;
 		} catch (IOException e) {
