@@ -6,7 +6,6 @@
 /Field/builds
 /Library/builds
 /Driver Station/builds
-/Robot/builds
 
 # Compiled class file
 *.class
