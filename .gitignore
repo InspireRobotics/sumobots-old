@@ -1,11 +1,12 @@
 # Eclipse Stuff
 .metadata
 .recommenders
+sumobots/.settings
+*.project
 
-# Build Files
-/Field/builds
-/Library/builds
-/Driver Station/builds
+# intellij
+sumobots/.idea
+*.iml
 
 # Compiled class file
 *.class
