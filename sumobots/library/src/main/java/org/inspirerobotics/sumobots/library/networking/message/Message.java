@@ -1,41 +1,23 @@
 package org.inspirerobotics.sumobots.library.networking.message;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
 public class Message {
 
-	/**
-	 * The Type of the Message
-	 */
 	private MessageType type;
 
-	/**
-	 * The data within the message
-	 */
 	private HashMap<String, String> data = new HashMap<String, String>();
 
-	/**
-	 * Create a message with no data attached
-	 * 
-	 * @param type
-	 */
 	public Message(MessageType type) {
 		super();
 		this.type = type;
 	}
 
-	/**
-	 * Creates a message from a String
-	 * 
-	 * @param string
-	 *            the string to be parsed
-	 * @return the message create
-	 */
 	public static Message fromString(String string) {
 		Type mapType = new TypeToken<HashMap<String, String>>(){}.getType();  
 		HashMap<String, String> json = new Gson().fromJson(string, mapType);
@@ -75,11 +57,6 @@ public class Message {
 		return type.getName() + "  Data: " + data;
 	}
 
-	/**
-	 * Formats the Data into a single string using the format
-	 * 
-	 * @return
-	 */
 	public String toJSONString() {
 		HashMap<String, String> jsonValues = new HashMap<String, String>();
 		Gson gson = new Gson();

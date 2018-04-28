@@ -2,12 +2,6 @@ package org.inspirerobotics.sumobots.field.gui.gametab;
 
 import javafx.beans.property.SimpleStringProperty;
 
-/**
- * A class to store the data for a connection in the Connection Table
- * 
- * Currently a WIP
- * @author Noah
- */
 public class TableConnection {
 	
 	public SimpleStringProperty name;

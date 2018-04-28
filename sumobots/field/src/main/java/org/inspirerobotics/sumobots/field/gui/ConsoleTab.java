@@ -1,12 +1,5 @@
 package org.inspirerobotics.sumobots.field.gui;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.inspirerobotics.sumobots.field.util.InternalLog;
-
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
@@ -15,82 +8,51 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import org.inspirerobotics.sumobots.field.util.InternalLog;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ConsoleTab extends AnchorPane {
 
-	/**
-	 * A equivalent enum of {@link java.util.logging.Level}. Used internally
-	 * because the GUI has different names for each level
-	 * 
-	 * @author Noah
-	 */
 	private enum GuiLogLevel {
 		ERROR, WARNING, INFO, DEBUG, TRACE
 	}
 
-	/**
-	 * The console on the control panel
-	 */
 	public GuiLogLevel currentLevel = GuiLogLevel.DEBUG;
 
-	/**
-	 * The console on the control panel
-	 */
 	@FXML
 	public Text levelLabel;
 
-	/**
-	 * The console on the control panel
-	 */
 	@FXML
 	public TextArea console;
 
-	/**
-	 * The control panel for the tab. At the bottom of the screen
-	 */
 	@FXML
 	public HBox controlBox;
 
-	/**
-	 * The buttons for setting the level of the console
-	 */
 	@FXML
 	public Button errorButton, warningButton, infoButton, fineButton, finerButton;
 
-	/**
-	 * The buttons for archiving the current log
-	 */
 	@FXML
 	public Button archiveButton;
 
-	/**
-	 * The log
-	 */
 	private Logger logger = InternalLog.getLogger();
 
-	/**
-	 * Creates a game tab and starts the game tab loop
-	 * 
-	 * @param ff
-	 *            the varaible to the FieldFrontend. See {@link #fieldFrontend}
-	 *            for its purpose
-	 */
 	public ConsoleTab() {
 
-		// Creates the loader that loads the GUI
 		logger.fine("Loading log.fxml");
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/fxml/log.fxml"));
 		fxmlLoader.setController(this);
 		fxmlLoader.setRoot(this);
 
-		// Actually try to load the GUI
 		try {
 			fxmlLoader.load();
 		} catch (IOException e) {
 			logger.log(Level.SEVERE, "Failed to load log.fxml", e);
 		}
 		
-		// Set all of the buttons to red
 		archiveButton.setStyle("-fx-background-color:red");
 		errorButton.setStyle("-fx-background-color:red");
 		warningButton.setStyle("-fx-background-color:red");
@@ -105,21 +67,16 @@ public class ConsoleTab extends AnchorPane {
 	void update() {
 		updateButtons();
 		
-		// Update the console
 		List<String> list = InternalLog.getInstance().getLogLines();
 		StringBuilder sb = new StringBuilder();
 	
-		// Set the label of the current level
 		levelLabel.setText("Current Level: " + currentLevel.toString());
 		
-		//Lets get the levels we need to remove from the log
 		String[] levelsToRemove = getLevelsToRemove();
 		
-		// toArray() prevents ConcurrentModificationException
 		for (Object obj : list.toArray()) {
 			String string = (String) obj;
 			
-			//If the string has any levels we need to remove, don't add the line
 			if(!containsAny(string, levelsToRemove))
 				sb.append(string);
 		}
@@ -130,14 +87,7 @@ public class ConsoleTab extends AnchorPane {
 		}
 
 	}
-	
-	/**
-	 * If a string s has any of the strings in the array
-	 * If levelsToRemove is true this will return false.
-	 * 
-	 * @param string the string to check
-	 * @param levelsToRemove strings to check if they are in the string
-	 */
+
 	private boolean containsAny(String string, String[] levelsToRemove) {
 		if(levelsToRemove == null)
 			return false;
@@ -168,7 +118,6 @@ public class ConsoleTab extends AnchorPane {
 		double fontSize = buttonLength / 6 > 20 ? 20 : buttonLength / 6;
 		Font font = Font.font(fontSize);
 
-		// Set the font sizes
 		archiveButton.setFont(font);
 		errorButton.setFont(font);
 		warningButton.setFont(font);
@@ -176,7 +125,6 @@ public class ConsoleTab extends AnchorPane {
 		fineButton.setFont(font);
 		finerButton.setFont(font);
 
-		// Sets the widths of the buttons
 		archiveButton.setMinWidth(buttonLength * 2);
 		errorButton.setMinWidth(buttonLength);
 		warningButton.setMinWidth(buttonLength);

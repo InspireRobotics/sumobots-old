@@ -1,11 +1,5 @@
 package org.inspirerobotics.sumobots.driverstation;
 
-import java.io.IOException;
-import java.net.Socket;
-import java.util.Random;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.inspirerobotics.sumobots.library.Resources;
 import org.inspirerobotics.sumobots.library.TimePeriod;
 import org.inspirerobotics.sumobots.library.concurrent.InterThreadMessage;
@@ -18,61 +12,30 @@ import org.inspirerobotics.sumobots.library.networking.message.Message;
 import org.inspirerobotics.sumobots.library.networking.message.MessageType;
 import org.inspirerobotics.sumobots.library.networking.tables.NetworkTable;
 
-/**
- * The second most important class for the driver station. Handles everything
- * that isn't the gui. This is started from the frontend. Roles include:
- * handling communication with the robot and field and handling the
- * joysticks/driving.
- * 
- * @author Noah
- *
- */
+import java.io.IOException;
+import java.net.Socket;
+import java.util.Random;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 public class DriverStationBackend extends Thread implements ConnectionListener {
 
-	/**
-	 * If the DS is in non-field mode
-	 */
 	public static final boolean nonFieldMode = false;
-	
-	/**
-	 * The logger for Sumobots
-	 */
+
 	private final Logger logger = Logger.getLogger(Resources.LOGGER_NAME);
 
-	/**
-	 * The connection to the field
-	 */
 	private Connection conn;
-	
-	/**
-	 * The config for the Driver Station
-	 */
+
 	private Config config;
 
-	/**
-	 * The current time period on the driver station
-	 */
 	private TimePeriod currentPeriod = TimePeriod.DISABLED;
 
-	/**
-	 * The thread channel for the frontend and backend threads
-	 */
 	private ThreadChannel channel;
 
-	/**
-	 * 
-	 * If the application is running
-	 */
 	private boolean running;
 
-	/**
-	 * The name of the current driver station
-	 */
 	private String name = "";
 
-	/*
-	 * the DS Network Table
-	 */
 	private NetworkTable table = new NetworkTable();
 
 	public DriverStationBackend(ThreadChannel tc) {
@@ -81,9 +44,6 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 		logger.setLevel(Level.ALL);
 	}
 
-	/**
-	 * Inits the socket, and sets a random name for the driver station
-	 */
 	@Override
 	public void run() {
 		logger.setLevel(Level.FINE);
@@ -94,8 +54,6 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 		
 		connect();
 
-		// If we closed the application while trying to connect,
-		// exit and don't run the main loop
 		if (!running) {
 			shutdown();
 			return;
@@ -109,7 +67,6 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 	}
 	
 	private void connect() {
-		// Connect to the server, wait 3 seconds if we fail and try again
 		while (running) {
 			pollMessages();
 			
@@ -136,12 +93,10 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 			}
 		}
 		
-		//If we aren't running, exit!
 		if(!running) {
 			return;
 		}
 		
-		// We are now connected, lets start transfering messages...
 		generateDriverStationName();
 		logger.info("Established Field-DS Connection! Starting main loop");
 		channel.add(new InterThreadMessage("conn_status", true));
@@ -165,10 +120,7 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 		}
 		setDriverStationName("DS-" + new Random().nextInt(10000));
 	}
-
-	/**
-	 * The Driver Station main loop
-	 */
+	
 	private void runMainLoop() {
 
 		while (running) {
@@ -211,34 +163,21 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 
 	}
 
-	/**
-	 * Checks and handles any messages recieved by the frontend
-	 */
 	private void pollMessages() {
-		// While there are messages from the frontend, handle them
 		InterThreadMessage m = null;
 		while ((m = channel.poll()) != null) {
 			onFrontendMessageReceived(m);
 
-			// This needs to be here to prevent other messages from being
-			// proccessed after the app is supposed to be closing
 			if (!running)
 				return;
 		}
 	}
 
-	/**
-	 * When a message is recieved by the frontend
-	 * 
-	 * @param m
-	 *            the message recieved
-	 */
 	private void onFrontendMessageReceived(InterThreadMessage m) {
 		String name = m.getName();
 
 		logger.fine("Recieved Message from Frontend: " + name);
 
-		// Figure out what type of message it is
 		switch (name) {
 		case "exit_app":
 			logger.info("Exiting Backend Thread!");
@@ -246,25 +185,18 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 			break;
 		case "new_state":
 			updateMatchStatus(ArchetypalMessages.enterNewMatchPeriod((TimePeriod) m.getData()));
-		default: // If it reaches this we don't know what it is so print a
-					// warning to the screen
+		default:
 			logger.warning("Unknown Message Recieved on Backend: " + name);
 			break;
 		}
 	}
 
-	/*
-	 * Shuts down the backend - closes the connections and stops running
-	 */
 	public void shutdown() {
 		if (conn != null)
 			conn.endConnection();
 		running = false;
 	}
 
-	/**
-	 * When a message is recieved from the FMS
-	 */
 	@Override
 	public void recievedMessage(Message message, Connection connection) {
 		MessageType type = message.getType();
@@ -280,25 +212,15 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 		conn.sendMessage(ArchetypalMessages.setName(name));
 	}
 
-	/**
-	 * Updates the Driver Station on the current match status. This update would be
-	 * originated by the FMS
-	 * 
-	 * @param message
-	 */
 	private void updateMatchStatus(Message message) {
 		String timePeriod = (String) message.getData("new_period");
 		currentPeriod = TimePeriod.fromString(timePeriod);
 
-		// Send the new period to the gui
 		channel.add(new InterThreadMessage("new_period", currentPeriod));
 
 		logger.info("Entering match period: " + currentPeriod.getName());
 	}
 
-	/**
-	 * The connection to the field
-	 */
 	public Connection getConn() {
 		return conn;
 	}

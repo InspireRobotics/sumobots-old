@@ -10,39 +10,20 @@ public class MatchStatusBar extends HBox {
 	private static final int cornerBoxSize = 80;
 	private static final int stdHeight = 60;
 
-	/**
-	 * The Current Match Number
-	 */
 	private TextField matchNumberBox;
 
-	/**
-	 * The current state of the match, i.e. game ended, init, in-game
-	 */
 	private TextField matchStateBox;
 
-	/**
-	 * The current time the match has been going
-	 */
 	private TextField matchTimeBox;
 
-	/**
-	 * The internal match number
-	 */
 	private int matchNum = 0;
 
-	/**
-	 * The internal Time
-	 */
 	private long matchTime;
 
-	/**
-	 * The last known time period
-	 */
 	private TimePeriod lastKnownTimePeriod;
 
 	public MatchStatusBar() {
-		// init the match number box and match time box
-		String style = "-fx-background-color:#2a2a2a;-fx-text-fill: white; -fx-font-size: 24;-fx-alignment: center;" + 
+		String style = "-fx-background-color:#2a2a2a;-fx-text-fill: white; -fx-font-size: 24;-fx-alignment: center;" +
 				"-fx-border-radius: 0 0 0 0;-fx-background-radius: 0 0 0 0;";
 		
 		matchNumberBox = new TextField("#250");
@@ -58,8 +39,7 @@ public class MatchStatusBar extends HBox {
 		matchTimeBox.setMaxWidth(cornerBoxSize);
 		matchTimeBox.setMinHeight(stdHeight);
 
-		// init the match state box
-		style = "-fx-background-color:green;-fx-text-fill: white;-fx-font-size: 28;-fx-alignment: center;" + 
+		style = "-fx-background-color:green;-fx-text-fill: white;-fx-font-size: 28;-fx-alignment: center;" +
 				"-fx-border-radius: 0 0 0 0;-fx-background-radius: 0 0 0 0;";
 		
 		matchStateBox = new TextField("Game Active");
@@ -70,22 +50,17 @@ public class MatchStatusBar extends HBox {
 	}
 
 	public void updateStats(TimePeriod timePeriod) {
-		// If its null, the backend has yet sent the first match update
-		// so we will assume it will be null
 		if (timePeriod == null) {
 			timePeriod = TimePeriod.DISABLED;
 		}
 
-		// Update what state we are in
 		updateMatchStateBox(timePeriod);
 
-		// If we are in a new time period, lets update the time and possibly number
 		if (timePeriod != lastKnownTimePeriod) {
 			enterNewPeriod(timePeriod);
 			lastKnownTimePeriod = timePeriod;
 		}
 
-		// Update Match Time/Match Number boxes
 		matchNumberBox.setText("#" + matchNum);
 
 		String time = "" + (System.currentTimeMillis() - matchTime) / 1000;
@@ -123,9 +98,6 @@ public class MatchStatusBar extends HBox {
 		}
 	}
 
-	/**
-	 * Updates the layout of the gui
-	 */
 	public void updateGui() {
 		matchStateBox.setMinWidth(this.getWidth() - (cornerBoxSize * 2));
 	}

@@ -1,5 +1,7 @@
 package org.inspirerobotics.sumobots.field.util;
 
+import org.inspirerobotics.sumobots.library.Resources;
+
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -8,47 +10,17 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
-import org.inspirerobotics.sumobots.library.Resources;
-
-/**
- * Represents the internal log of the application
- *
- * Levels of Logging:
- * <p>
- * Severe
- * <p>
- * Warning
- * <p>
- * Info
- * <p>
- * Debug (Fine in terms of java.util.logging)
- * <p>
- * Trace (Finer in terms of java.util.logging)
- *
- * @author Noah
- */
 public class InternalLog {
 
-	/**
-	 * The Instance of the Log (For this thread)
-	 */
 	private static InternalLog INSTANCE;
 
-	/**
-	 * The currents lines in the log
-	 */
 	private final Logger logger = Logger.getLogger(Resources.LOGGER_NAME);
-	
-	/**
-	 * This holds all of the lines to the internal log. This only includes logs
-	 * with the level info or above
-	 */
+
 	private final ArrayList<String> logLines = new ArrayList<String>();
 
 	private InternalLog() {
 		logger.setLevel(Level.FINE);
 		
-		//Set custom logging format
 		logger.setUseParentHandlers(false);
 		logger.addHandler(new Handler(){
 			
@@ -101,9 +73,6 @@ public class InternalLog {
 		return INSTANCE;
 	}
 
-	/**
-	 * Clears the internal version of the log
-	 */
 	public void clear() {
 		logLines.clear();
 	}

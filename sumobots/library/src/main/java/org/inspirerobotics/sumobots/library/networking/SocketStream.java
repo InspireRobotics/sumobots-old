@@ -1,75 +1,39 @@
 package org.inspirerobotics.sumobots.library.networking;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import org.inspirerobotics.sumobots.library.Resources;
+
+import java.io.*;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.inspirerobotics.sumobots.library.Resources;
-
 public class SocketStream {
-	
-	/**
-	 * The reader for the socket
-	 */
+
 	private final DataInputStream reader;
-	
-	/**
-	 * The actual socket connection
-	 */
+
 	private final Socket socket;
-	
-	/**
-	 * The writer for the socket
-	 */
+
 	private final DataOutputStream writer;
-	/**
-	 * The internal buffer for the stream
-	 */
+
 	private final StringBuilder builder = new StringBuilder();
-	
-	/**
-	 * If the socket stream has been closed
-	 */
+
 	private boolean closed = false;
-	
-	/**
-	 * The logger
-	 */
+
 	private final Logger logger = Logger.getLogger(Resources.LOGGER_NAME);
-	
-	/**
-	 * Makes a new SocketStream
-	 * 
-	 * @param reader 
-	 * @param writer
-	 */
+
 	public SocketStream(InputStream reader, OutputStream writer, Socket socket) {
 		super();
 		this.socket = socket;
 		this.reader = new DataInputStream(reader);
 		this.writer = new DataOutputStream(writer);
 	}
-	
-	/**
-	 * Makes a new SocketStream
-	 * 
-	 * @param socket
-	 * @throws IOException
-	 */
+
 	public SocketStream(Socket socket) throws IOException {
 		this(socket.getInputStream(), socket.getOutputStream(), socket);
 	}
 
-	/**
-	 * Updates the input stream and adds stuff to the buffer
-	 */
+
 	public void update(){
 		if(closed)
 			return;
@@ -97,17 +61,11 @@ public class SocketStream {
 			}
 		}
 	}
-	
-	/**
-	 * @return if the buffer has a message inside of it
-	 */
+
 	public boolean hasNextMessage(){
 		return builder.toString().contains(Resources.EOT);
 	}
-	
-	/**
-	 * @return the next message in the buffer. If no message is available it will return null
-	 */
+
 	public String getNextMessage(){
 		int index = builder.toString().indexOf(Resources.EOT);
 		
@@ -121,11 +79,7 @@ public class SocketStream {
 		builder.replace(0, index + 1, "");
 		return s;
 	}
-	
-	/**
-	 * Writes directly to the output stream
-	 * @param s
-	 */
+
 	public void write(String s){
 		if(closed)
 			return;
@@ -144,11 +98,7 @@ public class SocketStream {
 			}
 		}
 	}
-	
-	/**
-	 * Closes the output stream
-	 * @throws IOException
-	 */
+
 	public void close() throws IOException {
 		reader.close();
 		writer.close();
@@ -164,16 +114,10 @@ public class SocketStream {
 		return closed;
 	}
 
-	/**
-	 * @return the reader
-	 */
 	public DataInputStream getReader() {
 		return reader;
 	}
 
-	/**
-	 * @return the writer
-	 */
 	public DataOutputStream getWriter() {
 		return writer;
 	}

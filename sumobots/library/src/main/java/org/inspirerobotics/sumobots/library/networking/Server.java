@@ -1,5 +1,11 @@
 package org.inspirerobotics.sumobots.library.networking;
 
+import org.inspirerobotics.sumobots.library.Resources;
+import org.inspirerobotics.sumobots.library.networking.connection.Connection;
+import org.inspirerobotics.sumobots.library.networking.connection.ConnectionListener;
+import org.inspirerobotics.sumobots.library.networking.message.ArchetypalMessages;
+import org.inspirerobotics.sumobots.library.networking.message.Message;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -10,52 +16,18 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.inspirerobotics.sumobots.library.Resources;
-import org.inspirerobotics.sumobots.library.networking.connection.Connection;
-import org.inspirerobotics.sumobots.library.networking.connection.ConnectionListener;
-import org.inspirerobotics.sumobots.library.networking.message.ArchetypalMessages;
-import org.inspirerobotics.sumobots.library.networking.message.Message;
-
-/**
- * This class handles the server socket/server stuff.
- * 
- * @author Noah
- *
- */
 public class Server {
 
-	/**
-	 * The Log
-	 */
 	private final Logger log = Logger.getLogger(Resources.LOGGER_NAME);
 
-	/**
-	 * The server socket that handles incoming requests
-	 */
 	private final ServerSocket serverSocket;
-	/**
-	 * The list of the connections currently open
-	 */
+
 	private final List<Connection> connections = new ArrayList<Connection>();
-	/**
-	 * The ConnectionListener for everything connected to the server
-	 */
+
 	private final ConnectionListener cl;
-	
-	/**
-	 * The name to set the connection
-	 */
+
 	private final String name;
 
-	/**
-	 * Creates a new server
-	 * 
-	 * @param cl
-	 *            The
-	 *            {@link org.inspirerobotics.sumobots.library.networking.connection.ConnectionListener}
-	 *            for everything connected to the server
-	 * @param internalTable 
-	 */
 	public Server(ConnectionListener cl, String name) {
 		serverSocket = createServerSocket();
 		log.info("Started Server on " + serverSocket.getInetAddress() + " on port " + serverSocket.getLocalPort());
@@ -63,21 +35,12 @@ public class Server {
 		this.name = name;
 	}
 
-	/**
-	 * Sends a message to every connection on the server
-	 * 
-	 * @param m
-	 *            the message to send
-	 */
 	public void sendAll(Message m) {
 		for (Connection connection : connections) {
 			connection.sendMessage(m);
 		}
 	}
 
-	/**
-	 * Updates every connection on the server
-	 */
 	public void update() {
 		acceptConnections();
 
@@ -95,10 +58,6 @@ public class Server {
 		}
 	}
 
-	/**
-	 * Accepts all new connections and immediately sends a library version request
-	 * to confirm that both ends are using the same version of the software
-	 */
 	private void acceptConnections() {
 		try {
 			Socket s;
@@ -119,9 +78,6 @@ public class Server {
 
 	}
 
-	/**
-	 * @return a server socket with settings from the{@link Resources} file
-	 */
 	private ServerSocket createServerSocket() {
 		try {
 			ServerSocket socket = new ServerSocket(Resources.SERVER_PORT, 20, InetAddress.getByName("0.0.0.0"));
