@@ -1,14 +1,19 @@
-# Eclipse Stuff
-.metadata
-.recommenders
-sumobots/.settings
-*.project
-
-# intellij
-.idea/**/workspace.xml
-.idea/**/tasks.xml
-.idea/**/dictionaries
-.idea/**/shelf
+# Eclipse
+sumobots/.classpath
+sumobots/.project
+sumobots/.settings/
+ 
+# Intellij
+sumobots/.idea/
+*.iml 
+*.iws
+ 
+# Mac
+.DS_Store
+ 
+# Maven
+log/
+target/
 
 # Compiled class file
 *.class
