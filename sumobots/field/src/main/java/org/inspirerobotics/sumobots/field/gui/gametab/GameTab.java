@@ -1,36 +1,29 @@
 package org.inspirerobotics.sumobots.field.gui.gametab;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map.Entry;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.inspirerobotics.sumobots.field.FieldFrontend;
-import org.inspirerobotics.sumobots.field.util.InternalLog;
-import org.inspirerobotics.sumobots.library.networking.connection.Connection;
-import org.inspirerobotics.sumobots.library.networking.tables.NetworkTable;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.ToolBar;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
+import org.inspirerobotics.sumobots.field.FieldFrontend;
+import org.inspirerobotics.sumobots.field.util.InternalLog;
+import org.inspirerobotics.sumobots.library.networking.connection.Connection;
+import org.inspirerobotics.sumobots.library.networking.tables.NetworkTable;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map.Entry;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class GameTab extends AnchorPane {
 

@@ -1,19 +1,18 @@
 package org.inspirerobotics.sumobots.field.gui;
 
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.inspirerobotics.sumobots.field.FieldFrontend;
-import org.inspirerobotics.sumobots.field.gui.gametab.GameTab;
-import org.inspirerobotics.sumobots.field.util.InternalLog;
-
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
+import org.inspirerobotics.sumobots.field.FieldFrontend;
+import org.inspirerobotics.sumobots.field.gui.gametab.GameTab;
+import org.inspirerobotics.sumobots.field.util.InternalLog;
+
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * The root of the GUI This will hold all of the key elements

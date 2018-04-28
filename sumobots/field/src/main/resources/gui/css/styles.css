@@ -1,0 +1,84 @@
+.controlButton {
+    -fx-border-color:gray;
+    -fx-border-width:3;
+}
+
+.controlPane{
+	-fx-background-color:black;
+	-fx-alignment:center;
+}
+
+.controlConsole{
+	-fx-border-color:gray;
+    -fx-border-width:3;
+}
+
+.controlConsole .content {
+    -fx-background-color: 	#A9A9A9;
+}
+
+.stdTable{
+   -fx-background-color: transparent;
+}
+
+.stdTable:focused{
+    -fx-background-color: transparent;
+}
+
+.stdGrayBack{
+	-fx-background-color:gray;
+}
+
+
+/* Spaltenköpfe
+    Struktur column-header-background -> column-header */
+
+.stdTable .column-header-background{
+    -fx-background-color: linear-gradient(#131313 0%, #424141 100%);
+}
+
+.stdTable .column-header-background .filler {
+    -fx-background-color: linear-gradient(#101010 0%, #424141 100%);
+}
+
+.stdTable .column-header-background .label{
+    -fx-background-color: transparent;
+    -fx-text-fill: red;
+    -fx-font-size: 12pt ;
+}
+
+.stdTable .column-header {
+    -fx-background-color: transparent;
+}
+
+.netwTableSelector{
+	-fx-text-fill:red;
+	-fx-background:gray;
+}
+
+.split-pane{
+	-fx-background-color:gray;
+}
+
+.split-pane:horizontal > .split-pane-divider {
+   -fx-background-color: black;
+   -fx-max-width:2px;
+}
+
+.stdTable .table-cell{
+    -fx-text-fill: white;
+    -fx-background-color:gray;
+    -fx-border-color:black;
+    -fx-font: 18 arial;
+}
+
+#netwTable .table-cell{
+	    -fx-font: 14 arial;
+}
+
+
+.stdTable{
+    -fx-background-color: gray;
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-padding: 0.0em; /* 0 */
+}
