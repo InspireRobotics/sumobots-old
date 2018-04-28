@@ -122,14 +122,11 @@ public class Connection {
 		
 		stream.update();
 		
-		//While there is message, handle it
 		while(hasNextMessage()){
 			String nextMessage = getNextMessage();
 			Message message = Message.fromString(nextMessage);
 			MessageType messageType = message.getType();
-			
-			//If the message isn't internal send it to the listener
-			//else handle it
+
 			if(!MessageType.isInternalType(messageType)){
 				listener.recievedMessage(message, this);
 			}else{

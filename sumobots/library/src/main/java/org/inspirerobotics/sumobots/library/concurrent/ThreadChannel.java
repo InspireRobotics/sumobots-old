@@ -36,7 +36,12 @@ public class ThreadChannel {
 	}
 
 	public InterThreadMessage poll(){
-		return rx.poll();
+		InterThreadMessage message =  rx.poll();
+
+		if(message != null)
+			logger.finer("Received inter-thread message " + message.getName());
+
+		return message;
 	}
 
 	public void add(InterThreadMessage m){

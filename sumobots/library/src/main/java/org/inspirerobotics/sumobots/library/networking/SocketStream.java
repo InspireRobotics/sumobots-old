@@ -100,6 +100,7 @@ public class SocketStream {
 	}
 
 	public void close() throws IOException {
+		logger.fine("Closing socket stream: " + socket.getInetAddress());
 		reader.close();
 		writer.close();
 		closed = true;
