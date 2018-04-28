@@ -120,7 +120,7 @@ public class DriverStationBackend extends Thread implements ConnectionListener {
 		}
 		setDriverStationName("DS-" + new Random().nextInt(10000));
 	}
-	
+
 	private void runMainLoop() {
 
 		while (running) {
