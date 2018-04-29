@@ -30,6 +30,9 @@ public class GameTab extends AnchorPane {
 	private ControlPane controlPane;
 
 	@FXML
+	public BorderPane centralBorderPane;
+
+	@FXML
 	public BorderPane mainBorderPane;
 
 	public MatchStatusBar matchStatusBar;
@@ -90,7 +93,7 @@ public class GameTab extends AnchorPane {
 		VBox vbox = new VBox();
 		vbox.getChildren().addAll(matchStatusBar, toolbar);
 
-		mainBorderPane.setTop(vbox);
+		centralBorderPane.setTop(vbox);
 	}
 
 	private void initToolbar() {
