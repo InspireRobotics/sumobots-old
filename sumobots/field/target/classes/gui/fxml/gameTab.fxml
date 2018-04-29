@@ -18,52 +18,7 @@
 			AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0"
 			AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
 			<bottom>
-				<HBox fx:id="controlPane" fillHeight="true" prefHeight="140.0"
-					prefWidth="200.0" spacing="10.0" styleClass="controlPane"
-					stylesheets="@../css/styles.css" BorderPane.alignment="CENTER">
-					<children>
-						<HBox fx:id="controlButtonPane" minWidth="430.0" prefWidth="300.0"
-							spacing="15.0" styleClass="controlPane" stylesheets="@../css/styles.css">
-							<children>
-								<Button fx:id="initMatch" layoutX="182.0" layoutY="10.0"
-									minWidth="130.0" mnemonicParsing="false" onAction="#initButtonPressed"
-									style="-fx-background-color: blue;" styleClass="controlButton"
-									stylesheets="@../css/styles.css" text="Init" textFill="WHITE"
-									HBox.hgrow="ALWAYS">
-									<font>
-										<Font size="25.0" />
-									</font>
-								</Button>
-								<Button fx:id="startMatch" minWidth="130.0"
-									mnemonicParsing="false" onAction="#startButtonPressed" style="-fx-background-color: green;"
-									styleClass="controlButton" stylesheets="@../css/styles.css"
-									text="Start" textFill="WHITE" HBox.hgrow="ALWAYS">
-									<font>
-										<Font size="25.0" />
-									</font>
-								</Button>
-								<Button fx:id="endMatch" layoutX="10.0" layoutY="10.0"
-									minWidth="130.0" mnemonicParsing="false" onAction="#endButtonPressed"
-									style="-fx-background-color: red;" styleClass="controlButton"
-									stylesheets="@../css/styles.css" text="End" textFill="WHITE"
-									HBox.hgrow="ALWAYS">
-									<font>
-										<Font size="25.0" />
-									</font>
-								</Button>
-							</children>
-						</HBox>
-						<TextArea fx:id="controlConsole" styleClass="controlConsole"
-							stylesheets="@../css/styles.css">
-							<font>
-								<Font size="14.0" />
-							</font>
-						</TextArea>
-					</children>
-					<BorderPane.margin>
-						<Insets />
-					</BorderPane.margin>
-				</HBox>
+
 			</bottom>
 			<center>
 				<AnchorPane>

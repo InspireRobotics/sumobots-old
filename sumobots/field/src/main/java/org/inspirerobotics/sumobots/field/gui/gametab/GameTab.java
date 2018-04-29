@@ -10,7 +10,6 @@ import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import org.inspirerobotics.sumobots.field.FieldFrontend;
@@ -20,37 +19,20 @@ import org.inspirerobotics.sumobots.library.networking.tables.NetworkTable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class GameTab extends AnchorPane {
 
-	private FieldFrontend fieldFrontend;
+	private final FieldFrontend fieldFrontend;
 
-	@FXML
-	public HBox controlPane;
+	private ControlPane controlPane;
 
 	@FXML
 	public BorderPane mainBorderPane;
 
 	public MatchStatusBar matchStatusBar;
-
-	@FXML
-	public HBox controlButtonPane;
-
-	@FXML
-	public Button initMatch;
-
-	@FXML
-	public Button startMatch;
-
-	@FXML
-	public Button endMatch;
-
-	@FXML
-	public TextArea controlConsole;
 
 	@FXML
 	public TableView<TableConnection> connTable;
@@ -86,7 +68,9 @@ public class GameTab extends AnchorPane {
 			logger.log(Level.SEVERE, "Failed to load gameTab.fxml", e);
 		}
 
-		controlConsole.setText("Error: No Robot Detected");
+		System.out.println("test");
+		controlPane = new ControlPane(fieldFrontend);
+		mainBorderPane.setBottom(controlPane);
 
 		initTables();
 
@@ -216,29 +200,9 @@ public class GameTab extends AnchorPane {
 	}
 
 	public void update() {
+		controlPane.update();
 		matchStatusBar.updateGui();
 		matchStatusBar.updateStats(fieldFrontend.getTimePeriod());
-
-		initMatch.setMinHeight(controlPane.getHeight() - 5);
-		startMatch.setMinHeight(controlPane.getHeight() - 5);
-		endMatch.setMinHeight(controlPane.getHeight() - 5);
-
-		controlConsole.setMinWidth(this.getWidth() - controlButtonPane.getWidth() - 20);
-		controlConsole.setMaxWidth(this.getWidth() - controlButtonPane.getWidth() - 20);
-
-		List<String> list = InternalLog.getInstance().getLogLines();
-		StringBuilder sb = new StringBuilder();
-
-		for (Object obj : list.toArray()) {
-			String string = (String) obj;
-			if (!string.contains("FINE") && !string.contains("FINER"))
-				sb.append(string);
-		}
-
-		if (!sb.toString().equals(controlConsole.getText())) {
-			controlConsole.setText(sb.toString());
-			controlConsole.setScrollTop(Double.MAX_VALUE);
-		}
 
 	}
 
@@ -340,21 +304,6 @@ public class GameTab extends AnchorPane {
 	
 	public void setInternalNetwTable(NetworkTable internalNetwTable) {
 		this.internalNetwTable = internalNetwTable;
-	}
-
-	@FXML
-	public void startButtonPressed() {
-		fieldFrontend.startMatch();
-	}
-
-	@FXML
-	public void initButtonPressed() {
-		fieldFrontend.initMatch();
-	}
-
-	@FXML
-	public void endButtonPressed() {
-		fieldFrontend.endMatch();
 	}
 
 }
