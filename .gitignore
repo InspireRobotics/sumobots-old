@@ -4,9 +4,10 @@ sumobots/.project
 sumobots/.settings/
  
 # Intellij
-sumobots/.idea/
-*.iml 
-*.iws
+robot/.idea/workspace.xml
+robot/.idea/tasks.xml
+sumobots/.idea/workspace.xml
+sumobots/.idea/tasks.xml
  
 # Mac
 .DS_Store
