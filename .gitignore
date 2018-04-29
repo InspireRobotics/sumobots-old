@@ -4,10 +4,10 @@ sumobots/.project
 sumobots/.settings/
  
 # Intellij
-robot/.idea/workspace.xml
-robot/.idea/tasks.xml
-sumobots/.idea/workspace.xml
-sumobots/.idea/tasks.xml
+robot/.idea
+robot/.idea
+sumobots/.idea
+sumobots/.idea
 **/uiDesigner.xml 
 
 # Mac
