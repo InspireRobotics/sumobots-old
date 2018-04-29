@@ -1,11 +1,10 @@
 package org.inspirerobotics.sumobots.library.config;
 
-import java.io.IOException;
-import java.util.logging.Logger;
-
+import me.grison.jtoml.impl.Toml;
 import org.inspirerobotics.sumobots.library.Resources;
 
-import me.grison.jtoml.impl.Toml;
+import java.io.IOException;
+import java.util.logging.Logger;
 
 public class Config{
 	
@@ -23,6 +22,11 @@ public class Config{
 			logger.warning("Couldn't find config file: " + name);
 		}
 		
+	}
+
+	public Config(Toml t) {
+		this.toml = t;
+		name = null;
 	}
 	
 	public String getString(String key) {

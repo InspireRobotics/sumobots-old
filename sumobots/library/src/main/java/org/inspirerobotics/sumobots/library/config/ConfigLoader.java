@@ -1,12 +1,11 @@
 package org.inspirerobotics.sumobots.library.config;
 
+import me.grison.jtoml.impl.Toml;
+import org.inspirerobotics.sumobots.library.Resources;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
-
-import org.inspirerobotics.sumobots.library.Resources;
-
-import me.grison.jtoml.impl.Toml;
 
 public class ConfigLoader {
 	
@@ -17,7 +16,11 @@ public class ConfigLoader {
 		
 		logger.info("Loading Config File: " + path);
 		
-		return Toml.parse(new File(path));
+		return loadTomlFile(new File(path));
+	}
+
+	static Toml loadTomlFile(File file) throws IOException{
+		return Toml.parse(file);
 	}
 	
 	private static String getPath(String name) {
