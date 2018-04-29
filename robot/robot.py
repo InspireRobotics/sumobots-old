@@ -18,4 +18,5 @@ print("Starting server!")
 HOST, PORT = "localhost", 10489
 server = socketserver.TCPServer((HOST, PORT), RobotServer)
 
+# Start the server
 server.serve_forever()
