@@ -21,7 +21,9 @@ public class AudioEffect{
 		}
 	}
 
-	private static AudioStream createAudioStream(String name) throws IOException{
+	public static AudioStream createAudioStream(String name) throws IOException{
+		Logger.getLogger(Resources.LOGGER_NAME).info("Loading file: " + "sounds/"+name);
+
 		InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream("sounds/"+name);
 
 		return new AudioStream(in);

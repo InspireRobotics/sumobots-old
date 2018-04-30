@@ -38,9 +38,6 @@ public class MatchStatusBar extends HBox {
 		matchTimeBox.setMinWidth(cornerBoxSize);
 		matchTimeBox.setMaxWidth(cornerBoxSize);
 		matchTimeBox.setMinHeight(stdHeight);
-
-		style = "-fx-background-color:green;-fx-text-fill: white;-fx-font-size: 28;-fx-alignment: center;" +
-				"-fx-border-radius: 0 0 0 0;-fx-background-radius: 0 0 0 0;";
 		
 		matchStateBox = new TextField("Game Active");
 		matchStateBox.setMinHeight(stdHeight);

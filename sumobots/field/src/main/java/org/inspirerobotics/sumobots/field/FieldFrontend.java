@@ -164,7 +164,7 @@ public class FieldFrontend extends Application {
 	public void eStop() {
 		threadChannel.add(new InterThreadMessage("e-stop"));
 	}
-	
+
 	public void disable(String name) {
 		threadChannel.add(new InterThreadMessage("disable_ds", name));
 	}
