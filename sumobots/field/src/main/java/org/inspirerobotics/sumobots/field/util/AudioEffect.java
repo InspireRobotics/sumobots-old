@@ -1,4 +1,4 @@
-package org.inspirerobotics.sumobots.field;
+package org.inspirerobotics.sumobots.field.util;
 
 import org.inspirerobotics.sumobots.library.Resources;
 import sun.audio.AudioPlayer;
