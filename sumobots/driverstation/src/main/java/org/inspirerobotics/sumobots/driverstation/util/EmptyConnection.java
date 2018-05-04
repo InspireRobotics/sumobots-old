@@ -1,10 +1,10 @@
-package org.inspirerobotics.sumobots.driverstation;
-
-import java.io.IOException;
+package org.inspirerobotics.sumobots.driverstation.util;
 
 import org.inspirerobotics.sumobots.library.networking.connection.Connection;
 import org.inspirerobotics.sumobots.library.networking.message.Message;
 import org.inspirerobotics.sumobots.library.networking.tables.NetworkTable;
+
+import java.io.IOException;
 
 public class EmptyConnection extends Connection{
 

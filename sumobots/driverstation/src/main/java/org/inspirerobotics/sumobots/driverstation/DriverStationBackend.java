@@ -1,5 +1,6 @@
 package org.inspirerobotics.sumobots.driverstation;
 
+import org.inspirerobotics.sumobots.driverstation.util.EmptyConnection;
 import org.inspirerobotics.sumobots.library.Resources;
 import org.inspirerobotics.sumobots.library.TimePeriod;
 import org.inspirerobotics.sumobots.library.concurrent.InterThreadMessage;
