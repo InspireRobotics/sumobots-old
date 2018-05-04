@@ -71,7 +71,6 @@ public class GameTab extends AnchorPane {
 			logger.log(Level.SEVERE, "Failed to load gameTab.fxml", e);
 		}
 
-		System.out.println("test");
 		controlPane = new ControlPane(fieldFrontend);
 		mainBorderPane.setBottom(controlPane);
 
