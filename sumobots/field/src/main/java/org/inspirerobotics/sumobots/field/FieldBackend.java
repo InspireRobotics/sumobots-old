@@ -1,6 +1,6 @@
 package org.inspirerobotics.sumobots.field;
 
-import org.inspirerobotics.sumobots.field.util.InternalLog;
+import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.TimePeriod;
 import org.inspirerobotics.sumobots.library.concurrent.InterThreadMessage;
 import org.inspirerobotics.sumobots.library.concurrent.ThreadChannel;

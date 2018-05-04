@@ -7,7 +7,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import org.inspirerobotics.sumobots.field.gui.RootGroup;
 import org.inspirerobotics.sumobots.field.util.AudioEffect;
-import org.inspirerobotics.sumobots.field.util.InternalLog;
+import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.TimePeriod;
 import org.inspirerobotics.sumobots.library.concurrent.InterThreadMessage;
 import org.inspirerobotics.sumobots.library.concurrent.ThreadChannel;

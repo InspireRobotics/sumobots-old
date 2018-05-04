@@ -7,7 +7,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import org.inspirerobotics.sumobots.driverstation.gui.GuiController;
 import org.inspirerobotics.sumobots.driverstation.gui.MainScene;
-import org.inspirerobotics.sumobots.library.Resources;
+import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.TimePeriod;
 import org.inspirerobotics.sumobots.library.concurrent.InterThreadMessage;
 import org.inspirerobotics.sumobots.library.concurrent.ThreadChannel;
@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 
 public class DriverStationFrontend extends Application {
 
-	private Logger log = Logger.getLogger(Resources.LOGGER_NAME);
+	private Logger log = InternalLog.getLogger();
 
 	private ThreadChannel threadChannel;
 

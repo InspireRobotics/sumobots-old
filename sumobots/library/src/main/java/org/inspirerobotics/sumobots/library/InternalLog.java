@@ -1,6 +1,4 @@
-package org.inspirerobotics.sumobots.field.util;
-
-import org.inspirerobotics.sumobots.library.Resources;
+package org.inspirerobotics.sumobots.library;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;

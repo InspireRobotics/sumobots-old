@@ -9,8 +9,13 @@
 }
 
 #console{
-	-fx-background-color:#6a6a6a;
-	-fx-border-color:white;
+	-fx-border-color:black;
 	-fx-text-fill: white;
-	-fx-font-size:24;
+	-fx-font-size:12;
+	-fx-line-height: 0px;
+    -fx-line-spacing: 0px;
+}
+
+#console .content {
+    -fx-background-color: 	#6a6a6a;
 }

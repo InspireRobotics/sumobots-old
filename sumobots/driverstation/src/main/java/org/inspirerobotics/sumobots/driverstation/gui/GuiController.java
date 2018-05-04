@@ -1,37 +1,31 @@
 package org.inspirerobotics.sumobots.driverstation.gui;
 
+import javafx.application.Platform;
+import javafx.fxml.FXML;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.TimePeriod;
 
-import javafx.fxml.FXML;
-import javafx.scene.control.TextField;
+import java.util.List;
 
 /**
  * The main controller for the gui
  */
 public class GuiController{
-	
-	/**
-	 * The text field of the DS name
-	 */
+
+	@FXML
+	public TextArea logConsole;
+
 	@FXML
 	public TextField nameLabel;
-	
-	/**
-	 * The text field that contains the current time period
-	 */
+
 	@FXML
 	public TextField statusLabel;
-	
-	/**
-	 * The text field that displays the 
-	 * status of the DS-Field connection
-	 */
+
 	@FXML
 	public TextField connectedLabel;
-	
-	/**
-	 * Initializes the GUI controller and elements
-	 */
+
 	public void init() {
 		statusLabel.setMinHeight(85);
 		statusLabel.setMaxHeight(85);
@@ -40,30 +34,45 @@ public class GuiController{
 		
 		enterNewPeriod(TimePeriod.DISABLED);
 		setConnectionStatus(false);
+
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				updateLog();
+
+				Platform.runLater(this);
+			}
+		});
 	}
-	
-	/**
-	 * Sets the name displayed in the name text field
-	 * @see #nameLabel
-	 */
+
+	private void updateLog() {
+		List<String> logLines = InternalLog.getInstance().getLogLines();
+
+		StringBuilder b = new StringBuilder();
+
+		for (Object line: logLines.toArray()){
+			b.append(line );
+		}
+
+		//Probably bad
+		if(!b.toString().equals(logConsole.getText()))
+			logConsole.setText(b.toString());
+	}
+
 	public void setName(String newName) {
 		nameLabel.setText("Name: " + newName);
 	}
 	
 	public void setConnectionStatus(boolean connected) {
 		if(connected) {
-			connectedLabel.setText("Connected!");
+			connectedLabel.setText("Field: Connected!");
 			connectedLabel.setStyle("-fx-background-color:green");
 		}else {
-			connectedLabel.setText("Not Connected!");
+			connectedLabel.setText("Field: Not Connected!");
 			connectedLabel.setStyle("-fx-background-color:red");
 		}
 	}
 
-	/**
-	 * Sets the time period shown by the gui
-	 * @see #statusLabel
-	 */
 	public void enterNewPeriod(TimePeriod newPeriod) {
 		statusLabel.setText("State: " + newPeriod);
 		

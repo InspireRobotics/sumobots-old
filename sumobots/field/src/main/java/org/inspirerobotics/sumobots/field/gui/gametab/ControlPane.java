@@ -7,7 +7,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import org.inspirerobotics.sumobots.field.FieldFrontend;
-import org.inspirerobotics.sumobots.field.util.InternalLog;
+import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.Resources;
 
 import java.io.IOException;

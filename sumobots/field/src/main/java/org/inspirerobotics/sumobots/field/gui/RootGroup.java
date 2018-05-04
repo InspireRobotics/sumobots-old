@@ -8,7 +8,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import org.inspirerobotics.sumobots.field.FieldFrontend;
 import org.inspirerobotics.sumobots.field.gui.gametab.GameTab;
-import org.inspirerobotics.sumobots.field.util.InternalLog;
+import org.inspirerobotics.sumobots.library.InternalLog;
 
 import java.io.IOException;
 import java.util.logging.Level;
