@@ -60,6 +60,19 @@ public class GameTab extends AnchorPane {
 	public GameTab(FieldFrontend ff) {
 		this.fieldFrontend = ff;
 
+		loadFXML();
+
+		controlPane = new ControlPane(fieldFrontend);
+		mainBorderPane.setBottom(controlPane);
+
+		initTables();
+		initStatBar();
+		
+		netwTableSelector.getItems().add("Internal Table");
+		netwTableSelector.getSelectionModel().select(0);
+	}
+
+	private void loadFXML(){
 		logger.fine("Loading gameTab.fxml");
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/fxml/gameTab.fxml"));
 		fxmlLoader.setController(this);
@@ -70,16 +83,6 @@ public class GameTab extends AnchorPane {
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, "Failed to load gameTab.fxml", e);
 		}
-
-		controlPane = new ControlPane(fieldFrontend);
-		mainBorderPane.setBottom(controlPane);
-
-		initTables();
-
-		initStatBar();
-		
-		netwTableSelector.getItems().add("Internal Table");
-		netwTableSelector.getSelectionModel().select(0);
 	}
 
 	private void initStatBar() {
@@ -115,16 +118,11 @@ public class GameTab extends AnchorPane {
 		addSimpleConnColumn("DS Ping", 150, "dsPing");
 		addSimpleConnColumn("Robot IP", 200, "robotIP");
 		addSimpleConnColumn("Robot Ping", 150, "robotPing");
-		addButtonColumn("Disable", 125, "action", new EventHandler<ActionEvent>() {
-
-			@Override
-			public void handle(ActionEvent event) {
-				String name = (String) event.getSource();
-				logger.info("Disabling " + name);
-				fieldFrontend.disable(name);
-			}
-
-		});
+		addButtonColumn("Disable", 125, "action", event -> {
+            String name = (String) event.getSource();
+            logger.info("Disabling " + name);
+            fieldFrontend.disable(name);
+        });
 		addSimpleConnColumn("Status", 200, "status");
 		ObservableList<TableConnection> data = FXCollections.observableArrayList();
 
