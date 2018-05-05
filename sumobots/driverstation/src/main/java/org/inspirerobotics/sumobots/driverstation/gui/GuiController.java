@@ -4,6 +4,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import org.inspirerobotics.sumobots.driverstation.DriverStationBackend;
 import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.TimePeriod;
 
@@ -12,86 +13,89 @@ import java.util.List;
 /**
  * The main controller for the gui
  */
-public class GuiController{
+public class GuiController {
 
-	@FXML
-	public TextArea logConsole;
+    @FXML
+    public TextArea logConsole;
 
-	@FXML
-	public TextField nameLabel;
+    @FXML
+    public TextField nameLabel;
 
-	@FXML
-	public TextField statusLabel;
+    @FXML
+    public TextField statusLabel;
 
-	@FXML
-	public TextField connectedLabel;
+    @FXML
+    public TextField connectedLabel;
 
-	public void init() {
-		statusLabel.setMinHeight(85);
-		statusLabel.setMaxHeight(85);
-		statusLabel.setFocusTraversable(false);
-		nameLabel.setFocusTraversable(false);
-		
-		enterNewPeriod(TimePeriod.DISABLED);
-		setConnectionStatus(false);
+    public void init() {
+        statusLabel.setMinHeight(85);
+        statusLabel.setMaxHeight(85);
+        statusLabel.setFocusTraversable(false);
+        nameLabel.setFocusTraversable(false);
 
-		Platform.runLater(new Runnable() {
-			@Override
-			public void run() {
-				updateLog();
+        enterNewPeriod(TimePeriod.DISABLED);
+        setConnectionStatus(false);
 
-				Platform.runLater(this);
-			}
-		});
-	}
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                updateLog();
 
-	private void updateLog() {
-		List<String> logLines = InternalLog.getInstance().getLogLines();
+                Platform.runLater(this);
+            }
+        });
+    }
 
-		StringBuilder b = new StringBuilder();
+    private void updateLog() {
+        List<String> logLines = InternalLog.getInstance().getLogLines();
 
-		for (Object line: logLines.toArray()){
-			b.append(line );
-		}
+        StringBuilder b = new StringBuilder();
 
-		//Probably bad
-		if(!b.toString().equals(logConsole.getText()))
-			logConsole.setText(b.toString());
-	}
+        for (Object line : logLines.toArray()) {
+            b.append(line);
+        }
 
-	public void setName(String newName) {
-		nameLabel.setText("Name: " + newName);
-	}
-	
-	public void setConnectionStatus(boolean connected) {
-		if(connected) {
-			connectedLabel.setText("Field: Connected!");
-			connectedLabel.setStyle("-fx-background-color:green");
-		}else {
-			connectedLabel.setText("Field: Not Connected!");
-			connectedLabel.setStyle("-fx-background-color:red");
-		}
-	}
+        //Probably bad
+        if (!b.toString().equals(logConsole.getText()))
+            logConsole.setText(b.toString());
+    }
 
-	public void enterNewPeriod(TimePeriod newPeriod) {
-		statusLabel.setText("State: " + newPeriod);
-		
-		switch(newPeriod) {
-		case DISABLED:
-			statusLabel.setStyle("-fx-background-color:red;");
-			break;
-		case GAME:
-			statusLabel.setStyle("-fx-background-color:green;");
-			break;
-		case INIT:
-			statusLabel.setStyle("-fx-background-color:orange;");
-			break;
-		case ESTOPPED:
-			statusLabel.setStyle("-fx-background-color:black;");
+    public void setName(String newName) {
+        nameLabel.setText("Name: " + newName);
+    }
 
-		default:
-			break;
-		}
-	}
-	
+    public void setConnectionStatus(boolean connected) {
+        if (DriverStationBackend.nonFieldMode) {
+            connectedLabel.setText("Non Field Mode!");
+            connectedLabel.setStyle("-fx-background-color:blue");
+        } else if (connected) {
+            connectedLabel.setText("Field: Connected!");
+            connectedLabel.setStyle("-fx-background-color:green");
+        } else {
+            connectedLabel.setText("Field: Not Connected!");
+            connectedLabel.setStyle("-fx-background-color:red");
+        }
+    }
+
+    public void enterNewPeriod(TimePeriod newPeriod) {
+        statusLabel.setText("State: " + newPeriod);
+
+        switch (newPeriod) {
+            case DISABLED:
+                statusLabel.setStyle("-fx-background-color:red;");
+                break;
+            case GAME:
+                statusLabel.setStyle("-fx-background-color:green;");
+                break;
+            case INIT:
+                statusLabel.setStyle("-fx-background-color:orange;");
+                break;
+            case ESTOPPED:
+                statusLabel.setStyle("-fx-background-color:black;");
+
+            default:
+                break;
+        }
+    }
+
 }
