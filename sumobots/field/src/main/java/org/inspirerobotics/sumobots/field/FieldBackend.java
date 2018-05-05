@@ -40,8 +40,6 @@ public class FieldBackend extends Thread {
 		init();
 		log.info("Backend initialization has been completed. Starting main loop");
 
-
-
 		while (running) {
 			server.update();
 
@@ -75,7 +73,7 @@ public class FieldBackend extends Thread {
 
 
 	private void pollFrontendThreadMessages() {
-		InterThreadMessage m = null;
+		InterThreadMessage m;
 		while ((m = channel.poll()) != null) {
 			onFrontendMessageReceived(m);
 
@@ -101,16 +99,12 @@ public class FieldBackend extends Thread {
 
 		log.fine("Recieved Message from Frontend: " + name);
 
+		if(name.endsWith("_match")){
+			onMatchMessageReceived(name.split("_match")[0]);
+			return;
+		}
+
 		switch (name) {
-		case "start_match":
-			startMatch();
-			break;
-		case "end_match":
-			endMatch();
-			break;
-		case "init_match":
-			initMatch();
-			break;
 		case "exit_app":
 			log.info("Exiting Backend Thread!");
 			server.closeServer();
@@ -119,9 +113,6 @@ public class FieldBackend extends Thread {
 		case "close_all":
 			server.removeAll();
 			break;
-		case "e-stop":
-			eStop();
-			break;
 		case "disable_ds":
 			disableDS((String) m.getData());
 			break;
@@ -129,6 +120,27 @@ public class FieldBackend extends Thread {
 			log.warning("Unknown Message Recieved on Backend: " + name);
 			break;
 		}
+	}
+
+	private void onMatchMessageReceived(String messageName) {
+		switch (messageName) {
+			case "start":
+				startMatch();
+				break;
+			case "end":
+				endMatch();
+				break;
+			case "init":
+				initMatch();
+				break;
+			case "e-stop":
+				eStop();
+				break;
+			default:
+				log.warning("Unknown Match Update Recieved on Backend: " + messageName);
+				break;
+		}
+
 	}
 
 	private void disableDS(String name) {
