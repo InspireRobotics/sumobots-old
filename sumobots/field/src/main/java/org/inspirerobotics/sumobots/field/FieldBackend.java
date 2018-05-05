@@ -24,7 +24,11 @@ public class FieldBackend extends Thread {
 	private boolean running = true;
 
 	private NetworkTable internalNetworkTable = new NetworkTable();
-	
+
+	private long loopStartTime = System.currentTimeMillis();
+	private long loopTime = 0;
+	private int loopCount = 0;
+
 	public FieldBackend(ThreadChannel tc) {
 		this.setName("Backend Thread");
 		this.channel = tc;
@@ -36,21 +40,18 @@ public class FieldBackend extends Thread {
 		init();
 		log.info("Backend initialization has been completed. Starting main loop");
 
+
+
 		while (running) {
 			server.update();
 
 			sendConnectionsToFrontend();
-			
-			updateInternalTable();
+			updateLoopTime();
+			updateInternalTable(loopTime);
+
 			channel.add(new InterThreadMessage("update_internal_table", this.internalNetworkTable.clone()));
 
-			InterThreadMessage m = null;
-			while ((m = channel.poll()) != null) {
-				onFrontendMessageReceived(m);
-
-				if (!running)
-					break;
-			}
+			pollFrontendThreadMessages();
 		}
 
 		server.closeServer();
@@ -58,9 +59,35 @@ public class FieldBackend extends Thread {
 		log.info("Backend Thread Shutdown Complete!");
 	}
 
-	private void updateInternalTable() {
+	private void updateLoopTime(){
+		loopCount++;
+
+		if (System.currentTimeMillis() - loopStartTime > 1000){
+			loopTime = (System.currentTimeMillis() - loopStartTime) / loopCount;
+			loopStartTime = System.currentTimeMillis();
+			loopCount = 0;
+
+			if(loopTime > 15){
+				log.warning("High Backend Loop Time: " + loopTime);
+			}
+		}
+	}
+
+
+	private void pollFrontendThreadMessages() {
+		InterThreadMessage m = null;
+		while ((m = channel.poll()) != null) {
+			onFrontendMessageReceived(m);
+
+			if (!running)
+				break;
+		}
+	}
+
+	private void updateInternalTable(long loopTime) {
 		internalNetworkTable.put("IP", "" + server.getServerSocket().getLocalSocketAddress());
 		internalNetworkTable.put("Port", ""+server.getServerSocket().getLocalPort());
+		internalNetworkTable.put("Backend Loop Time", loopTime + "ms");
 	}
 
 	private void sendConnectionsToFrontend() {
