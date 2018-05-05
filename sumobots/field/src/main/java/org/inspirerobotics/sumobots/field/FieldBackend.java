@@ -124,6 +124,7 @@ public class FieldBackend extends Thread {
 			break;
 		case "disable_ds":
 			disableDS((String) m.getData());
+			break;
 		default:
 			log.warning("Unknown Message Recieved on Backend: " + name);
 			break;
