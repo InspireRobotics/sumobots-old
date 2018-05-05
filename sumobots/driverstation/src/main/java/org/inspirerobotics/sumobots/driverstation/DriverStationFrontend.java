@@ -102,30 +102,33 @@ public class DriverStationFrontend extends Application {
             log.info("Closing down Frontend Thread...");
             Platform.exit();
         });
-		
+
+		addKeyHandlers();
+	}
+
+	private void addKeyHandlers() {
 		stage.addEventFilter(KeyEvent.KEY_PRESSED, k -> {
 			log.info("Key Pressed: " + k.getCode());
 			if(k.getCode() == KeyCode.DIGIT1 && nonFieldMode) {
 				threadChannel.add(new InterThreadMessage("new_state", TimePeriod.INIT));
 				return;
 			}
-			
+
 			if(k.getCode() == KeyCode.DIGIT2 && nonFieldMode) {
 				threadChannel.add(new InterThreadMessage("new_state", TimePeriod.GAME));
 				return;
 			}
-			
+
 			if(k.getCode() == KeyCode.SPACE) {
 				threadChannel.add(new InterThreadMessage("new_state", TimePeriod.ESTOPPED));
 				return;
 			}
-			
+
 			if(k.getCode() == KeyCode.ENTER) {
 				threadChannel.add(new InterThreadMessage("new_state", TimePeriod.DISABLED));
 				return;
 			}
-	    });
-
+		});
 	}
 
 	public static void main(String[] args) {
