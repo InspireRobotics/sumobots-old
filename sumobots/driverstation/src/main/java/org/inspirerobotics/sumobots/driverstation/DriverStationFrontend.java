@@ -115,12 +115,12 @@ public class DriverStationFrontend extends Application {
 				return;
 			}
 			
-			if(k.getCode() == KeyCode.SPACE && nonFieldMode) {
+			if(k.getCode() == KeyCode.SPACE) {
 				threadChannel.add(new InterThreadMessage("new_state", TimePeriod.ESTOPPED));
 				return;
 			}
 			
-			if(k.getCode() == KeyCode.ENTER && nonFieldMode) {
+			if(k.getCode() == KeyCode.ENTER) {
 				threadChannel.add(new InterThreadMessage("new_state", TimePeriod.DISABLED));
 				return;
 			}
