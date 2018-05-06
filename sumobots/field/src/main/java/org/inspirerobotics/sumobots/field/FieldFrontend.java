@@ -38,10 +38,10 @@ public class FieldFrontend extends Application {
 
 		threadChannel = new ThreadChannel();
 
-		log.fine("Starting backend thread");
+		log.fine("Starting field thread");
 		fieldBackend = new FieldBackend(threadChannel.createPair());
 		fieldBackend.start();
-		log.fine("Finished starting backend thread");
+		log.fine("Finished starting field thread");
 
 		log.fine("Creating the GUI");
 		this.stage = s;

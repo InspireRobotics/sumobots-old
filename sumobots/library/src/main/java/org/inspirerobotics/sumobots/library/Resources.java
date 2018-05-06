@@ -9,7 +9,7 @@ public class Resources {
 
 	public static final int SERVER_PORT = 4283;
 
-	public static final int DS_PORT = 10489;
+	public static final int ROBOT_PORT = 10489;
 
 	public static final String EOT = String.valueOf((char) 4);
 

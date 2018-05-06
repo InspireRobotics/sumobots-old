@@ -1,6 +1,7 @@
 package org.inspirerobotics.sumobots.driverstation;
 
-import org.inspirerobotics.sumobots.driverstation.backend.Field;
+import org.inspirerobotics.sumobots.driverstation.field.Field;
+import org.inspirerobotics.sumobots.driverstation.robot.Robot;
 import org.inspirerobotics.sumobots.library.Resources;
 import org.inspirerobotics.sumobots.library.TimePeriod;
 import org.inspirerobotics.sumobots.library.concurrent.InterThreadMessage;
@@ -18,6 +19,8 @@ public class DriverStationBackend extends Thread {
     private final Logger logger = Logger.getLogger(Resources.LOGGER_NAME);
 
     private final Field field = new Field(this);
+
+    private final Robot robot = new Robot(this);
 
     private Config config;
 
@@ -117,17 +120,37 @@ public class DriverStationBackend extends Thread {
     private void runMainLoop() {
         while (running) {
             field.update();
-            if (field.getFieldConnection().isClosed()) {
-                onFieldConnectionLost();
-                connectToField();
-            }
+            robot.update();
 
+            checkConnections();
             updateNetworkTable();
             pollMessages();
         }
 
         logger.info("Backend Shutdown...");
         shutdown();
+    }
+
+    private void checkConnections(){
+        if (field.getFieldConnection().isClosed()) {
+            onFieldConnectionLost();
+            connectToField();
+        }
+
+        if(robot.getRobotConnection() == null){
+            attemptRobotConnection();
+        }else if(robot.getRobotConnection().isClosed()){
+           attemptRobotConnection();
+        }
+    }
+
+    private void attemptRobotConnection(){
+        if(robot.attemptConnection("localhost")){
+
+        }else{
+            logger.info("Failed to connect to the robot! Waiting 3 seconds...");
+            sleepCatchException(3000);
+        }
     }
 
     private void onFieldConnectionLost() {

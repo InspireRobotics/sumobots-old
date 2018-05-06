@@ -36,7 +36,7 @@ public class FieldBackend extends Thread {
 
 	@Override
 	public void run() {
-		log.fine("Initializating backend");
+		log.fine("Initializating field");
 		init();
 		log.info("Backend initialization has been completed. Starting main loop");
 

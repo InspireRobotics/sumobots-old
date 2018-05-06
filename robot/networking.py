@@ -1,22 +1,35 @@
-import socketserver
+import socket
+import sys
 
-print("Starting robot code...")
+# Create a TCP/IP socket
+sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
+# Bind the socket to the port
+server_address = ('localhost', 10489)
+print('starting up on {} port {}'.format(*server_address))
+sock.bind(server_address)
 
-class RobotServer(socketserver.BaseRequestHandler):
+# Listen for incoming connections
+sock.listen(1)
 
-    def handle(self):
-        self.data = self.request.recv(1024).strip()
-        print("{} wrote:".format(self.client_address[0]))
-        print(self.data)
+while True:
+    # Wait for a connection
+    print('waiting for a connection')
+    connection, client_address = sock.accept()
+    try:
+        print('connection from', client_address)
 
-        # just send back the same data, but upper-cased
-        self.request.sendall(self.data.upper())
+        # Receive the data in small chunks and retransmit it
+        while True:
+            data = connection.recv(512)
+            print('received {!r}'.format(data))
+            if data:
+                print('sending data back to the client')
+                connection.sendall(bytes(b'\x00\x18{"message_type":"PONG"}\x04'))
+            else:
+                print('no data from', client_address)
+                break
 
-
-print("Starting server!")
-HOST, PORT = "localhost", 10489
-server = socketserver.TCPServer((HOST, PORT), RobotServer)
-
-# Start the server
-server.serve_forever()
+    finally:
+        # Clean up the connection
+        connection.close()

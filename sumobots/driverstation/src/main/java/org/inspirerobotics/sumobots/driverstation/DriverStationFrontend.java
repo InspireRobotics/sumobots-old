@@ -41,10 +41,10 @@ public class DriverStationFrontend extends Application {
 
 		threadChannel = new ThreadChannel();
 
-		log.fine("Starting backend thread");
+		log.fine("Starting field thread");
 		backend = new DriverStationBackend(threadChannel.createPair());
 		backend.start();
-		log.fine("Finished starting backend thread");
+		log.fine("Finished starting field thread");
 
 		initGui();
 
@@ -102,7 +102,7 @@ public class DriverStationFrontend extends Application {
             threadChannel.add(new InterThreadMessage("exit_app"));
             log.info("Closing down Frontend Thread...");
             Platform.exit();
-        });
+		});
 
 		addKeyHandlers();
 	}
