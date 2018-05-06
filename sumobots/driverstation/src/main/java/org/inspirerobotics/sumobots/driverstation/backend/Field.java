@@ -47,7 +47,7 @@ public class Field implements ConnectionListener {
     }
 
     @Override
-    public void recievedMessage(Message message, Connection connection) {
+    public void receivedMessage(Message message, Connection connection) {
         MessageType type = message.getType();
 
         if (type == MessageType.MATCH_STATE_UPDATE) {

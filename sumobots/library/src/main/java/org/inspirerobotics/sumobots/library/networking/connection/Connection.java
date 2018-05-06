@@ -90,7 +90,7 @@ public class Connection {
 	}
 	
 	/**
-	 * Updates the socket and calls {@link ConnectionListener#recievedMessage(Message, Connection)} if needed
+	 * Updates the socket and calls {@link ConnectionListener#receivedMessage(Message, Connection)} if needed
 	 */
 	public void update() {
 		if(closed){
@@ -128,7 +128,7 @@ public class Connection {
 			MessageType messageType = message.getType();
 
 			if(!MessageType.isInternalType(messageType)){
-				listener.recievedMessage(message, this);
+				listener.receivedMessage(message, this);
 			}else{
 				handleInternalTypes(message, messageType);
 			}

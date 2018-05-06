@@ -14,6 +14,6 @@ public interface ConnectionListener {
 	 * @param message the message recieved
 	 * @param connection the connection the message was recieved from
 	 */
-	public void recievedMessage(Message message, Connection connection);
+	public void receivedMessage(Message message, Connection connection);
 	
 }
