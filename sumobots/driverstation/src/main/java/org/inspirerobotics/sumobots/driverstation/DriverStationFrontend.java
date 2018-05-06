@@ -7,6 +7,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import org.inspirerobotics.sumobots.driverstation.gui.GuiController;
 import org.inspirerobotics.sumobots.driverstation.gui.MainScene;
+import org.inspirerobotics.sumobots.driverstation.joystick.Input;
 import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.TimePeriod;
 import org.inspirerobotics.sumobots.library.concurrent.InterThreadMessage;
@@ -33,6 +34,8 @@ public class DriverStationFrontend extends Application {
 
 	@Override
 	public void start(Stage s) throws Exception {
+		new Input().start();
+
 		stage = s;
 
 		Thread.currentThread().setName("Frontend Thread");
