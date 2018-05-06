@@ -9,6 +9,10 @@ public class Input extends Thread{
 
     private Logger log = InternalLog.getLogger();
 
+    public Input(){
+        this.setDaemon(true);
+    }
+
     public void run(){
         while (true) {
             Controller[] controllers = ControllerEnvironment.getDefaultEnvironment().getControllers();
