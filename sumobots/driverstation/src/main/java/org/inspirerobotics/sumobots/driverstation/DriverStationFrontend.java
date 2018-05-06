@@ -29,7 +29,7 @@ public class DriverStationFrontend extends Application {
 
 	private GuiController controller = new GuiController();
 	
-	private static final boolean nonFieldMode = DriverStationBackend.nonFieldMode;
+	private static final boolean nonFieldMode = Settings.nonFieldMode;
 
 	@Override
 	public void start(Stage s) throws Exception {

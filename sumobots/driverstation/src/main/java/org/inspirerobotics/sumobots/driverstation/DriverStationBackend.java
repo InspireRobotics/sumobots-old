@@ -1,229 +1,198 @@
 package org.inspirerobotics.sumobots.driverstation;
 
-import org.inspirerobotics.sumobots.driverstation.util.EmptyConnection;
+import org.inspirerobotics.sumobots.driverstation.backend.Field;
 import org.inspirerobotics.sumobots.library.Resources;
 import org.inspirerobotics.sumobots.library.TimePeriod;
 import org.inspirerobotics.sumobots.library.concurrent.InterThreadMessage;
 import org.inspirerobotics.sumobots.library.concurrent.ThreadChannel;
 import org.inspirerobotics.sumobots.library.config.Config;
 import org.inspirerobotics.sumobots.library.networking.connection.Connection;
-import org.inspirerobotics.sumobots.library.networking.connection.ConnectionListener;
 import org.inspirerobotics.sumobots.library.networking.message.ArchetypalMessages;
-import org.inspirerobotics.sumobots.library.networking.message.Message;
-import org.inspirerobotics.sumobots.library.networking.message.MessageType;
 import org.inspirerobotics.sumobots.library.networking.tables.NetworkTable;
 
-import java.io.IOException;
-import java.net.Socket;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class DriverStationBackend extends Thread implements ConnectionListener {
+public class DriverStationBackend extends Thread {
 
-	public static final boolean nonFieldMode = false;
+    private final Logger logger = Logger.getLogger(Resources.LOGGER_NAME);
 
-	private final Logger logger = Logger.getLogger(Resources.LOGGER_NAME);
+    private final Field field = new Field(this);
 
-	private Connection conn;
+    private Config config;
 
-	private Config config;
+    private ThreadChannel channel;
 
-	private TimePeriod currentPeriod = TimePeriod.DISABLED;
+    private boolean running;
 
-	private ThreadChannel channel;
+    private String name = "";
 
-	private boolean running;
+    private NetworkTable table = new NetworkTable();
 
-	private String name = "";
+    public DriverStationBackend(ThreadChannel tc) {
+        this.setName("Backend Thread");
+        this.channel = tc;
+        logger.setLevel(Level.ALL);
+    }
 
-	private NetworkTable table = new NetworkTable();
+    @Override
+    public void run() {
+        logger.setLevel(Level.FINE);
+        loadConfig();
 
-	public DriverStationBackend(ThreadChannel tc) {
-		this.setName("Backend Thread");
-		this.channel = tc;
-		logger.setLevel(Level.ALL);
-	}
+        running = true;
+        sendMessageToFrontend(new InterThreadMessage("conn_status", false));
 
-	@Override
-	public void run() {
-		logger.setLevel(Level.FINE);
-		loadConfig();
-		
-		running = true;
-		channel.add(new InterThreadMessage("conn_status", false));
-		
-		connect();
+        connectToField();
 
-		if (!running) {
-			shutdown();
-			return;
-		}
+        if (!running) {
+            shutdown();
+            return;
+        }
 
-		runMainLoop();
-	}
+        runMainLoop();
+    }
 
-	private void loadConfig() {
-		config = new Config("DriverStation");
-	}
-	
-	private void connect() {
-		while (running) {
-			pollMessages();
-			
-			
-			if(nonFieldMode) {
-				conn = new EmptyConnection();
-				break;
-			}
-			
-			try {
-				Socket socket = new Socket(getFieldIp(), Resources.SERVER_PORT);
-				conn = new Connection(socket, this);
-				conn.setBindedTable(table);
-				logger.info("Found connection!");
-				break;
-			} catch (IOException e) {
-				logger.info("Failed to connect! Waiting 3 seconds...");
+    private void loadConfig() {
+        config = new Config("DriverStation");
+    }
 
-				try {
-					Thread.sleep(3000);
-				} catch (InterruptedException e1) {
-					e1.printStackTrace();
-				}
-			}
-		}
-		
-		if(!running) {
-			return;
-		}
-		
-		generateDriverStationName();
-		logger.info("Established Field-DS Connection! Starting main loop");
-		channel.add(new InterThreadMessage("conn_status", true));
-	}
-	
-	private String getFieldIp() {
-		if(config != null) {
-			if(config.getString("fieldIP") != null) {
-				return config.getString("fieldIP");
-			}
-		}
-		return "localhost";
-	}
+    private void connectToField() {
+        while (running) {
+            pollMessages();
 
-	private void generateDriverStationName() {
-		if(config != null) {
-			if(config.getString("name") != null) {
-				setDriverStationName("DS-" + config.getString("name"));
-				return;
-			}
-		}
-		setDriverStationName("DS-" + new Random().nextInt(10000));
-	}
+            boolean connectionCreated = field.tryToCreateConnection(getFieldIp());
 
-	private void runMainLoop() {
+            if (connectionCreated) {
+                break;
+            } else {
+                logger.info("Failed to connect to the field! Waiting 3 seconds...");
+                sleepCatchException(3000);
+            }
+        }
 
-		while (running) {
-			conn.update();
-			if (conn.isClosed()) {
-				channel.add(new InterThreadMessage("conn_status", false));
+        if (!running) {
+            return;
+        }
 
-				logger.info("Lost Connection to Field! Waiting 2.5 seconds before reconnecting...");
-				updateMatchStatus(ArchetypalMessages.enterNewMatchPeriod(TimePeriod.DISABLED));
+        onFieldConnectionCreated();
+    }
 
-				try {
-					Thread.sleep(2500);
-				} catch (InterruptedException e1) {
-					e1.printStackTrace();
-				}
+    private void onFieldConnectionCreated() {
+        generateDriverStationName();
+        logger.info("Established Field-DS Connection! Starting main loop");
+        sendMessageToFrontend(new InterThreadMessage("conn_status", true));
+    }
 
-				connect();
-			}
+    private void sleepCatchException(long time) {
+        try {
+            sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 
-			updateNetworkTable();
-			pollMessages();
-		}
+    private String getFieldIp() {
+        if (config != null) {
+            if (config.getString("fieldIP") != null) {
+                return config.getString("fieldIP");
+            }
+        }
+        return "localhost";
+    }
 
-		logger.info("Backend Shutdown...");
-		shutdown();
-	}
+    private void generateDriverStationName() {
+        if (config != null) {
+            if (config.getString("name") != null) {
+                setDriverStationName("DS-" + config.getString("name"));
+                return;
+            }
+        }
+        setDriverStationName("DS-" + new Random().nextInt(10000));
+    }
 
-	private void updateNetworkTable() {
-		if (conn != null) {
-			if(conn.getSocket() != null) {
-				table.put("ping", conn.getCurrentPing() + " ms");
-				table.put("connection name", conn.getConnectionName());
-				table.put("ip", conn.getSocket().getLocalAddress().toString());
-			}
-		}
-		
-		table.put("Logger Level", "" + logger.getLevel());
-		table.put("Name", name);
-		table.put("Time Period", "" + currentPeriod);
+    public void sendMessageToFrontend(InterThreadMessage m) {
+        channel.add(m);
+    }
 
-	}
+    private void runMainLoop() {
+        while (running) {
+            field.update();
+            if (field.getFieldConnection().isClosed()) {
+                onFieldConnectionLost();
+                connectToField();
+            }
 
-	private void pollMessages() {
-		InterThreadMessage m = null;
-		while ((m = channel.poll()) != null) {
-			onFrontendMessageReceived(m);
+            updateNetworkTable();
+            pollMessages();
+        }
 
-			if (!running)
-				return;
-		}
-	}
+        logger.info("Backend Shutdown...");
+        shutdown();
+    }
 
-	private void onFrontendMessageReceived(InterThreadMessage m) {
-		String name = m.getName();
+    private void onFieldConnectionLost() {
+        sendMessageToFrontend(new InterThreadMessage("conn_status", false));
 
-		logger.fine("Recieved Message from Frontend: " + name);
+        logger.info("Lost Connection to Field!");
+        field.updateMatchStatus(ArchetypalMessages.enterNewMatchPeriod(TimePeriod.DISABLED));
+    }
 
-		switch (name) {
-		case "exit_app":
-			logger.info("Exiting Backend Thread!");
-			shutdown();
-			break;
-		case "new_state":
-			updateMatchStatus(ArchetypalMessages.enterNewMatchPeriod((TimePeriod) m.getData()));
-		default:
-			logger.warning("Unknown Message Recieved on Backend: " + name);
-			break;
-		}
-	}
+    private void updateNetworkTable() {
+        table.put("Logger Level", "" + logger.getLevel());
+        table.put("Name", name);
+        table.put("Time Period", "" + getTimePeriod());
 
-	public void shutdown() {
-		if (conn != null)
-			conn.endConnection();
-		running = false;
-	}
+        field.setNetworkingTable(table);
+    }
 
-	@Override
-	public void recievedMessage(Message message, Connection connection) {
-		MessageType type = message.getType();
+    private void pollMessages() {
+        InterThreadMessage m = null;
+        while ((m = channel.poll()) != null) {
+            onFrontendMessageReceived(m);
 
-		if (type == MessageType.MATCH_STATE_UPDATE) {
-			updateMatchStatus(message);
-		}
-	}
+            if (!running)
+                return;
+        }
+    }
 
-	public void setDriverStationName(String n) {
-		channel.add(new InterThreadMessage("new_name", n));
-		name = n;
-		conn.sendMessage(ArchetypalMessages.setName(name));
-	}
+    private void onFrontendMessageReceived(InterThreadMessage m) {
+        String name = m.getName();
 
-	private void updateMatchStatus(Message message) {
-		String timePeriod = (String) message.getData("new_period");
-		currentPeriod = TimePeriod.fromString(timePeriod);
+        logger.fine("Recieved Message from Frontend: " + name);
 
-		channel.add(new InterThreadMessage("new_period", currentPeriod));
+        switch (name) {
+            case "exit_app":
+                logger.info("Exiting Backend Thread!");
+                shutdown();
+                break;
+            case "new_state":
+                field.updateMatchStatus(ArchetypalMessages.enterNewMatchPeriod((TimePeriod) m.getData()));
+            default:
+                logger.warning("Unknown Message Recieved on Backend: " + name);
+                break;
+        }
+    }
 
-		logger.info("Entering match period: " + currentPeriod.getName());
-	}
+    public void shutdown() {
+        field.shutdown();
+        running = false;
+    }
 
-	public Connection getConn() {
-		return conn;
-	}
+    public void setDriverStationName(String n) {
+        sendMessageToFrontend(new InterThreadMessage("new_name", n));
+        name = n;
+        field.setDriverStationName(name);
+    }
+
+    @Deprecated
+    public Connection getConn() {
+        return field.getFieldConnection();
+    }
+
+    public TimePeriod getTimePeriod() {
+        return field.getCurrentPeriod();
+    }
 
 }
