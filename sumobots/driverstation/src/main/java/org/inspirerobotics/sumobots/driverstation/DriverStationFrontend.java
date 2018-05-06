@@ -13,7 +13,6 @@ import org.inspirerobotics.sumobots.library.TimePeriod;
 import org.inspirerobotics.sumobots.library.concurrent.InterThreadMessage;
 import org.inspirerobotics.sumobots.library.concurrent.ThreadChannel;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DriverStationFrontend extends Application {
@@ -61,7 +60,6 @@ public class DriverStationFrontend extends Application {
 	}
 
 	protected void update() {
-		log.setLevel(Level.ALL);
 		InterThreadMessage m = null;
 		while ((m = threadChannel.poll()) != null) {
 			onBackendMessageReceived(m);

@@ -1,8 +1,13 @@
 package org.inspirerobotics.sumobots.driverstation.joystick;
 
 import net.java.games.input.*;
+import org.inspirerobotics.sumobots.library.InternalLog;
+
+import java.util.logging.Logger;
 
 public class Input extends Thread{
+
+    private Logger log = InternalLog.getLogger();
 
     public void run(){
         while (true) {
@@ -35,7 +40,7 @@ public class Input extends Thread{
                             buffer.append("Off");
                         }
                     }
-                    System.out.println(buffer.toString());
+                    log.finest(buffer.toString());
                 }
             }
 

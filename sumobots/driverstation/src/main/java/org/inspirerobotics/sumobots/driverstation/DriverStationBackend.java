@@ -11,7 +11,6 @@ import org.inspirerobotics.sumobots.library.networking.message.ArchetypalMessage
 import org.inspirerobotics.sumobots.library.networking.tables.NetworkTable;
 
 import java.util.Random;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class DriverStationBackend extends Thread {
@@ -33,12 +32,11 @@ public class DriverStationBackend extends Thread {
     public DriverStationBackend(ThreadChannel tc) {
         this.setName("Backend Thread");
         this.channel = tc;
-        logger.setLevel(Level.ALL);
     }
 
     @Override
     public void run() {
-        logger.setLevel(Level.FINE);
+        logger.setLevel(Settings.LOG_LEVEL);
         loadConfig();
 
         running = true;
