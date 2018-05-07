@@ -13,7 +13,7 @@ import org.inspirerobotics.sumobots.library.networking.message.MessageType;
 import org.inspirerobotics.sumobots.library.networking.tables.NetworkTable;
 
 public class Connection {
-	
+
 	private Socket socket;
 
 	private SocketStream stream;
@@ -30,8 +30,7 @@ public class Connection {
 
 	private long currentPing;
 
-	private String
-			connectionName = "";
+	private String connectionName = "";
 
 	private NetworkTable table = new NetworkTable();
 
