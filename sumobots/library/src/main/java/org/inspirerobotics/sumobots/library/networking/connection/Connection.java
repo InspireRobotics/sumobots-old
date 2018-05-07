@@ -204,9 +204,11 @@ public class Connection {
 	 * Sends a message over the socket with the data attached
 	 *
 	 * @param m
-	 */
-	public void sendMessage(Message m) {
+	 */public void sendMessage(Message m) {
 		writeRaw(m.toJSONString());
+		System.out.println("BAL" +
+				"BAGHf" + "GFGSFDGSDGs");;
+
 	}
 
 	private String getNextMessage() {
