@@ -17,7 +17,8 @@ import java.util.logging.Logger;
 
 public class ConsoleTab extends AnchorPane {
 
-	private enum GuiLogLevel {
+	private enum GuiLogLevel
+	{
 		ERROR, WARNING, INFO, DEBUG, TRACE
 	}
 
@@ -52,7 +53,7 @@ public class ConsoleTab extends AnchorPane {
 		} catch (IOException e) {
 			logger.log(Level.SEVERE, "Failed to load log.fxml", e);
 		}
-		
+
 		archiveButton.setStyle("-fx-background-color:red");
 		errorButton.setStyle("-fx-background-color:red");
 		warningButton.setStyle("-fx-background-color:red");
@@ -89,26 +90,26 @@ public class ConsoleTab extends AnchorPane {
 	}
 
 	private boolean containsAny(String string, String[] levelsToRemove) {
-		if(levelsToRemove == null)
+		if (levelsToRemove == null)
 			return false;
-		
+
 		for (String s : levelsToRemove) {
-			if(string.contains(s))
+			if (string.contains(s))
 				return true;
 		}
 		return false;
 	}
 
 	private String[] getLevelsToRemove() {
-		//NOTE: We need the colons or "Fine" will pop if a string has "FINER"
-		if(currentLevel == GuiLogLevel.ERROR){
-			return new String[]{"WARNING:", "INFO:", "FINE:", "FINER:"};
-		}else if(currentLevel == GuiLogLevel.WARNING){
-			return new String[]{"INFO:", "FINE:", "FINER:"};
-		}else if(currentLevel == GuiLogLevel.INFO){
-			return new String[]{"FINE:", "FINER:"};
-		}else if(currentLevel == GuiLogLevel.DEBUG){
-			return new String[]{"FINER:"};
+		// NOTE: We need the colons or "Fine" will pop if a string has "FINER"
+		if (currentLevel == GuiLogLevel.ERROR) {
+			return new String[] { "WARNING:", "INFO:", "FINE:", "FINER:" };
+		} else if (currentLevel == GuiLogLevel.WARNING) {
+			return new String[] { "INFO:", "FINE:", "FINER:" };
+		} else if (currentLevel == GuiLogLevel.INFO) {
+			return new String[] { "FINE:", "FINER:" };
+		} else if (currentLevel == GuiLogLevel.DEBUG) {
+			return new String[] { "FINER:" };
 		}
 		return null;
 	}
@@ -137,27 +138,27 @@ public class ConsoleTab extends AnchorPane {
 	public void onErrorPressed() {
 		currentLevel = GuiLogLevel.ERROR;
 	}
-	
+
 	@FXML
 	public void onWarningPressed() {
 		currentLevel = GuiLogLevel.WARNING;
 	}
-	
+
 	@FXML
 	public void onInfoPressed() {
 		currentLevel = GuiLogLevel.INFO;
 	}
-	
+
 	@FXML
 	public void onDebugPressed() {
 		currentLevel = GuiLogLevel.DEBUG;
 	}
-	
+
 	@FXML
 	public void onTracePressed() {
 		currentLevel = GuiLogLevel.TRACE;
 	}
-	
+
 	@FXML
 	public void onArchivePressed() {
 		InternalLog.getInstance().clear();

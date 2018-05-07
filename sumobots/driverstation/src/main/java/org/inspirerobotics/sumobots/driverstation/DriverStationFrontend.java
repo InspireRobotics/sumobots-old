@@ -28,7 +28,7 @@ public class DriverStationFrontend extends Application {
 	private MainScene mainScene;
 
 	private GuiController controller = new GuiController();
-	
+
 	private static final boolean nonFieldMode = Settings.nonFieldMode;
 
 	@Override
@@ -68,25 +68,25 @@ public class DriverStationFrontend extends Application {
 
 	private void onBackendMessageReceived(InterThreadMessage m) {
 		String name = m.getName();
-		
+
 		log.finer("Recieved Message from Backend: " + name);
 
 		switch (name) {
-		case "new_name":
-			String newName = (String) m.getData();
-			controller.setName(newName);
-			break;
-		case "new_period":
-			TimePeriod newPeriod = (TimePeriod) m.getData();
-			stage.setTitle("DS: " + newPeriod.toString());
-			controller.enterNewPeriod(newPeriod);
-			break;
-		case "conn_status":
-			controller.setConnectionStatus((boolean) m.getData());
-			break;
-		default:
-			log.warning("Unknown Message Recieved on Frontend: " + name);
-			break;
+			case "new_name":
+				String newName = (String) m.getData();
+				controller.setName(newName);
+				break;
+			case "new_period":
+				TimePeriod newPeriod = (TimePeriod) m.getData();
+				stage.setTitle("DS: " + newPeriod.toString());
+				controller.enterNewPeriod(newPeriod);
+				break;
+			case "conn_status":
+				controller.setConnectionStatus((boolean) m.getData());
+				break;
+			default:
+				log.warning("Unknown Message Recieved on Frontend: " + name);
+				break;
 		}
 	}
 
@@ -96,12 +96,12 @@ public class DriverStationFrontend extends Application {
 		stage.setScene(mainScene.toScene());
 		stage.setTitle("Driver Station!");
 		stage.show();
-		
+
 		stage.setOnCloseRequest(event -> {
-            log.info("Application Window has been closed");
-            threadChannel.add(new InterThreadMessage("exit_app"));
-            log.info("Closing down Frontend Thread...");
-            Platform.exit();
+			log.info("Application Window has been closed");
+			threadChannel.add(new InterThreadMessage("exit_app"));
+			log.info("Closing down Frontend Thread...");
+			Platform.exit();
 		});
 
 		addKeyHandlers();
@@ -110,22 +110,22 @@ public class DriverStationFrontend extends Application {
 	private void addKeyHandlers() {
 		stage.addEventFilter(KeyEvent.KEY_PRESSED, k -> {
 			log.info("Key Pressed: " + k.getCode());
-			if(k.getCode() == KeyCode.DIGIT1 && nonFieldMode) {
+			if (k.getCode() == KeyCode.DIGIT1 && nonFieldMode) {
 				threadChannel.add(new InterThreadMessage("new_state", TimePeriod.INIT));
 				return;
 			}
 
-			if(k.getCode() == KeyCode.DIGIT2 && nonFieldMode) {
+			if (k.getCode() == KeyCode.DIGIT2 && nonFieldMode) {
 				threadChannel.add(new InterThreadMessage("new_state", TimePeriod.GAME));
 				return;
 			}
 
-			if(k.getCode() == KeyCode.SPACE) {
+			if (k.getCode() == KeyCode.SPACE) {
 				threadChannel.add(new InterThreadMessage("new_state", TimePeriod.ESTOPPED));
 				return;
 			}
 
-			if(k.getCode() == KeyCode.ENTER) {
+			if (k.getCode() == KeyCode.ENTER) {
 				threadChannel.add(new InterThreadMessage("new_state", TimePeriod.DISABLED));
 				return;
 			}

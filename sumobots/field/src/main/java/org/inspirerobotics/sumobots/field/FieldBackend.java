@@ -57,20 +57,19 @@ public class FieldBackend extends Thread {
 		log.info("Backend Thread Shutdown Complete!");
 	}
 
-	private void updateLoopTime(){
+	private void updateLoopTime() {
 		loopCount++;
 
-		if (System.currentTimeMillis() - loopStartTime > 1000){
+		if (System.currentTimeMillis() - loopStartTime > 1000) {
 			loopTime = (System.currentTimeMillis() - loopStartTime) / loopCount;
 			loopStartTime = System.currentTimeMillis();
 			loopCount = 0;
 
-			if(loopTime > 15){
+			if (loopTime > 15) {
 				log.warning("High Backend Loop Time: " + loopTime);
 			}
 		}
 	}
-
 
 	private void pollFrontendThreadMessages() {
 		InterThreadMessage m;
@@ -84,7 +83,7 @@ public class FieldBackend extends Thread {
 
 	private void updateInternalTable(long loopTime) {
 		internalNetworkTable.put("IP", "" + server.getServerSocket().getLocalSocketAddress());
-		internalNetworkTable.put("Port", ""+server.getServerSocket().getLocalPort());
+		internalNetworkTable.put("Port", "" + server.getServerSocket().getLocalPort());
 		internalNetworkTable.put("Backend Loop Time", loopTime + "ms");
 	}
 
@@ -99,26 +98,26 @@ public class FieldBackend extends Thread {
 
 		log.fine("Recieved Message from Frontend: " + name);
 
-		if(name.endsWith("_match")){
+		if (name.endsWith("_match")) {
 			onMatchMessageReceived(name.split("_match")[0]);
 			return;
 		}
 
 		switch (name) {
-		case "exit_app":
-			log.info("Exiting Backend Thread!");
-			server.closeServer();
-			running = false;
-			break;
-		case "close_all":
-			server.removeAll();
-			break;
-		case "disable_ds":
-			disableDS((String) m.getData());
-			break;
-		default:
-			log.warning("Unknown Message Recieved on Backend: " + name);
-			break;
+			case "exit_app":
+				log.info("Exiting Backend Thread!");
+				server.closeServer();
+				running = false;
+				break;
+			case "close_all":
+				server.removeAll();
+				break;
+			case "disable_ds":
+				disableDS((String) m.getData());
+				break;
+			default:
+				log.warning("Unknown Message Recieved on Backend: " + name);
+				break;
 		}
 	}
 
@@ -145,7 +144,7 @@ public class FieldBackend extends Thread {
 
 	private void disableDS(String name) {
 		for (Connection c : server.getConnections()) {
-			if(c.getConnectionName().equals(name)) {
+			if (c.getConnectionName().equals(name)) {
 				c.sendMessage(ArchetypalMessages.enterNewMatchPeriod(TimePeriod.DISABLED));
 			}
 		}

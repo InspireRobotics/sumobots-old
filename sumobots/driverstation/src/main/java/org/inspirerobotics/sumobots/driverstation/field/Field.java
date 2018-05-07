@@ -19,88 +19,88 @@ import java.util.logging.Logger;
 
 public class Field implements ConnectionListener {
 
-    private final Logger logger = Logger.getLogger(Resources.LOGGER_NAME);
+	private final Logger logger = Logger.getLogger(Resources.LOGGER_NAME);
 
-    private Connection fieldConnection;
-    private TimePeriod currentPeriod;
-    private final DriverStationBackend backend;
+	private Connection fieldConnection;
+	private TimePeriod currentPeriod;
+	private final DriverStationBackend backend;
 
-    public Field(DriverStationBackend b) {
-        backend = b;
-    }
+	public Field(DriverStationBackend b) {
+		backend = b;
+	}
 
-    public boolean tryToCreateConnection(String ip) {
-        if (Settings.nonFieldMode) {
-            setFieldConnection(new EmptyConnection());
-            return true;
-        }
+	public boolean tryToCreateConnection(String ip) {
+		if (Settings.nonFieldMode) {
+			setFieldConnection(new EmptyConnection());
+			return true;
+		}
 
-        try {
-            Socket socket = new Socket(ip, Resources.SERVER_PORT);
-            setFieldConnection(new Connection(socket, this));
-            logger.info("Found connection!");
-            return true;
-        } catch (IOException e) {
-            //TODO we should probably throw here and catch lower in the stack
-        }
-        return false;
-    }
+		try {
+			Socket socket = new Socket(ip, Resources.SERVER_PORT);
+			setFieldConnection(new Connection(socket, this));
+			logger.info("Found connection!");
+			return true;
+		} catch (IOException e) {
+			// TODO we should probably throw here and catch lower in the stack
+		}
+		return false;
+	}
 
-    @Override
-    public void receivedMessage(Message message, Connection connection) {
-        MessageType type = message.getType();
+	@Override
+	public void receivedMessage(Message message, Connection connection) {
+		MessageType type = message.getType();
 
-        if (type == MessageType.MATCH_STATE_UPDATE) {
-            updateMatchStatus(message);
-        }
-    }
+		if (type == MessageType.MATCH_STATE_UPDATE) {
+			updateMatchStatus(message);
+		}
+	}
 
-    public void update() {
-        fieldConnection.update();
+	public void update() {
+		fieldConnection.update();
 
-        updateNetworkingTable();
-    }
+		updateNetworkingTable();
+	}
 
-    private void updateNetworkingTable() {
-        if (fieldConnection != null) {
-            if (fieldConnection.getSocket() != null) {
-                fieldConnection.getTable().put("ping", fieldConnection.getCurrentPing() + " ms");
-                fieldConnection.getTable().put("connection name", fieldConnection.getConnectionName());
-                fieldConnection.getTable().put("ip", fieldConnection.getSocket().getLocalAddress().toString());
-            }
-        }
-    }
+	private void updateNetworkingTable() {
+		if (fieldConnection != null) {
+			if (fieldConnection.getSocket() != null) {
+				fieldConnection.getTable().put("ping", fieldConnection.getCurrentPing() + " ms");
+				fieldConnection.getTable().put("connection name", fieldConnection.getConnectionName());
+				fieldConnection.getTable().put("ip", fieldConnection.getSocket().getLocalAddress().toString());
+			}
+		}
+	}
 
-    public void setDriverStationName(String name) {
-        fieldConnection.sendMessage(ArchetypalMessages.setName(name));
-    }
+	public void setDriverStationName(String name) {
+		fieldConnection.sendMessage(ArchetypalMessages.setName(name));
+	}
 
-    public void updateMatchStatus(Message message) {
-        String timePeriod = (String) message.getData("new_period");
-        currentPeriod = TimePeriod.fromString(timePeriod);
+	public void updateMatchStatus(Message message) {
+		String timePeriod = (String) message.getData("new_period");
+		currentPeriod = TimePeriod.fromString(timePeriod);
 
-        logger.info("Field entering match period: " + currentPeriod.getName());
-        backend.sendMessageToFrontend(new InterThreadMessage("new_period", currentPeriod));
-    }
+		logger.info("Field entering match period: " + currentPeriod.getName());
+		backend.sendMessageToFrontend(new InterThreadMessage("new_period", currentPeriod));
+	}
 
-    public void shutdown() {
-        if (fieldConnection != null)
-            fieldConnection.endConnection();
-    }
+	public void shutdown() {
+		if (fieldConnection != null)
+			fieldConnection.endConnection();
+	}
 
-    public Connection getFieldConnection() {
-        return fieldConnection;
-    }
+	public Connection getFieldConnection() {
+		return fieldConnection;
+	}
 
-    public void setNetworkingTable(NetworkTable networkingTable) {
-        fieldConnection.setBindedTable(networkingTable);
-    }
+	public void setNetworkingTable(NetworkTable networkingTable) {
+		fieldConnection.setBindedTable(networkingTable);
+	}
 
-    public void setFieldConnection(Connection fieldConnection) {
-        this.fieldConnection = fieldConnection;
-    }
+	public void setFieldConnection(Connection fieldConnection) {
+		this.fieldConnection = fieldConnection;
+	}
 
-    public TimePeriod getCurrentPeriod() {
-        return currentPeriod;
-    }
+	public TimePeriod getCurrentPeriod() {
+		return currentPeriod;
+	}
 }

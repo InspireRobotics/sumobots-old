@@ -33,64 +33,64 @@ public class SocketStream {
 		this(socket.getInputStream(), socket.getOutputStream(), socket);
 	}
 
-
-	public void update(){
-		if(closed)
+	public void update() {
+		if (closed)
 			return;
-		
+
 		String s;
-		while(true && !closed){
-			try{
+		while (true && !closed) {
+			try {
 				s = reader.readUTF();
 				builder.append(s);
-			}catch(EOFException e){
+			} catch (EOFException e) {
 				break;
-			}catch(SocketTimeoutException e){
+			} catch (SocketTimeoutException e) {
 				break;
-			}catch(IOException e){
-				logger.log(Level.SEVERE, "IOException threw while updating SocketStream for socket " + socket.getInetAddress(), e);
+			} catch (IOException e) {
+				logger.log(Level.SEVERE,
+						"IOException threw while updating SocketStream for socket " + socket.getInetAddress(), e);
 				closed = true;
-				
+
 				try {
 					this.close();
 				} catch (IOException e1) {
 					logger.log(Level.FINE, "IOException threw while closing socket " + socket.getInetAddress(), e);
 				}
-				
-				
+
 			}
 		}
 	}
 
-	public boolean hasNextMessage(){
+	public boolean hasNextMessage() {
 		return builder.toString().contains(Resources.EOT);
 	}
 
-	public String getNextMessage(){
+	public String getNextMessage() {
 		int index = builder.toString().indexOf(Resources.EOT);
-		
-		//If no message is there return null
-		if(index == -1){
+
+		// If no message is there return null
+		if (index == -1) {
 			return null;
 		}
-		
-		//Remove it from the buffer
+
+		// Remove it from the buffer
 		String s = builder.toString().substring(0, index);
 		builder.replace(0, index + 1, "");
 		return s;
 	}
 
-	public void write(String s){
-		if(closed)
+	public void write(String s) {
+		if (closed)
 			return;
-		
+
 		try {
 			writer.writeUTF(s);
 			writer.flush();
 		} catch (IOException e) {
-			logger.log(Level.SEVERE, "IOException threw while writing to the SocketStream for socket " + socket.getInetAddress(), e);
+			logger.log(Level.SEVERE,
+					"IOException threw while writing to the SocketStream for socket " + socket.getInetAddress(), e);
 			closed = true;
-			
+
 			try {
 				this.close();
 			} catch (IOException e1) {
@@ -105,7 +105,7 @@ public class SocketStream {
 		writer.close();
 		closed = true;
 	}
-	
+
 	@Override
 	protected void finalize() throws Throwable {
 		close();
@@ -122,5 +122,5 @@ public class SocketStream {
 	public DataOutputStream getWriter() {
 		return writer;
 	}
-	
+
 }

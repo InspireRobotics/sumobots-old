@@ -1,7 +1,6 @@
 package org.inspirerobotics.sumobots.library;
 
 public class Resources {
-	
 
 	public static final String LIBRARY_VERSION = "0.2.1";
 
@@ -14,5 +13,5 @@ public class Resources {
 	public static final String EOT = String.valueOf((char) 4);
 
 	public static final int SOCKET_TIMEOUT = 1;
-	
+
 }

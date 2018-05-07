@@ -67,12 +67,12 @@ public class GameTab extends AnchorPane {
 
 		initTables();
 		initStatBar();
-		
+
 		netwTableSelector.getItems().add("Internal Table");
 		netwTableSelector.getSelectionModel().select(0);
 	}
 
-	private void loadFXML(){
+	private void loadFXML() {
 		logger.fine("Loading gameTab.fxml");
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/fxml/gameTab.fxml"));
 		fxmlLoader.setController(this);
@@ -119,17 +119,18 @@ public class GameTab extends AnchorPane {
 		addSimpleConnColumn("Robot IP", 200, "robotIP");
 		addSimpleConnColumn("Robot Ping", 150, "robotPing");
 		addButtonColumn("Disable", 125, "action", event -> {
-            String name = (String) event.getSource();
-            logger.info("Disabling " + name);
-            fieldFrontend.disable(name);
-        });
+			String name = (String) event.getSource();
+			logger.info("Disabling " + name);
+			fieldFrontend.disable(name);
+		});
 		addSimpleConnColumn("Status", 200, "status");
 		ObservableList<TableConnection> data = FXCollections.observableArrayList();
 
 		connTable.setItems(data);
 	}
 
-	private TableColumn<NetworkTableEntry, String> addSimpleNetworkColumn(String name, int minWidth, String propertyName) {
+	private TableColumn<NetworkTableEntry, String> addSimpleNetworkColumn(String name, int minWidth,
+			String propertyName) {
 		TableColumn<NetworkTableEntry, String> col = new TableColumn<NetworkTableEntry, String>(name);
 		col.setCellValueFactory(new PropertyValueFactory<NetworkTableEntry, String>(propertyName));
 
@@ -145,7 +146,8 @@ public class GameTab extends AnchorPane {
 		return col;
 	}
 
-	private TableColumn<TableConnection, String> addButtonColumn(String name, int minWidth, String propertyName, EventHandler<ActionEvent> handler) {
+	private TableColumn<TableConnection, String> addButtonColumn(String name, int minWidth, String propertyName,
+			EventHandler<ActionEvent> handler) {
 		TableColumn<TableConnection, String> col = new TableColumn<TableConnection, String>(name);
 		col.setCellValueFactory(new PropertyValueFactory<TableConnection, String>(propertyName));
 		col.setMaxWidth(minWidth);
@@ -180,7 +182,7 @@ public class GameTab extends AnchorPane {
 								public void handle(ActionEvent e) {
 									handler.handle(new ActionEvent(item.split(";")[0], ActionEvent.NULL_SOURCE_TARGET));
 								}
-								
+
 							});
 							btn.setMinWidth(minWidth - 8);
 							btn.setMaxWidth(minWidth - 8);
@@ -214,23 +216,23 @@ public class GameTab extends AnchorPane {
 
 	private void updateNetworkTable(ArrayList<Connection> conns) {
 		ObservableList<NetworkTableEntry> data = FXCollections.observableArrayList();
-		
+
 		NetworkTable table = null;
 		String netwTableName = netwTableSelector.getSelectionModel().getSelectedItem();
-		
+
 		for (Connection c : conns) {
-			if(c.getConnectionName().equals(netwTableName)) {
+			if (c.getConnectionName().equals(netwTableName)) {
 				table = c.getTable();
 				break;
 			}
 		}
-		if(netwTableName != null) {
-			if(netwTableName.equals("Internal Table")) {
+		if (netwTableName != null) {
+			if (netwTableName.equals("Internal Table")) {
 				table = internalNetwTable;
 			}
 		}
-		
-		if(table != null) {
+
+		if (table != null) {
 			for (Entry<String, String> e : table.entrySet()) {
 				data.add(new NetworkTableEntry(e.getKey(), e.getValue()));
 			}
@@ -276,7 +278,7 @@ public class GameTab extends AnchorPane {
 		for (Connection connection : connsListed) {
 			connsInTable.remove(connection);
 			netwTableSelector.getItems().remove(connection.getConnectionName());
-			logger.warning("Lost networking table? "  + connection.getConnectionName());
+			logger.warning("Lost networking table? " + connection.getConnectionName());
 		}
 
 	}
@@ -291,7 +293,7 @@ public class GameTab extends AnchorPane {
 			String robotIP = "null";
 			String robotPing = "null";
 			String status = conn.isClosed() ? "Closed!" : "Open!";
-			TableConnection tc = new TableConnection(name, dsIP, dsPing, robotIP, robotPing, status, name+";Disable");
+			TableConnection tc = new TableConnection(name, dsIP, dsPing, robotIP, robotPing, status, name + ";Disable");
 			data.add(tc);
 		}
 
@@ -301,7 +303,7 @@ public class GameTab extends AnchorPane {
 
 		connTable.setItems(data);
 	}
-	
+
 	public void setInternalNetwTable(NetworkTable internalNetwTable) {
 		this.internalNetwTable = internalNetwTable;
 	}

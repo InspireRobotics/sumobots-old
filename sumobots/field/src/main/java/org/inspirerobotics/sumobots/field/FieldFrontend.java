@@ -76,52 +76,52 @@ public class FieldFrontend extends Application {
 		log.finer("Recieved Message from Backend: " + name);
 
 		switch (name) {
-		case "conn_update":
-			Object data = m.getData();
-			if (data instanceof List) {
-				@SuppressWarnings("unchecked")
-				ArrayList<Connection> conn = (ArrayList<Connection>) data;
-				root.getGameTab().setConnections(conn);
-			}
-			break;
-		case "time_period_update":
-			timePeriod = (TimePeriod) m.getData();
-			log.fine("New Time Period on Frontend: " + timePeriod);
-			
-			if(timePeriod == TimePeriod.GAME) {
-				AudioEffect.play("start.wav");
-			}else if(timePeriod == TimePeriod.ESTOPPED) {
-				AudioEffect.play("estop.wav");
-			}
-			
-			break;
-		case "update_internal_table":
-			root.getGameTab().setInternalNetwTable((NetworkTable) m.getData());
-			break;
-		default:
-			log.warning("Unknown Message Recieved on Frontend: " + name);
-			break;
+			case "conn_update":
+				Object data = m.getData();
+				if (data instanceof List) {
+					@SuppressWarnings("unchecked")
+					ArrayList<Connection> conn = (ArrayList<Connection>) data;
+					root.getGameTab().setConnections(conn);
+				}
+				break;
+			case "time_period_update":
+				timePeriod = (TimePeriod) m.getData();
+				log.fine("New Time Period on Frontend: " + timePeriod);
+
+				if (timePeriod == TimePeriod.GAME) {
+					AudioEffect.play("start.wav");
+				} else if (timePeriod == TimePeriod.ESTOPPED) {
+					AudioEffect.play("estop.wav");
+				}
+
+				break;
+			case "update_internal_table":
+				root.getGameTab().setInternalNetwTable((NetworkTable) m.getData());
+				break;
+			default:
+				log.warning("Unknown Message Recieved on Frontend: " + name);
+				break;
 		}
 	}
 
 	private void initGUI() {
 		root = new RootGroup(this);
 		stage.setScene(root.toScene());
-		
+
 		stage.addEventFilter(KeyEvent.KEY_PRESSED, k -> {
 			log.finer("Key Pressed: " + k.getCode());
-			if(this.timePeriod == TimePeriod.GAME) {
-				if(k.getCode() == KeyCode.SPACE) {
+			if (this.timePeriod == TimePeriod.GAME) {
+				if (k.getCode() == KeyCode.SPACE) {
 					eStop();
-		            k.consume();
+					k.consume();
 				}
-				
-				if(k.getCode() == KeyCode.ENTER) {
+
+				if (k.getCode() == KeyCode.ENTER) {
 					endMatch();
 					k.consume();
 				}
 			}
-	    });
+		});
 	}
 
 	private void initStage(Stage stage) {
@@ -131,12 +131,12 @@ public class FieldFrontend extends Application {
 		stage.setMinHeight(400);
 
 		stage.setOnCloseRequest(event -> {
-            log.info("Application Window has been closed");
-            threadChannel.add(new InterThreadMessage("exit_app"));
-            log.info("Closing down Frontend Thread...");
-            stage.hide();
-            Platform.exit();
-        });
+			log.info("Application Window has been closed");
+			threadChannel.add(new InterThreadMessage("exit_app"));
+			log.info("Closing down Frontend Thread...");
+			stage.hide();
+			Platform.exit();
+		});
 	}
 
 	@Override

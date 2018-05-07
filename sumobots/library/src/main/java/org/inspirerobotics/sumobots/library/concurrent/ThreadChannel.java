@@ -11,7 +11,7 @@ public class ThreadChannel {
 
 	private final ConcurrentLinkedQueue<InterThreadMessage> tx;
 
-	private final ConcurrentLinkedQueue<InterThreadMessage> rx ;
+	private final ConcurrentLinkedQueue<InterThreadMessage> rx;
 
 	public ThreadChannel() {
 		rx = new ConcurrentLinkedQueue<InterThreadMessage>();
@@ -29,28 +29,26 @@ public class ThreadChannel {
 	public ConcurrentLinkedQueue<InterThreadMessage> getRx() {
 		return rx;
 	}
-	
 
 	public ConcurrentLinkedQueue<InterThreadMessage> getTx() {
 		return tx;
 	}
 
-	public InterThreadMessage poll(){
-		InterThreadMessage message =  rx.poll();
+	public InterThreadMessage poll() {
+		InterThreadMessage message = rx.poll();
 
-		if(message != null)
+		if (message != null)
 			logger.finer("Received inter-thread message " + message.getName());
 
 		return message;
 	}
 
-	public void add(InterThreadMessage m){
+	public void add(InterThreadMessage m) {
 		tx.add(m);
 	}
 
 	public ThreadChannel createPair() {
 		return new ThreadChannel(rx, tx);
 	}
-	
-	
+
 }

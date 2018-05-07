@@ -19,18 +19,18 @@ public class Message {
 	}
 
 	public static Message fromString(String string) {
-		Type mapType = new TypeToken<HashMap<String, String>>(){}.getType();  
+		Type mapType = new TypeToken<HashMap<String, String>>() {
+		}.getType();
 		HashMap<String, String> json = new Gson().fromJson(string, mapType);
-		
+
 		Message m = new Message(MessageType.fromString(json.get("message_type")));
-		
+
 		for (Entry<String, String> o : json.entrySet()) {
 			m.addData(o.getKey(), o.getValue());
 		}
-		
+
 		return m;
 	}
-
 
 	public HashMap<String, String> getDataSet() {
 		return data;
@@ -60,11 +60,11 @@ public class Message {
 	public String toJSONString() {
 		HashMap<String, String> jsonValues = new HashMap<String, String>();
 		Gson gson = new Gson();
-		
+
 		jsonValues.putAll(data);
-		
+
 		jsonValues.put("message_type", type.getName());
-		
+
 		return gson.toJson(jsonValues);
 	}
 

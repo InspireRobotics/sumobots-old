@@ -16,204 +16,204 @@ import java.util.logging.Logger;
 
 public class DriverStationBackend extends Thread {
 
-    private final Logger logger = Logger.getLogger(Resources.LOGGER_NAME);
+	private final Logger logger = Logger.getLogger(Resources.LOGGER_NAME);
 
-    private final Field field = new Field(this);
+	private final Field field = new Field(this);
 
-    private final Robot robot = new Robot(this);
+	private final Robot robot = new Robot(this);
 
-    private Config config;
+	private Config config;
 
-    private ThreadChannel channel;
+	private ThreadChannel channel;
 
-    private boolean running;
+	private boolean running;
 
-    private String name = "";
+	private String name = "";
 
-    private NetworkTable table = new NetworkTable();
+	private NetworkTable table = new NetworkTable();
 
-    public DriverStationBackend(ThreadChannel tc) {
-        this.setName("Backend Thread");
-        this.channel = tc;
-    }
+	public DriverStationBackend(ThreadChannel tc) {
+		this.setName("Backend Thread");
+		this.channel = tc;
+	}
 
-    @Override
-    public void run() {
-        logger.setLevel(Settings.LOG_LEVEL);
-        loadConfig();
+	@Override
+	public void run() {
+		logger.setLevel(Settings.LOG_LEVEL);
+		loadConfig();
 
-        running = true;
-        sendMessageToFrontend(new InterThreadMessage("conn_status", false));
+		running = true;
+		sendMessageToFrontend(new InterThreadMessage("conn_status", false));
 
-        connectToField();
+		connectToField();
 
-        if (!running) {
-            shutdown();
-            return;
-        }
+		if (!running) {
+			shutdown();
+			return;
+		}
 
-        runMainLoop();
-    }
+		runMainLoop();
+	}
 
-    private void loadConfig() {
-        config = new Config("DriverStation");
-    }
+	private void loadConfig() {
+		config = new Config("DriverStation");
+	}
 
-    private void connectToField() {
-        while (running) {
-            pollMessages();
+	private void connectToField() {
+		while (running) {
+			pollMessages();
 
-            boolean connectionCreated = field.tryToCreateConnection(getFieldIp());
+			boolean connectionCreated = field.tryToCreateConnection(getFieldIp());
 
-            if (connectionCreated) {
-                break;
-            } else {
-                logger.info("Failed to connect to the field! Waiting 3 seconds...");
-                sleepCatchException(3000);
-            }
-        }
+			if (connectionCreated) {
+				break;
+			} else {
+				logger.info("Failed to connect to the field! Waiting 3 seconds...");
+				sleepCatchException(3000);
+			}
+		}
 
-        if (!running) {
-            return;
-        }
+		if (!running) {
+			return;
+		}
 
-        onFieldConnectionCreated();
-    }
+		onFieldConnectionCreated();
+	}
 
-    private void onFieldConnectionCreated() {
-        generateDriverStationName();
-        logger.info("Established Field-DS Connection! Starting main loop");
-        sendMessageToFrontend(new InterThreadMessage("conn_status", true));
-    }
+	private void onFieldConnectionCreated() {
+		generateDriverStationName();
+		logger.info("Established Field-DS Connection! Starting main loop");
+		sendMessageToFrontend(new InterThreadMessage("conn_status", true));
+	}
 
-    private void sleepCatchException(long time) {
-        try {
-            sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
+	private void sleepCatchException(long time) {
+		try {
+			sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
 
-    private String getFieldIp() {
-        if (config != null) {
-            if (config.getString("fieldIP") != null) {
-                return config.getString("fieldIP");
-            }
-        }
-        return "localhost";
-    }
+	private String getFieldIp() {
+		if (config != null) {
+			if (config.getString("fieldIP") != null) {
+				return config.getString("fieldIP");
+			}
+		}
+		return "localhost";
+	}
 
-    private void generateDriverStationName() {
-        if (config != null) {
-            if (config.getString("name") != null) {
-                setDriverStationName("DS-" + config.getString("name"));
-                return;
-            }
-        }
-        setDriverStationName("DS-" + new Random().nextInt(10000));
-    }
+	private void generateDriverStationName() {
+		if (config != null) {
+			if (config.getString("name") != null) {
+				setDriverStationName("DS-" + config.getString("name"));
+				return;
+			}
+		}
+		setDriverStationName("DS-" + new Random().nextInt(10000));
+	}
 
-    public void sendMessageToFrontend(InterThreadMessage m) {
-        channel.add(m);
-    }
+	public void sendMessageToFrontend(InterThreadMessage m) {
+		channel.add(m);
+	}
 
-    private void runMainLoop() {
-        while (running) {
-            field.update();
-            robot.update();
+	private void runMainLoop() {
+		while (running) {
+			field.update();
+			robot.update();
 
-            checkConnections();
-            updateNetworkTable();
-            pollMessages();
-        }
+			checkConnections();
+			updateNetworkTable();
+			pollMessages();
+		}
 
-        logger.info("Backend Shutdown...");
-        shutdown();
-    }
+		logger.info("Backend Shutdown...");
+		shutdown();
+	}
 
-    private void checkConnections(){
-        if (field.getFieldConnection().isClosed()) {
-            onFieldConnectionLost();
-            connectToField();
-        }
+	private void checkConnections() {
+		if (field.getFieldConnection().isClosed()) {
+			onFieldConnectionLost();
+			connectToField();
+		}
 
-        if(robot.getRobotConnection() == null){
-            attemptRobotConnection();
-        }else if(robot.getRobotConnection().isClosed()){
-           attemptRobotConnection();
-        }
-    }
+		if (robot.getRobotConnection() == null) {
+			attemptRobotConnection();
+		} else if (robot.getRobotConnection().isClosed()) {
+			attemptRobotConnection();
+		}
+	}
 
-    private void attemptRobotConnection(){
-        if(robot.attemptConnection("localhost")){
+	private void attemptRobotConnection() {
+		if (robot.attemptConnection("localhost")) {
 
-        }else{
-            logger.info("Failed to connect to the robot! Waiting 3 seconds...");
-            sleepCatchException(3000);
-        }
-    }
+		} else {
+			logger.info("Failed to connect to the robot! Waiting 3 seconds...");
+			sleepCatchException(3000);
+		}
+	}
 
-    private void onFieldConnectionLost() {
-        sendMessageToFrontend(new InterThreadMessage("conn_status", false));
+	private void onFieldConnectionLost() {
+		sendMessageToFrontend(new InterThreadMessage("conn_status", false));
 
-        logger.info("Lost Connection to Field!");
-        field.updateMatchStatus(ArchetypalMessages.enterNewMatchPeriod(TimePeriod.DISABLED));
-    }
+		logger.info("Lost Connection to Field!");
+		field.updateMatchStatus(ArchetypalMessages.enterNewMatchPeriod(TimePeriod.DISABLED));
+	}
 
-    private void updateNetworkTable() {
-        table.put("Logger Level", "" + logger.getLevel());
-        table.put("Name", name);
-        table.put("Time Period", "" + getTimePeriod());
+	private void updateNetworkTable() {
+		table.put("Logger Level", "" + logger.getLevel());
+		table.put("Name", name);
+		table.put("Time Period", "" + getTimePeriod());
 
-        field.setNetworkingTable(table);
-    }
+		field.setNetworkingTable(table);
+	}
 
-    private void pollMessages() {
-        InterThreadMessage m = null;
-        while ((m = channel.poll()) != null) {
-            onFrontendMessageReceived(m);
+	private void pollMessages() {
+		InterThreadMessage m = null;
+		while ((m = channel.poll()) != null) {
+			onFrontendMessageReceived(m);
 
-            if (!running)
-                return;
-        }
-    }
+			if (!running)
+				return;
+		}
+	}
 
-    private void onFrontendMessageReceived(InterThreadMessage m) {
-        String name = m.getName();
+	private void onFrontendMessageReceived(InterThreadMessage m) {
+		String name = m.getName();
 
-        logger.fine("Recieved Message from Frontend: " + name);
+		logger.fine("Recieved Message from Frontend: " + name);
 
-        switch (name) {
-            case "exit_app":
-                logger.info("Exiting Backend Thread!");
-                shutdown();
-                break;
-            case "new_state":
-                field.updateMatchStatus(ArchetypalMessages.enterNewMatchPeriod((TimePeriod) m.getData()));
-            default:
-                logger.warning("Unknown Message Recieved on Backend: " + name);
-                break;
-        }
-    }
+		switch (name) {
+			case "exit_app":
+				logger.info("Exiting Backend Thread!");
+				shutdown();
+				break;
+			case "new_state":
+				field.updateMatchStatus(ArchetypalMessages.enterNewMatchPeriod((TimePeriod) m.getData()));
+			default:
+				logger.warning("Unknown Message Recieved on Backend: " + name);
+				break;
+		}
+	}
 
-    public void shutdown() {
-        field.shutdown();
-        running = false;
-    }
+	public void shutdown() {
+		field.shutdown();
+		running = false;
+	}
 
-    public void setDriverStationName(String n) {
-        sendMessageToFrontend(new InterThreadMessage("new_name", n));
-        name = n;
-        field.setDriverStationName(name);
-    }
+	public void setDriverStationName(String n) {
+		sendMessageToFrontend(new InterThreadMessage("new_name", n));
+		name = n;
+		field.setDriverStationName(name);
+	}
 
-    @Deprecated
-    public Connection getConn() {
-        return field.getFieldConnection();
-    }
+	@Deprecated
+	public Connection getConn() {
+		return field.getFieldConnection();
+	}
 
-    public TimePeriod getTimePeriod() {
-        return field.getCurrentPeriod();
-    }
+	public TimePeriod getTimePeriod() {
+		return field.getCurrentPeriod();
+	}
 
 }

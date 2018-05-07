@@ -6,27 +6,27 @@ import org.inspirerobotics.sumobots.library.networking.tables.NetworkTable;
 
 import java.io.IOException;
 
-public class EmptyConnection extends Connection{
+public class EmptyConnection extends Connection {
 
-	public EmptyConnection(){
+	public EmptyConnection() {
 		super(null, null);
 	}
-	
+
 	@Override
 	public void update() {
-		
+
 	}
-	
+
 	@Override
 	public boolean isClosed() {
 		return false;
 	}
-	
+
 	@Override
 	public void sendMessage(Message m) {
-		
+
 	}
-	
+
 	@Override
 	public NetworkTable getTable() {
 		return null;
@@ -34,7 +34,7 @@ public class EmptyConnection extends Connection{
 
 	@Override
 	public void close() throws IOException {
-		
+
 	}
-	
+
 }

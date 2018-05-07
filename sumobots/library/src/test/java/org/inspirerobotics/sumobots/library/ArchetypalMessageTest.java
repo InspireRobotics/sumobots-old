@@ -8,28 +8,28 @@ import static org.junit.Assert.assertEquals;
 
 public class ArchetypalMessageTest {
 
-    @Test
-    public void libraryVersionTest(){
-        Message m = ArchetypalMessages.libraryVersion(false);
+	@Test
+	public void libraryVersionTest() {
+		Message m = ArchetypalMessages.libraryVersion(false);
 
-        assertEquals(Boolean.parseBoolean((String) m.getData("is_response")), false);
-        assertEquals(m.getData("version"), Resources.LIBRARY_VERSION);
-    }
+		assertEquals(Boolean.parseBoolean((String) m.getData("is_response")), false);
+		assertEquals(m.getData("version"), Resources.LIBRARY_VERSION);
+	}
 
-    @Test
-    public void enterNewMatchPeriodTest(){
-        for (TimePeriod t : TimePeriod.values()){
-            Message m = ArchetypalMessages.enterNewMatchPeriod(t);
+	@Test
+	public void enterNewMatchPeriodTest() {
+		for (TimePeriod t : TimePeriod.values()) {
+			Message m = ArchetypalMessages.enterNewMatchPeriod(t);
 
-            assertEquals(m.getData("new_period"), t.getName());
-        }
-    }
+			assertEquals(m.getData("new_period"), t.getName());
+		}
+	}
 
-    @Test
-    public void setNameTest(){
-        Message m = ArchetypalMessages.setName("FooBar");
+	@Test
+	public void setNameTest() {
+		Message m = ArchetypalMessages.setName("FooBar");
 
-        assertEquals(m.getData("name"), "FooBar");
-    }
+		assertEquals(m.getData("name"), "FooBar");
+	}
 
 }

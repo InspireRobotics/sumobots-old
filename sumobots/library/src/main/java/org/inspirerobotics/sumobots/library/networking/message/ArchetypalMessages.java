@@ -5,10 +5,10 @@ import org.inspirerobotics.sumobots.library.TimePeriod;
 
 public class ArchetypalMessages {
 
-	public static final Message libraryVersion(boolean isResponse){
+	public static final Message libraryVersion(boolean isResponse) {
 		Message m = new Message(MessageType.LIB_VERSION);
 		m.addData("version", Resources.LIBRARY_VERSION);
-		m.addData("is_response", ""+isResponse);
+		m.addData("is_response", "" + isResponse);
 		return m;
 	}
 
@@ -22,7 +22,7 @@ public class ArchetypalMessages {
 		return m;
 	}
 
-	public static final Message enterNewMatchPeriod(TimePeriod t){
+	public static final Message enterNewMatchPeriod(TimePeriod t) {
 		Message m = new Message(MessageType.MATCH_STATE_UPDATE);
 		m.addData("new_period", t.getName());
 		return m;
@@ -38,5 +38,5 @@ public class ArchetypalMessages {
 		m.addData("name", name);
 		return m;
 	}
-	
+
 }
