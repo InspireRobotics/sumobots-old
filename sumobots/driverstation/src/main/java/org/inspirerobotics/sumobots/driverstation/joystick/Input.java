@@ -24,7 +24,7 @@ public class Input extends Thread {
 
 		for (int i = 0; i < controllers.length; i++) {
 			log.fine("Found Controller: " + controllers[i]);
-			if(controllers[i].getName().equals("Controller (Gamepad F310)")) {
+			if (controllers[i].getName().equals("Controller (Gamepad F310)")) {
 				controller = controllers[i];
 				break;
 			}
@@ -33,12 +33,12 @@ public class Input extends Thread {
 		EventQueue queue = controller.getEventQueue();
 
 		Event event = new Event();
-		
+
 		log.info("Using Controller: " + controller.getName());
-		
+
 		while (true) {
 			controller.poll();
-			
+
 			while (queue.getNextEvent(event)) {
 				StringBuffer buffer = new StringBuffer(controller.getName());
 				buffer.append(" at ");
