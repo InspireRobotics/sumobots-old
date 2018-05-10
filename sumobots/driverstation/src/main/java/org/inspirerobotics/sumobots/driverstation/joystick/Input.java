@@ -16,11 +16,10 @@ public class Input extends Thread {
 	public void run() {
 		Controller controller = getController();
 
-		if(controller == null){
+		if (controller == null) {
 			log.info("No Controller Found!");
 			return;
 		}
-
 
 		EventQueue queue = controller.getEventQueue();
 		Event event = new Event();
@@ -58,7 +57,7 @@ public class Input extends Thread {
 		log.finest(buffer.toString());
 	}
 
-	private static void sleepCatchException(long millis){
+	private static void sleepCatchException(long millis) {
 		try {
 			Thread.sleep(millis);
 		} catch (InterruptedException e) {
@@ -66,7 +65,7 @@ public class Input extends Thread {
 		}
 	}
 
-	private Controller getController(){
+	private Controller getController() {
 		Controller[] controllers = ControllerEnvironment.getDefaultEnvironment().getControllers();
 		if (controllers.length == 0) {
 			System.out.println("Found no controllers.");

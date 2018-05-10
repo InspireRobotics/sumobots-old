@@ -7,6 +7,7 @@ import org.inspirerobotics.sumobots.library.networking.connection.ConnectionList
 import org.inspirerobotics.sumobots.library.networking.message.Message;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.logging.Logger;
 
@@ -16,6 +17,7 @@ public class Robot implements ConnectionListener {
 
 	private Connection robotConnection;
 	private final DriverStationBackend backend;
+	private long lastConnectionAttempt;
 
 	public Robot(DriverStationBackend b) {
 		backend = b;
@@ -26,15 +28,43 @@ public class Robot implements ConnectionListener {
 	}
 
 	public boolean attemptConnection(String ip) {
+		if (inConnectionAttemptTimeout()) {
+			logger.warning("Cannot connect to robot during timeout");
+			return false;
+		}
+
+		logger.fine("Attempting Robot Connection...");
+
 		try {
-			Socket socket = new Socket(ip, Resources.ROBOT_PORT);
-			setRobotConnection(new Connection(socket, this));
-			logger.info("Found connection!");
+			Socket socket = createSocket(ip);
+
+			if (!socket.isConnected())
+				throw new IOException();
+
+			onConnectionMade(socket);
 			return true;
 		} catch (IOException e) {
-			// TODO we should probably throw here and catch lower in the stack
+			lastConnectionAttempt = System.currentTimeMillis();
 		}
 		return false;
+	}
+
+	private void onConnectionMade(Socket s) {
+		setRobotConnection(new Connection(s, this));
+		logger.info("Found connection!");
+		lastConnectionAttempt = 0;
+	}
+
+	private Socket createSocket(String ip) throws IOException {
+		Socket socket = new Socket();
+		socket.setSoTimeout(Resources.SOCKET_TIMEOUT);
+		socket.bind(new InetSocketAddress(ip, Resources.ROBOT_PORT));
+
+		return socket;
+	}
+
+	public boolean inConnectionAttemptTimeout() {
+		return lastConnectionAttempt + 3000 > System.currentTimeMillis();
 	}
 
 	@Override
