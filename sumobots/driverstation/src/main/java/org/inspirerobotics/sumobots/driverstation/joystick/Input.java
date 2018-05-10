@@ -14,6 +14,58 @@ public class Input extends Thread {
 	}
 
 	public void run() {
+		Controller controller = getController();
+
+		if (controller == null) {
+			log.info("No Controller Found!");
+			return;
+		}
+
+		EventQueue queue = controller.getEventQueue();
+		Event event = new Event();
+
+		log.info("Using Controller: " + controller.getName());
+
+		while (true) {
+			controller.poll();
+
+			while (queue.getNextEvent(event)) {
+				handleEvent(event, controller);
+			}
+
+			sleepCatchException(10);
+		}
+
+	}
+
+	private void handleEvent(Event event, Controller c) {
+		StringBuffer buffer = new StringBuffer(c.getName());
+		buffer.append(" at ");
+		buffer.append(event.getNanos()).append(", ");
+		Component comp = event.getComponent();
+		buffer.append(comp.getName()).append(" changed to ");
+		float value = event.getValue();
+		if (comp.isAnalog()) {
+			buffer.append(value);
+		} else {
+			if (value == 1.0f) {
+				buffer.append("On");
+			} else {
+				buffer.append("Off");
+			}
+		}
+		log.finest(buffer.toString());
+	}
+
+	private static void sleepCatchException(long millis) {
+		try {
+			Thread.sleep(millis);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private Controller getController() {
 		Controller[] controllers = ControllerEnvironment.getDefaultEnvironment().getControllers();
 		if (controllers.length == 0) {
 			System.out.println("Found no controllers.");
@@ -30,40 +82,6 @@ public class Input extends Thread {
 			}
 		}
 
-		EventQueue queue = controller.getEventQueue();
-
-		Event event = new Event();
-
-		log.info("Using Controller: " + controller.getName());
-
-		while (true) {
-			controller.poll();
-
-			while (queue.getNextEvent(event)) {
-				StringBuffer buffer = new StringBuffer(controller.getName());
-				buffer.append(" at ");
-				buffer.append(event.getNanos()).append(", ");
-				Component comp = event.getComponent();
-				buffer.append(comp.getName()).append(" changed to ");
-				float value = event.getValue();
-				if (comp.isAnalog()) {
-					buffer.append(value);
-				} else {
-					if (value == 1.0f) {
-						buffer.append("On");
-					} else {
-						buffer.append("Off");
-					}
-				}
-				log.finest(buffer.toString());
-			}
-
-			try {
-				Thread.sleep(20);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-
+		return controller;
 	}
 }

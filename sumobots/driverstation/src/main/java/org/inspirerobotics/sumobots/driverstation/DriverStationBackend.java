@@ -87,8 +87,10 @@ public class DriverStationBackend extends Thread {
 	}
 
 	private void sleepCatchException(long time) {
+		logger.fine("Sleeping " + time + "ms");
+
 		try {
-			sleep(3000);
+			sleep(time);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
@@ -145,11 +147,13 @@ public class DriverStationBackend extends Thread {
 	}
 
 	private void attemptRobotConnection() {
+		if (robot.inConnectionAttemptTimeout())
+			return;
+
 		if (robot.attemptConnection("localhost")) {
 
 		} else {
 			logger.info("Failed to connect to the robot! Waiting 3 seconds...");
-			sleepCatchException(3000);
 		}
 	}
 
