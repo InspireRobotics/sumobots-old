@@ -6,7 +6,7 @@ import org.junit.Test;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-public class AudioClipTests {
+public class AudioClipTest {
 
 	@Test
 	public void testEstopSound() throws IOException {
