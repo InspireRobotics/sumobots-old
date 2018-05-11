@@ -1,3 +1,4 @@
 language: java
 
-script: cd sumobots && mvn test && mvn spotless:check
+script: before_install:
+  - if [[ "${TRAVIS_OS_NAME}" == linux ]]; then export DISPLAY=:99.0; sh -e /etc/init.d/xvfb start; ficd && sumobots && mvn test && mvn spotless:check
