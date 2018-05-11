@@ -1,18 +1,16 @@
 package org.inspirerobotics.sumobots.field.gui.gametab;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import org.inspirerobotics.sumobots.field.FieldFrontend;
+import org.inspirerobotics.sumobots.field.gui.FXMLFileLoader;
 import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.Resources;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ControlPane extends AnchorPane {
@@ -39,18 +37,7 @@ public class ControlPane extends AnchorPane {
 	public ControlPane(FieldFrontend fieldFrontend) {
 		this.fieldFrontend = fieldFrontend;
 
-		logger.fine("Loading consolePane.fxml");
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/fxml/consolePane.fxml"));
-		fxmlLoader.setController(this);
-		fxmlLoader.setRoot(this);
-
-		try {
-			fxmlLoader.load();
-		} catch (IOException e) {
-			logger.log(Level.SEVERE, "Failed to load log.fxml", e);
-		}
-
-		logger.fine("Loaded consolePane.fxml");
+		FXMLFileLoader.load("consolePane.fxml", this);
 	}
 
 	void update() {

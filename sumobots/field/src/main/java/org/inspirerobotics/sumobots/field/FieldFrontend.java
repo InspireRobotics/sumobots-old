@@ -105,7 +105,7 @@ public class FieldFrontend extends Application {
 	}
 
 	private void initGUI() {
-		root = new RootGroup(this);
+		root = new RootGroup(this, true);
 		stage.setScene(root.toScene());
 
 		stage.addEventFilter(KeyEvent.KEY_PRESSED, k -> {
