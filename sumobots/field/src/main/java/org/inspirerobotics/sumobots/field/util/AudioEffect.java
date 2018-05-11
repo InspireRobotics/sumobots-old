@@ -4,6 +4,7 @@ import org.inspirerobotics.sumobots.library.Resources;
 import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Logger;
@@ -23,9 +24,12 @@ public class AudioEffect {
 	}
 
 	public static AudioStream createAudioStream(String name) throws IOException {
-		Logger.getLogger(Resources.LOGGER_NAME).info("Loading file: " + "sounds/" + name);
+		Logger.getLogger(Resources.LOGGER_NAME).info("Loading file: sounds/" + name);
 
 		InputStream in = Thread.currentThread().getContextClassLoader().getResourceAsStream("sounds/" + name);
+
+		if (in == null)
+			throw new FileNotFoundException("Couldn't find file: sounds/" + name);
 
 		return new AudioStream(in);
 	}

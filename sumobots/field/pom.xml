@@ -7,7 +7,7 @@
   </parent>
   <artifactId>field</artifactId>
   <groupId>org.inspirerobotics.sumobots</groupId>
-  
+    
   <dependencies>
   	<dependency>
   		<groupId>org.inspirerobotics.sumobots</groupId>
