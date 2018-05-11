@@ -5,7 +5,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
@@ -13,6 +12,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 import org.inspirerobotics.sumobots.field.FieldFrontend;
+import org.inspirerobotics.sumobots.field.gui.FXMLFileLoader;
 import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.networking.connection.Connection;
 import org.inspirerobotics.sumobots.library.networking.tables.NetworkTable;
@@ -20,7 +20,6 @@ import org.inspirerobotics.sumobots.library.networking.tables.NetworkTable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map.Entry;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class GameTab extends AnchorPane {
@@ -60,7 +59,7 @@ public class GameTab extends AnchorPane {
 	public GameTab(FieldFrontend ff) {
 		this.fieldFrontend = ff;
 
-		loadFXML();
+		FXMLFileLoader.load("gameTab.fxml", this);
 
 		controlPane = new ControlPane(fieldFrontend);
 		mainBorderPane.setBottom(controlPane);
@@ -70,21 +69,7 @@ public class GameTab extends AnchorPane {
 
 		netwTableSelector.getItems().add("Internal Table");
 		netwTableSelector.getSelectionModel().select(0);
-	}
-
-	private void loadFXML() {
-		logger.fine("Loading gameTab.fxml");
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/fxml/gameTab.fxml"));
-		fxmlLoader.setController(this);
-		fxmlLoader.setRoot(this);
-
-		try {
-			fxmlLoader.load();
-		} catch (Exception e) {
-			logger.log(Level.SEVERE, "Failed to load gameTab.fxml", e);
-		}
-
-		logger.fine("Loaded gameTab.fxml");
+		logger.fine("Initialized GameTab!");
 	}
 
 	private void initStatBar() {
@@ -207,7 +192,6 @@ public class GameTab extends AnchorPane {
 		controlPane.update();
 		matchStatusBar.updateGui();
 		matchStatusBar.updateStats(fieldFrontend.getTimePeriod());
-
 	}
 
 	public void setConnections(ArrayList<Connection> conns) {
