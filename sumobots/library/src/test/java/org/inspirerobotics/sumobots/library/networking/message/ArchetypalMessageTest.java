@@ -1,7 +1,8 @@
-package org.inspirerobotics.sumobots.library;
+package org.inspirerobotics.sumobots.library.networking.message;
 
-import org.inspirerobotics.sumobots.library.networking.message.ArchetypalMessages;
-import org.inspirerobotics.sumobots.library.networking.message.Message;
+import org.inspirerobotics.sumobots.library.Resources;
+import org.inspirerobotics.sumobots.library.TimePeriod;
+import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -13,7 +14,7 @@ public class ArchetypalMessageTest {
 		Message m = ArchetypalMessages.libraryVersion(false);
 
 		assertEquals(Boolean.parseBoolean((String) m.getData("is_response")), false);
-		assertEquals(m.getData("version"), Resources.LIBRARY_VERSION);
+		Assert.assertEquals(m.getData("version"), Resources.LIBRARY_VERSION);
 	}
 
 	@Test
