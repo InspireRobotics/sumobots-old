@@ -1,7 +1,6 @@
 package org.inspirerobotics.sumobots.field.gui;
 
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
@@ -10,9 +9,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import org.inspirerobotics.sumobots.library.InternalLog;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class ConsoleTab extends AnchorPane {
@@ -43,16 +40,7 @@ public class ConsoleTab extends AnchorPane {
 
 	public ConsoleTab() {
 
-		logger.fine("Loading log.fxml");
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/fxml/log.fxml"));
-		fxmlLoader.setController(this);
-		fxmlLoader.setRoot(this);
-
-		try {
-			fxmlLoader.load();
-		} catch (IOException e) {
-			logger.log(Level.SEVERE, "Failed to load log.fxml", e);
-		}
+		FXMLFileLoader.load("log.fxml", this);
 
 		archiveButton.setStyle("-fx-background-color:red");
 		errorButton.setStyle("-fx-background-color:red");

@@ -1,7 +1,6 @@
 package org.inspirerobotics.sumobots.field.gui;
 
 import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -10,8 +9,6 @@ import org.inspirerobotics.sumobots.field.FieldFrontend;
 import org.inspirerobotics.sumobots.field.gui.gametab.GameTab;
 import org.inspirerobotics.sumobots.library.InternalLog;
 
-import java.io.IOException;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class RootGroup extends TabPane {
@@ -24,18 +21,10 @@ public class RootGroup extends TabPane {
 
 	private ConsoleTab consoleTab;
 
-	public RootGroup(FieldFrontend ff) {
+	public RootGroup(FieldFrontend ff, boolean startLoop) {
 		this.fieldFrontend = ff;
 
-		log.fine("Loading main.fxml");
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/gui/fxml/root.fxml"));
-		fxmlLoader.setController(this);
-
-		try {
-			fxmlLoader.load();
-		} catch (IOException e) {
-			log.log(Level.SEVERE, "Failed to load root.fxml", e);
-		}
+		FXMLFileLoader.load("root.fxml", this, null);
 
 		gameTab = new GameTab(fieldFrontend);
 		consoleTab = new ConsoleTab();
@@ -43,6 +32,11 @@ public class RootGroup extends TabPane {
 		addTab(gameTab, "Game");
 		addTab(consoleTab, "Console");
 
+		if (startLoop)
+			startUpdateLoop();
+	}
+
+	public void startUpdateLoop() {
 		Platform.runLater(new Runnable() {
 
 			@Override
