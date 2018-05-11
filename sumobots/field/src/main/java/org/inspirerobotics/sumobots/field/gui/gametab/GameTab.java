@@ -83,6 +83,8 @@ public class GameTab extends AnchorPane {
 		} catch (Exception e) {
 			logger.log(Level.SEVERE, "Failed to load gameTab.fxml", e);
 		}
+
+		logger.fine("Loaded gameTab.fxml");
 	}
 
 	private void initStatBar() {

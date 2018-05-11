@@ -49,6 +49,8 @@ public class ControlPane extends AnchorPane {
 		} catch (IOException e) {
 			logger.log(Level.SEVERE, "Failed to load log.fxml", e);
 		}
+
+		logger.fine("Loaded consolePane.fxml");
 	}
 
 	void update() {
