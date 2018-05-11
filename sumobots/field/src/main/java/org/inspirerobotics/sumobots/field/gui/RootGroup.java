@@ -32,11 +32,11 @@ public class RootGroup extends TabPane {
 		addTab(gameTab, "Game");
 		addTab(consoleTab, "Console");
 
-		if(startLoop)
+		if (startLoop)
 			startUpdateLoop();
 	}
 
-	public void startUpdateLoop(){
+	public void startUpdateLoop() {
 		Platform.runLater(new Runnable() {
 
 			@Override

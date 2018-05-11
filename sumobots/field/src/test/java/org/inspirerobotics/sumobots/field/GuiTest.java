@@ -7,17 +7,17 @@ import org.junit.Test;
 
 public class GuiTest {
 
-    @Rule
-    public JavaFXThreadingRule javafxRule = new JavaFXThreadingRule();
+	@Rule
+	public JavaFXThreadingRule javafxRule = new JavaFXThreadingRule();
 
-    @Test
-    public void testRootGroup(){
-        new RootGroup(null, false);
-    }
+	@Test
+	public void testRootGroup() {
+		new RootGroup(null, false);
+	}
 
-    @Test(expected = RuntimeException.class)
-    public void testUnexistantFile(){
-        FXMLFileLoader.load("foo.fxml", null);
-    }
+	@Test(expected = RuntimeException.class)
+	public void testUnexistantFile() {
+		FXMLFileLoader.load("foo.fxml", null);
+	}
 
 }
