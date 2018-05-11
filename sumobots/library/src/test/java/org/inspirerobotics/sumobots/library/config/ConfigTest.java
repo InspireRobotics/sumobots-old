@@ -1,4 +1,4 @@
-package org.inspirerobotics.sumobots.library;
+package org.inspirerobotics.sumobots.library.config;
 
 import me.grison.jtoml.impl.Toml;
 import org.inspirerobotics.sumobots.library.config.Config;
