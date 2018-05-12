@@ -54,7 +54,7 @@ public class Message {
 
 	@Override
 	public String toString() {
-		return type.getName() + "  Data: " + data;
+		return type.getName() + " Data: " + data;
 	}
 
 	public String toJSONString() {
