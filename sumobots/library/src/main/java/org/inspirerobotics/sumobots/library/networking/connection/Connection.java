@@ -139,6 +139,7 @@ public class Connection {
 			}
 		} else if (messageType == MessageType.SET_NAME) {
 			connectionName = (String) message.getData("name");
+			logger.fine(String.format("Setting name for %s to %s", socket.getInetAddress().toString(), connectionName));
 		} else if (messageType == MessageType.UPDATE_NTWK_TABLE) {
 			table.updateFrom(message);
 		}

@@ -5,6 +5,7 @@ import org.inspirerobotics.sumobots.library.Resources;
 import org.inspirerobotics.sumobots.library.networking.connection.Connection;
 import org.inspirerobotics.sumobots.library.networking.connection.ConnectionListener;
 import org.inspirerobotics.sumobots.library.networking.message.Message;
+import org.inspirerobotics.sumobots.library.networking.tables.NetworkTable;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -48,6 +49,27 @@ public class Robot implements ConnectionListener {
 			lastConnectionAttempt = System.currentTimeMillis();
 		}
 		return false;
+	}
+
+	public void addStatsToNetworkTable(NetworkTable table){
+		if(!connected()){
+			table.put("robot_connected", "false");
+			return;
+		}
+
+		table.put("robot_connected", "false");
+		table.put("robot_ip", robotConnection.getSocket().getInetAddress().toString());
+		table.put("robot_ping", robotConnection.getCurrentPing() + " ms");
+		table.put("robot_name", robotConnection.getConnectionName());
+	}
+
+	public boolean connected(){
+		if (getRobotConnection() == null) {
+			return false;
+		} else if (getRobotConnection().isClosed()) {
+			return false;
+		}
+		return true;
 	}
 
 	private void onConnectionMade(Socket s) {

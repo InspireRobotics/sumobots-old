@@ -139,11 +139,8 @@ public class DriverStationBackend extends Thread {
 			connectToField();
 		}
 
-		if (robot.getRobotConnection() == null) {
+		if(!robot.connected())
 			attemptRobotConnection();
-		} else if (robot.getRobotConnection().isClosed()) {
-			attemptRobotConnection();
-		}
 	}
 
 	private void attemptRobotConnection() {
@@ -168,6 +165,8 @@ public class DriverStationBackend extends Thread {
 		table.put("Logger Level", "" + logger.getLevel());
 		table.put("Name", name);
 		table.put("Time Period", "" + getTimePeriod());
+
+		robot.addStatsToNetworkTable(table);
 
 		field.setNetworkingTable(table);
 	}
