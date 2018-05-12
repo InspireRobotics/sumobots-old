@@ -139,7 +139,7 @@ public class DriverStationBackend extends Thread {
 			connectToField();
 		}
 
-		if(!robot.connected())
+		if (!robot.connected())
 			attemptRobotConnection();
 	}
 

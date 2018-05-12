@@ -51,8 +51,8 @@ public class Robot implements ConnectionListener {
 		return false;
 	}
 
-	public void addStatsToNetworkTable(NetworkTable table){
-		if(!connected()){
+	public void addStatsToNetworkTable(NetworkTable table) {
+		if (!connected()) {
 			table.put("robot_connected", "false");
 			return;
 		}
@@ -63,7 +63,7 @@ public class Robot implements ConnectionListener {
 		table.put("robot_name", robotConnection.getConnectionName());
 	}
 
-	public boolean connected(){
+	public boolean connected() {
 		if (getRobotConnection() == null) {
 			return false;
 		} else if (getRobotConnection().isClosed()) {
