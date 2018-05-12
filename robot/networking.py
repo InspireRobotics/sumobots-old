@@ -30,7 +30,7 @@ while True:
     try:
         print('connection from', client_address)
         connection.sendall(format_message('{"message_type":"LIB_VERSION","is_response":"false","version":"0.2.1"}'))
-        connection.sendall(format_message('{"message_type":"set_name","name":"robo-py"}'))
+        connection.sendall(format_message('{"message_type":"SET_NAME","name":"robo-py"}'))
 
         # Receive the data in small chunks and retransmit it
         while True:

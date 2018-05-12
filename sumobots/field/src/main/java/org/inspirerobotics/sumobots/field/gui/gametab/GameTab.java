@@ -276,8 +276,8 @@ public class GameTab extends AnchorPane {
 			String name = conn.getConnectionName();
 			String dsIP = conn.getSocket().getRemoteSocketAddress().toString();
 			String dsPing = conn.getCurrentPing() + " ms";
-			String robotIP = "null";
-			String robotPing = "null";
+			String robotIP = conn.getTable().get("robot_ip");
+			String robotPing = conn.getTable().get("robot_ping");
 			String status = conn.isClosed() ? "Closed!" : "Open!";
 			TableConnection tc = new TableConnection(name, dsIP, dsPing, robotIP, robotPing, status, name + ";Disable");
 			data.add(tc);
