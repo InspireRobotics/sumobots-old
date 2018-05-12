@@ -44,6 +44,7 @@ public class Robot implements ConnectionListener {
 			onConnectionMade(socket);
 			return true;
 		} catch (IOException e) {
+			logger.fine("E: " + e);
 			lastConnectionAttempt = System.currentTimeMillis();
 		}
 		return false;
@@ -58,7 +59,7 @@ public class Robot implements ConnectionListener {
 	private Socket createSocket(String ip) throws IOException {
 		Socket socket = new Socket();
 		socket.setSoTimeout(Resources.SOCKET_TIMEOUT);
-		socket.bind(new InetSocketAddress(ip, Resources.ROBOT_PORT));
+		socket.connect(new InetSocketAddress(ip, Resources.ROBOT_PORT));
 
 		return socket;
 	}
