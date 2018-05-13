@@ -56,6 +56,14 @@ public class Connection {
 			return;
 		}
 
+		checkStream();
+		updatePing();
+		updateNetworkTable();
+		stream.update();
+		handleIncomingMessage();
+	}
+
+	private void checkStream(){
 		if (stream.isClosed()) {
 			try {
 				close();
@@ -64,33 +72,41 @@ public class Connection {
 			}
 			return;
 		}
+	}
 
+	private void updatePing(){
 		if (System.currentTimeMillis() - lastPingTime > 1000) {
 			lastPingTime = System.currentTimeMillis();
 			sendMessage(ArchetypalMessages.ping());
 		}
+	}
 
+	private void updateNetworkTable(){
 		if (System.currentTimeMillis() - lastNetworkTime > 250) {
 			if (bindedTable != null)
 				bindedTable.sendUpdates(this);
 
 			lastNetworkTime = System.currentTimeMillis();
 		}
+	}
 
-		stream.update();
-
+	private void handleIncomingMessage(){
 		while (hasNextMessage()) {
 			String nextMessage = getNextMessage();
 			logger.finer(
 					"Received raw message: " + nextMessage + " to " + socket.getInetAddress() + ":" + socket.getPort());
 			Message message = Message.fromString(nextMessage);
-			MessageType messageType = message.getType();
+			onMessageReceived(message);
+		}
+	}
 
-			if (!MessageType.isInternalType(messageType)) {
-				listener.receivedMessage(message, this);
-			} else {
-				handleInternalTypes(message, messageType);
-			}
+	public void onMessageReceived(Message message){
+		MessageType messageType = message.getType();
+
+		if (!MessageType.isInternalType(messageType)) {
+			listener.receivedMessage(message, this);
+		} else {
+			handleInternalTypes(message, messageType);
 		}
 	}
 
@@ -167,7 +183,7 @@ public class Connection {
 		stream.close();
 		socket.close();
 	}
-	
+
 	public void endConnection() {
 		sendMessage(ArchetypalMessages.terminatedConnection());
 
