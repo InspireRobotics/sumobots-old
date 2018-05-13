@@ -23,7 +23,7 @@ public class NetworkingTableTest {
 		Assert.assertEquals(generateTestMessage().toJSONString(), networkTable.toMessage().toJSONString());
 	}
 
-	private Message generateTestMessage() {
+	public static Message generateTestMessage() {
 		Message m = new Message(MessageType.UPDATE_NTWK_TABLE);
 		m.addData("Foo", "Bar");
 		m.addData("Fizz", "Buzz");
@@ -31,7 +31,7 @@ public class NetworkingTableTest {
 		return m;
 	}
 
-	private NetworkTable generateTestNetworkingTable() {
+	public static NetworkTable generateTestNetworkingTable() {
 		NetworkTable networkTable = new NetworkTable();
 		networkTable.put("Foo", "Bar");
 		networkTable.put("Fizz", "Buzz");

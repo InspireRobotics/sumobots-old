@@ -92,12 +92,16 @@ public class Connection {
 
 	private void updateNetworkTable() {
 		if (System.currentTimeMillis() - lastNetworkTime > 250) {
-			if (bindedTable != null)
-				bindedTable.sendUpdates(this);
-
-			lastNetworkTime = System.currentTimeMillis();
+			sendNetworkTableUpdates();
 		}
 	}
+
+	public void sendNetworkTableUpdates(){
+        if (bindedTable != null)
+            bindedTable.sendUpdates(this);
+
+        lastNetworkTime = System.currentTimeMillis();
+    }
 
 	private void handleIncomingMessage() {
 		while (hasNextMessage()) {
