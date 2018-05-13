@@ -201,6 +201,7 @@ public class DriverStationBackend extends Thread {
 
 	public void shutdown() {
 		field.shutdown();
+		robot.getRobotConnection().endConnection();
 		running = false;
 	}
 
