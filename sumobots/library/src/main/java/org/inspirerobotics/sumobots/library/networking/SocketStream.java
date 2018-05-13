@@ -106,6 +106,9 @@ public class SocketStream {
 	}
 
 	public void close() throws IOException {
+		if (isClosed())
+			return;
+
 		logger.fine("Closing socket stream: " + socket.getInetAddress());
 		reader.close();
 		writer.close();
