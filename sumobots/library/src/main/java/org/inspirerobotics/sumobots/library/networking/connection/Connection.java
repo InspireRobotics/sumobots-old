@@ -50,6 +50,11 @@ public class Connection {
 		}
 	}
 
+	protected Connection(SocketStream stream, ConnectionListener listener) {
+		this.listener = listener;
+		this.stream = stream;
+	}
+
 	public void update() {
 		if (closed) {
 			logger.warning("WARNING! Closed Socket is remaining open!");
@@ -63,7 +68,7 @@ public class Connection {
 		handleIncomingMessage();
 	}
 
-	private void checkStream(){
+	private void checkStream() {
 		if (stream.isClosed()) {
 			try {
 				close();
@@ -74,14 +79,18 @@ public class Connection {
 		}
 	}
 
-	private void updatePing(){
+	private void updatePing() {
 		if (System.currentTimeMillis() - lastPingTime > 1000) {
-			lastPingTime = System.currentTimeMillis();
-			sendMessage(ArchetypalMessages.ping());
+			ping();
 		}
 	}
 
-	private void updateNetworkTable(){
+	public void ping() {
+		lastPingTime = System.currentTimeMillis();
+		sendMessage(ArchetypalMessages.ping());
+	}
+
+	private void updateNetworkTable() {
 		if (System.currentTimeMillis() - lastNetworkTime > 250) {
 			if (bindedTable != null)
 				bindedTable.sendUpdates(this);
@@ -90,7 +99,7 @@ public class Connection {
 		}
 	}
 
-	private void handleIncomingMessage(){
+	private void handleIncomingMessage() {
 		while (hasNextMessage()) {
 			String nextMessage = getNextMessage();
 			logger.finer(
@@ -100,7 +109,7 @@ public class Connection {
 		}
 	}
 
-	public void onMessageReceived(Message message){
+	protected void onMessageReceived(Message message) {
 		MessageType messageType = message.getType();
 
 		if (!MessageType.isInternalType(messageType)) {
@@ -112,34 +121,7 @@ public class Connection {
 
 	private void handleInternalTypes(Message message, MessageType messageType) {
 		if (messageType == MessageType.LIB_VERSION) {
-			String libraryVersion = (String) message.getData("version");
-			boolean isResponse = Boolean.valueOf((String) message.getData("is_response"));
-
-			if (libraryVersion.equals(Resources.LIBRARY_VERSION)) {
-				String logMessage = String.format("Library Version(%s) matches for %s", Resources.LIBRARY_VERSION,
-						socket.getInetAddress().toString());
-
-				logger.fine(logMessage);
-				if (!isResponse) {
-					sendMessage(ArchetypalMessages.libraryVersion(true));
-				}
-			} else {
-				String errorMessage = String.format(
-						"Library versions don't match! This Version: %s, Connection Version: %s",
-						Resources.LIBRARY_VERSION, libraryVersion);
-
-				logger.severe(errorMessage);
-
-				if (!isResponse) {
-					sendMessage(ArchetypalMessages.libraryVersion(true));
-				}
-
-				try {
-					this.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
+			handleLibraryVersionMessage(message);
 		} else if (messageType == MessageType.PING) {
 			sendMessage(ArchetypalMessages.pong());
 		} else if (messageType == MessageType.PONG) {
@@ -155,9 +137,42 @@ public class Connection {
 			}
 		} else if (messageType == MessageType.SET_NAME) {
 			connectionName = (String) message.getData("name");
-			logger.fine(String.format("Setting name for %s to %s", socket.getInetAddress().toString(), connectionName));
+			logger.fine(String.format("Setting name for %s to %s", toString(), connectionName));
 		} else if (messageType == MessageType.UPDATE_NTWK_TABLE) {
 			table.updateFrom(message);
+		}
+	}
+
+	public void handleLibraryVersionMessage(Message message) {
+		String libraryVersion = (String) message.getData("version");
+		boolean isResponse = Boolean.valueOf((String) message.getData("is_response"));
+
+		if (libraryVersion.equals(Resources.LIBRARY_VERSION)) {
+			onLibraryVersionMatch(isResponse);
+		} else {
+			onLibraryVersionMatchFailure(libraryVersion, isResponse);
+		}
+	}
+
+	private void onLibraryVersionMatch(boolean isResponse) {
+		String logMessage = String.format("Library Version(%s) matches for %s", Resources.LIBRARY_VERSION, toString());
+
+		logger.fine(logMessage);
+		if (!isResponse) {
+			sendMessage(ArchetypalMessages.libraryVersion(true));
+		}
+	}
+
+	private void onLibraryVersionMatchFailure(String libraryVersion, boolean isResponse) {
+		String errorMessage = String.format("Library versions don't match! This Version: %s, Connection Version: %s",
+				Resources.LIBRARY_VERSION, libraryVersion);
+
+		logger.severe(errorMessage);
+
+		try {
+			this.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -218,7 +233,15 @@ public class Connection {
 
 	@Override
 	public String toString() {
-		return this.getConnectionName() == null ? this.getConnectionName() : "Unnamed Connection";
+		String unnamed = "Unnamed Connection";
+
+		try {
+			unnamed = socket.getInetAddress().toString();
+		} catch (NullPointerException e) {
+
+		}
+
+		return this.getConnectionName() == null ? this.getConnectionName() : unnamed;
 	}
 
 	public static Connection fromSocket(Socket s, ConnectionListener l) {

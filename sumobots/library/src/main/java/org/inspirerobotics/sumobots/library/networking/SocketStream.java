@@ -29,6 +29,12 @@ public class SocketStream {
 		this.writer = new DataOutputStream(writer);
 	}
 
+	protected SocketStream(Socket socket, DataInputStream reader, DataOutputStream writer) {
+		this.socket = socket;
+		this.reader = reader;
+		this.writer = writer;
+	}
+
 	public SocketStream(Socket socket) throws IOException {
 		this(socket.getInputStream(), socket.getOutputStream(), socket);
 	}
