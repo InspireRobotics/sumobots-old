@@ -1,16 +1,16 @@
 package org.inspirerobotics.sumobots.library.networking.connection;
 
-import java.io.IOException;
-import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.inspirerobotics.sumobots.library.Resources;
 import org.inspirerobotics.sumobots.library.networking.SocketStream;
 import org.inspirerobotics.sumobots.library.networking.message.ArchetypalMessages;
 import org.inspirerobotics.sumobots.library.networking.message.Message;
 import org.inspirerobotics.sumobots.library.networking.message.MessageType;
 import org.inspirerobotics.sumobots.library.networking.tables.NetworkTable;
+
+import java.io.IOException;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Connection {
 
@@ -167,11 +167,7 @@ public class Connection {
 		stream.close();
 		socket.close();
 	}
-
-	/**
-	 * Peacefully ends the stream. Used when nothing went wrong but we need to end
-	 * the connection
-	 */
+	
 	public void endConnection() {
 		sendMessage(ArchetypalMessages.terminatedConnection());
 
@@ -182,11 +178,6 @@ public class Connection {
 		}
 	}
 
-	/**
-	 * Closes the socket and streams
-	 *
-	 * @throws IOException
-	 */
 	public void close() throws IOException {
 		stream.close();
 		socket.close();
@@ -214,14 +205,6 @@ public class Connection {
 		return this.getConnectionName() == null ? this.getConnectionName() : "Unnamed Connection";
 	}
 
-	/**
-	 * Creates a connection with the Socket and Listener provided
-	 *
-	 * @param socket
-	 *            the socket to handle
-	 * @param listener
-	 *            the listener to handle incoming messages
-	 */
 	public static Connection fromSocket(Socket s, ConnectionListener l) {
 		return new Connection(s, l);
 	}
