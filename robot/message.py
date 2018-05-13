@@ -18,6 +18,17 @@ class Message(object):
         message = message.replace('TYPE', self.type)
         return format_message_to_bytes(message)
 
+    def send_from(self, connection):
+        connection.send(self.format_message())
+
+def set_name_message(new_name):
+    message = Message('SET_NAME')
+    message.add_data('name', new_name)
+    return message
+
+def pong_message():
+    return Message('PONG')
+
 def format_message_to_bytes(string):
     xs = bytearray(1);
     xs.append(utf8len(string) + 1)

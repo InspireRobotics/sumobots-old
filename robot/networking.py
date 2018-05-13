@@ -1,5 +1,6 @@
 import socket
 import sys
+import message
 from message import Message
 
 # Create a TCP/IP socket
@@ -18,9 +19,7 @@ while True:
     print('waiting for a connection')
     connection, client_address = sock.accept()
 
-    message = Message('SET_NAME')
-    message.add_data('name', 'robo-py')
-    connection.sendall(message.format_message())
+    message.set_name_message('robo-py').send_from(connection)
 
     try:
         print('connection from', client_address)
@@ -29,8 +28,7 @@ while True:
         while True:
             data = connection.recv(512)
             print('received {!r}'.format(data))
-            message = Message("PONG")
-            connection.sendall(message.format_message())
+            message.pong_message().send_from(connection)
 
     finally:
         # Clean up the connection
