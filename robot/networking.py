@@ -1,16 +1,6 @@
 import socket
 import sys
-
-def utf8len(s):
-    return len(s.encode('utf-8'))
-
-def format_message(string):
-    xs = bytearray(1);
-    xs.append(utf8len(string) + 1)
-    xs.extend(string.encode('utf-8'))
-    xs.append(4)
-    print('Formatted message: {}'.format(xs))
-    return xs;
+from message import Message
 
 # Create a TCP/IP socket
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -27,21 +17,20 @@ while True:
     # Wait for a connection
     print('waiting for a connection')
     connection, client_address = sock.accept()
+
+    message = Message('SET_NAME')
+    message.add_data('name', 'robo-py')
+    connection.sendall(message.format_message())
+
     try:
         print('connection from', client_address)
-        connection.sendall(format_message('{"message_type":"LIB_VERSION","is_response":"false","version":"0.2.1"}'))
-        connection.sendall(format_message('{"message_type":"SET_NAME","name":"robo-py"}'))
 
         # Receive the data in small chunks and retransmit it
         while True:
             data = connection.recv(512)
             print('received {!r}'.format(data))
-            if data:
-                print('sending data back to the client')
-                connection.sendall(format_message('{"message_type":"PONG"}'))
-            else:
-                print('no data from', client_address)
-                break
+            message = Message("PONG")
+            connection.sendall(message.format_message())
 
     finally:
         # Clean up the connection
