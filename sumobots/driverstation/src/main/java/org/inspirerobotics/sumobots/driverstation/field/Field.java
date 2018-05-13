@@ -23,6 +23,7 @@ public class Field implements ConnectionListener {
 
 	private Connection fieldConnection;
 	private TimePeriod currentPeriod;
+	private String driverStationName;
 	private final DriverStationBackend backend;
 
 	public Field(DriverStationBackend b) {
@@ -38,6 +39,7 @@ public class Field implements ConnectionListener {
 		try {
 			Socket socket = new Socket(ip, Resources.SERVER_PORT);
 			setFieldConnection(new Connection(socket, this));
+			fieldConnection.sendMessage(ArchetypalMessages.setName(driverStationName));
 			logger.info("Found connection!");
 			return true;
 		} catch (IOException e) {
@@ -71,10 +73,6 @@ public class Field implements ConnectionListener {
 		}
 	}
 
-	public void setDriverStationName(String name) {
-		fieldConnection.sendMessage(ArchetypalMessages.setName(name));
-	}
-
 	public void updateMatchStatus(Message message) {
 		String timePeriod = (String) message.getData("new_period");
 		currentPeriod = TimePeriod.fromString(timePeriod);
@@ -102,5 +100,9 @@ public class Field implements ConnectionListener {
 
 	public TimePeriod getCurrentPeriod() {
 		return currentPeriod;
+	}
+
+	public void setDriverStationName(String driverStationName) {
+		this.driverStationName = driverStationName;
 	}
 }

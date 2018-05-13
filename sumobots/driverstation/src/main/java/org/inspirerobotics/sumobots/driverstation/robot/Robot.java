@@ -2,6 +2,7 @@ package org.inspirerobotics.sumobots.driverstation.robot;
 
 import org.inspirerobotics.sumobots.driverstation.DriverStationBackend;
 import org.inspirerobotics.sumobots.library.Resources;
+import org.inspirerobotics.sumobots.library.concurrent.InterThreadMessage;
 import org.inspirerobotics.sumobots.library.networking.connection.Connection;
 import org.inspirerobotics.sumobots.library.networking.connection.ConnectionListener;
 import org.inspirerobotics.sumobots.library.networking.message.Message;
@@ -19,6 +20,7 @@ public class Robot implements ConnectionListener {
 	private Connection robotConnection;
 	private final DriverStationBackend backend;
 	private long lastConnectionAttempt;
+	private boolean previouslyConnected;
 
 	public Robot(DriverStationBackend b) {
 		backend = b;
@@ -63,6 +65,13 @@ public class Robot implements ConnectionListener {
 		table.put("robot_name", robotConnection.getConnectionName());
 	}
 
+	public void checkIfStillConnected() {
+		if (previouslyConnected && !connected()) {
+			previouslyConnected = false;
+			backend.sendMessageToFrontend(new InterThreadMessage("robot_conn_status", false));
+		}
+	}
+
 	public boolean connected() {
 		if (getRobotConnection() == null) {
 			return false;
@@ -76,6 +85,8 @@ public class Robot implements ConnectionListener {
 		setRobotConnection(new Connection(s, this));
 		logger.info("Found connection!");
 		lastConnectionAttempt = 0;
+		previouslyConnected = true;
+		backend.sendMessageToFrontend(new InterThreadMessage("robot_conn_status", true));
 	}
 
 	private Socket createSocket(String ip) throws IOException {

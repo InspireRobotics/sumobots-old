@@ -41,9 +41,11 @@ public class DriverStationBackend extends Thread {
 	public void run() {
 		logger.setLevel(Settings.LOG_LEVEL);
 		loadConfig();
+		generateDriverStationName();
+		field.setDriverStationName(name);
 
 		running = true;
-		sendMessageToFrontend(new InterThreadMessage("conn_status", false));
+		sendMessageToFrontend(new InterThreadMessage("field_conn_status", false));
 
 		connectToField();
 
@@ -81,9 +83,8 @@ public class DriverStationBackend extends Thread {
 	}
 
 	private void onFieldConnectionCreated() {
-		generateDriverStationName();
 		logger.info("Established Field-DS Connection! Starting main loop");
-		sendMessageToFrontend(new InterThreadMessage("conn_status", true));
+		sendMessageToFrontend(new InterThreadMessage("field_conn_status", true));
 	}
 
 	private void sleepCatchException(long time) {
@@ -139,6 +140,8 @@ public class DriverStationBackend extends Thread {
 			connectToField();
 		}
 
+		robot.checkIfStillConnected();
+
 		if (!robot.connected())
 			attemptRobotConnection();
 	}
@@ -147,17 +150,17 @@ public class DriverStationBackend extends Thread {
 		if (robot.inConnectionAttemptTimeout())
 			return;
 
-		if (robot.attemptConnection("localhost")) {
-
-		} else {
+		if (!robot.attemptConnection("localhost")) {
 			logger.info("Failed to connect to the robot! Waiting 3 seconds...");
 		}
 	}
 
 	private void onFieldConnectionLost() {
-		sendMessageToFrontend(new InterThreadMessage("conn_status", false));
+		sendMessageToFrontend(new InterThreadMessage("field_conn_status", false));
+		sendMessageToFrontend(new InterThreadMessage("robot_conn_status", false));
 
 		logger.info("Lost Connection to Field!");
+		robot.getRobotConnection().endConnection();
 		field.updateMatchStatus(ArchetypalMessages.enterNewMatchPeriod(TimePeriod.DISABLED));
 	}
 
@@ -201,7 +204,7 @@ public class DriverStationBackend extends Thread {
 
 	public void shutdown() {
 		field.shutdown();
-		if(robot.getRobotConnection() != null)
+		if (robot.getRobotConnection() != null)
 			robot.getRobotConnection().endConnection();
 		running = false;
 	}

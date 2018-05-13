@@ -25,16 +25,21 @@ public class GuiController {
 	public TextField statusLabel;
 
 	@FXML
-	public TextField connectedLabel;
+	public TextField fieldLabel;
+
+	@FXML
+	public TextField robotLabel;
 
 	public void init() {
 		statusLabel.setMinHeight(85);
 		statusLabel.setMaxHeight(85);
 		statusLabel.setFocusTraversable(false);
 		nameLabel.setFocusTraversable(false);
+		robotLabel.setFocusTraversable(false);
 
 		enterNewPeriod(TimePeriod.DISABLED);
-		setConnectionStatus(false);
+		setFieldConnectionStatus(false);
+		setRobotConnectionStatus(false);
 
 		Platform.runLater(new Runnable() {
 			@Override
@@ -64,16 +69,26 @@ public class GuiController {
 		nameLabel.setText("Name: " + newName);
 	}
 
-	public void setConnectionStatus(boolean connected) {
+	public void setFieldConnectionStatus(boolean connected) {
 		if (Settings.nonFieldMode) {
-			connectedLabel.setText("Non Field Mode!");
-			connectedLabel.setStyle("-fx-background-color:blue");
+			fieldLabel.setText("Non Field Mode!");
+			fieldLabel.setStyle("-fx-background-color:blue");
 		} else if (connected) {
-			connectedLabel.setText("Field: Connected!");
-			connectedLabel.setStyle("-fx-background-color:green");
+			fieldLabel.setText("Field: Connected!");
+			fieldLabel.setStyle("-fx-background-color:green");
 		} else {
-			connectedLabel.setText("Field: Not Connected!");
-			connectedLabel.setStyle("-fx-background-color:red");
+			fieldLabel.setText("Field: Not Connected!");
+			fieldLabel.setStyle("-fx-background-color:red");
+		}
+	}
+
+	public void setRobotConnectionStatus(boolean connected) {
+		if (connected) {
+			robotLabel.setText("Robot: Connected!");
+			robotLabel.setStyle("-fx-background-color:green");
+		} else {
+			robotLabel.setText("Robot: Not Connected!");
+			robotLabel.setStyle("-fx-background-color:red");
 		}
 	}
 

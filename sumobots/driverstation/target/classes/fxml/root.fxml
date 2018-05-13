@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import java.lang.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
 
-<fx:root minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/style.css" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../css/style.css" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/8.0.76-ea" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <BorderPane id="root" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
@@ -15,8 +16,9 @@
          <bottom>
             <HBox alignment="CENTER_LEFT">
                <children>
-                  <TextField fx:id="nameLabel" alignment="CENTER" editable="false" styleClass="stdTextfield" text="Name: DS 1243" BorderPane.alignment="CENTER" HBox.hgrow="ALWAYS" />
-                  <TextField fx:id="connectedLabel" alignment="CENTER" editable="false" layoutX="10.0" layoutY="10.0" styleClass="stdTextfield" text="Connected?" />
+                  <TextField fx:id="robotLabel" alignment="CENTER" editable="false" styleClass="stdTextfield" text="No Robot Found" BorderPane.alignment="CENTER" HBox.hgrow="SOMETIMES" />
+                  <TextField fx:id="nameLabel" alignment="CENTER" editable="false" styleClass="stdTextfield" text="Name" BorderPane.alignment="CENTER" HBox.hgrow="ALWAYS" />
+                  <TextField fx:id="fieldLabel" alignment="CENTER" editable="false" layoutX="10.0" layoutY="10.0" styleClass="stdTextfield" text="No Field Found" HBox.hgrow="SOMETIMES"/>
                </children>
             </HBox>
          </bottom>
