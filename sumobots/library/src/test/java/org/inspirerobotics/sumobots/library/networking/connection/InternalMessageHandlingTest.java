@@ -14,7 +14,7 @@ public class InternalMessageHandlingTest {
 
 	@Before
 	public void setupTest() {
-		testConnection = new TestConnection(null);
+		testConnection = new TestConnection();
 	}
 
 	@Test

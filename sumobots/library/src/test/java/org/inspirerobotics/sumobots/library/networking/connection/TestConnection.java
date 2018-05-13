@@ -7,8 +7,8 @@ public class TestConnection extends Connection {
 
 	private Message lastSentMessage;
 
-	public TestConnection(ConnectionListener cl) {
-		super(new TestSocketStream(), cl);
+	public TestConnection() {
+		super(new TestSocketStream());
 	}
 
 	public void handleTestMessage(Message m) {

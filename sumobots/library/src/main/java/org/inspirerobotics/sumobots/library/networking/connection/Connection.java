@@ -50,8 +50,8 @@ public class Connection {
 		}
 	}
 
-	protected Connection(SocketStream stream, ConnectionListener listener) {
-		this.listener = listener;
+	protected Connection(SocketStream stream) {
+		this.listener = null;
 		this.stream = stream;
 	}
 

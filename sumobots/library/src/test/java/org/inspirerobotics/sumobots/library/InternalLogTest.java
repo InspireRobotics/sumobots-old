@@ -54,24 +54,27 @@ public class InternalLogTest {
 
 	@Test
 	public void logFormatTest() {
+		long milli = System.currentTimeMillis();
+
 		LogRecord log = new LogRecord(Level.INFO, "Foo");
 		log.setLoggerName(Resources.LOGGER_NAME);
 		log.setSourceClassName("Class");
+		log.setMillis(milli);
 		log.setSourceMethodName("Method");
 
 		String formattedString = InternalLog.format(log);
-		String expected = createExpectedLog();
+		String expected = createExpectedLog(milli);
 
 		Assert.assertEquals(expected, formattedString);
 	}
 
-	private String createExpectedLog() {
+	private String createExpectedLog(long milli) {
 		MessageFormat messageFormat = new MessageFormat("[{3,date,hh:mm:ss:SS} {2} {6}.{5}()] {1}: {4}\t {7}\n");
 
 		Object[] arguments = new Object[8];
 		arguments[1] = "INFO";
 		arguments[2] = Thread.currentThread().getName();
-		arguments[3] = new Date(System.currentTimeMillis());
+		arguments[3] = new Date(milli);
 		arguments[4] = "Foo";
 		arguments[5] = "Method";
 		arguments[6] = "Class";
