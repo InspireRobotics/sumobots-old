@@ -96,12 +96,12 @@ public class Connection {
 		}
 	}
 
-	public void sendNetworkTableUpdates(){
-        if (bindedTable != null)
-            bindedTable.sendUpdates(this);
+	public void sendNetworkTableUpdates() {
+		if (bindedTable != null)
+			bindedTable.sendUpdates(this);
 
-        lastNetworkTime = System.currentTimeMillis();
-    }
+		lastNetworkTime = System.currentTimeMillis();
+	}
 
 	private void handleIncomingMessage() {
 		while (hasNextMessage()) {

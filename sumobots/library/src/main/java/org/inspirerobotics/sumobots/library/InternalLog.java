@@ -8,7 +8,7 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
-public class InternalLog extends Handler{
+public class InternalLog extends Handler {
 
 	private static InternalLog INSTANCE;
 
@@ -44,7 +44,7 @@ public class InternalLog extends Handler{
 		System.out.print(formattedString);
 	}
 
-	public static String format(LogRecord record){
+	public static String format(LogRecord record) {
 		Object[] arguments = new Object[8];
 		// arguments[0] = record.getLoggerName();
 		arguments[1] = record.getLevel();
@@ -83,7 +83,7 @@ public class InternalLog extends Handler{
 		logLines.clear();
 	}
 
-	public void reset(){
+	public void reset() {
 		logger.removeHandler(INSTANCE);
 		logLines.clear();
 		INSTANCE = null;

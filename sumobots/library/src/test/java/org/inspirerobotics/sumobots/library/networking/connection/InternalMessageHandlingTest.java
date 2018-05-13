@@ -60,23 +60,23 @@ public class InternalMessageHandlingTest {
 		Assert.assertNull(m);
 	}
 
-    @Test
-    public void sendNetworkTableUpdateTest() throws InterruptedException {
-        testConnection.setBindedTable(NetworkingTableTest.generateTestNetworkingTable());
-        testConnection.sendNetworkTableUpdates();
-        Message m = testConnection.getLastSentMessage();
+	@Test
+	public void sendNetworkTableUpdateTest() throws InterruptedException {
+		testConnection.setBindedTable(NetworkingTableTest.generateTestNetworkingTable());
+		testConnection.sendNetworkTableUpdates();
+		Message m = testConnection.getLastSentMessage();
 
-        Assert.assertEquals(MessageType.UPDATE_NTWK_TABLE, m.getType());
-        Assert.assertEquals("Bar", m.getData("Foo"));
-        Assert.assertEquals("Buzz", m.getData("Fizz"));
-    }
+		Assert.assertEquals(MessageType.UPDATE_NTWK_TABLE, m.getType());
+		Assert.assertEquals("Bar", m.getData("Foo"));
+		Assert.assertEquals("Buzz", m.getData("Fizz"));
+	}
 
-    @Test
-    public void networkTableUpdateReceivedTest() throws InterruptedException {
-        testConnection.handleTestMessage(NetworkingTableTest.generateTestMessage());
+	@Test
+	public void networkTableUpdateReceivedTest() throws InterruptedException {
+		testConnection.handleTestMessage(NetworkingTableTest.generateTestMessage());
 
-        Assert.assertEquals("Bar", testConnection.getTable().get("Foo"));
-        Assert.assertEquals("Buzz", testConnection.getTable().get("Fizz"));
-    }
+		Assert.assertEquals("Bar", testConnection.getTable().get("Foo"));
+		Assert.assertEquals("Buzz", testConnection.getTable().get("Fizz"));
+	}
 
 }
