@@ -6,6 +6,7 @@ sumobots/.settings/
 # Intellij
 robot/.idea
 robot/.idea
+**.pyc
 sumobots/.idea
 sumobots/.idea
 **/uiDesigner.xml 
