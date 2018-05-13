@@ -1,4 +1,4 @@
-package org.inspirerobotics.sumobots.library.message;
+package org.inspirerobotics.sumobots.library.networking.message;
 
 import org.inspirerobotics.sumobots.library.networking.message.MessageType;
 import org.junit.Assert;
