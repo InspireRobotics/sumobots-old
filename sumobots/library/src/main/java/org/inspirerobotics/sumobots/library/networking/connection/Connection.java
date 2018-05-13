@@ -1,16 +1,16 @@
 package org.inspirerobotics.sumobots.library.networking.connection;
 
-import java.io.IOException;
-import java.net.Socket;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import org.inspirerobotics.sumobots.library.Resources;
 import org.inspirerobotics.sumobots.library.networking.SocketStream;
 import org.inspirerobotics.sumobots.library.networking.message.ArchetypalMessages;
 import org.inspirerobotics.sumobots.library.networking.message.Message;
 import org.inspirerobotics.sumobots.library.networking.message.MessageType;
 import org.inspirerobotics.sumobots.library.networking.tables.NetworkTable;
+
+import java.io.IOException;
+import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Connection {
 
@@ -50,12 +50,25 @@ public class Connection {
 		}
 	}
 
+	protected Connection(SocketStream stream) {
+		this.listener = null;
+		this.stream = stream;
+	}
+
 	public void update() {
 		if (closed) {
 			logger.warning("WARNING! Closed Socket is remaining open!");
 			return;
 		}
 
+		checkStream();
+		updatePing();
+		updateNetworkTable();
+		stream.update();
+		handleIncomingMessage();
+	}
+
+	private void checkStream() {
 		if (stream.isClosed()) {
 			try {
 				close();
@@ -64,66 +77,55 @@ public class Connection {
 			}
 			return;
 		}
+	}
 
+	private void updatePing() {
 		if (System.currentTimeMillis() - lastPingTime > 1000) {
-			lastPingTime = System.currentTimeMillis();
-			sendMessage(ArchetypalMessages.ping());
+			ping();
 		}
+	}
 
+	public void ping() {
+		lastPingTime = System.currentTimeMillis();
+		sendMessage(ArchetypalMessages.ping());
+	}
+
+	private void updateNetworkTable() {
 		if (System.currentTimeMillis() - lastNetworkTime > 250) {
-			if (bindedTable != null)
-				bindedTable.sendUpdates(this);
-
-			lastNetworkTime = System.currentTimeMillis();
+			sendNetworkTableUpdates();
 		}
+	}
 
-		stream.update();
+	public void sendNetworkTableUpdates() {
+		if (bindedTable != null)
+			bindedTable.sendUpdates(this);
 
+		lastNetworkTime = System.currentTimeMillis();
+	}
+
+	private void handleIncomingMessage() {
 		while (hasNextMessage()) {
 			String nextMessage = getNextMessage();
 			logger.finer(
 					"Received raw message: " + nextMessage + " to " + socket.getInetAddress() + ":" + socket.getPort());
 			Message message = Message.fromString(nextMessage);
-			MessageType messageType = message.getType();
+			onMessageReceived(message);
+		}
+	}
 
-			if (!MessageType.isInternalType(messageType)) {
-				listener.receivedMessage(message, this);
-			} else {
-				handleInternalTypes(message, messageType);
-			}
+	protected void onMessageReceived(Message message) {
+		MessageType messageType = message.getType();
+
+		if (!MessageType.isInternalType(messageType)) {
+			listener.receivedMessage(message, this);
+		} else {
+			handleInternalTypes(message, messageType);
 		}
 	}
 
 	private void handleInternalTypes(Message message, MessageType messageType) {
 		if (messageType == MessageType.LIB_VERSION) {
-			String libraryVersion = (String) message.getData("version");
-			boolean isResponse = Boolean.valueOf((String) message.getData("is_response"));
-
-			if (libraryVersion.equals(Resources.LIBRARY_VERSION)) {
-				String logMessage = String.format("Library Version(%s) matches for %s", Resources.LIBRARY_VERSION,
-						socket.getInetAddress().toString());
-
-				logger.fine(logMessage);
-				if (!isResponse) {
-					sendMessage(ArchetypalMessages.libraryVersion(true));
-				}
-			} else {
-				String errorMessage = String.format(
-						"Library versions don't match! This Version: %s, Connection Version: %s",
-						Resources.LIBRARY_VERSION, libraryVersion);
-
-				logger.severe(errorMessage);
-
-				if (!isResponse) {
-					sendMessage(ArchetypalMessages.libraryVersion(true));
-				}
-
-				try {
-					this.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			}
+			handleLibraryVersionMessage(message);
 		} else if (messageType == MessageType.PING) {
 			sendMessage(ArchetypalMessages.pong());
 		} else if (messageType == MessageType.PONG) {
@@ -139,9 +141,42 @@ public class Connection {
 			}
 		} else if (messageType == MessageType.SET_NAME) {
 			connectionName = (String) message.getData("name");
-			logger.fine(String.format("Setting name for %s to %s", socket.getInetAddress().toString(), connectionName));
+			logger.fine(String.format("Setting name for %s to %s", toString(), connectionName));
 		} else if (messageType == MessageType.UPDATE_NTWK_TABLE) {
 			table.updateFrom(message);
+		}
+	}
+
+	public void handleLibraryVersionMessage(Message message) {
+		String libraryVersion = (String) message.getData("version");
+		boolean isResponse = Boolean.valueOf((String) message.getData("is_response"));
+
+		if (libraryVersion.equals(Resources.LIBRARY_VERSION)) {
+			onLibraryVersionMatch(isResponse);
+		} else {
+			onLibraryVersionMatchFailure(libraryVersion, isResponse);
+		}
+	}
+
+	private void onLibraryVersionMatch(boolean isResponse) {
+		String logMessage = String.format("Library Version(%s) matches for %s", Resources.LIBRARY_VERSION, toString());
+
+		logger.fine(logMessage);
+		if (!isResponse) {
+			sendMessage(ArchetypalMessages.libraryVersion(true));
+		}
+	}
+
+	private void onLibraryVersionMatchFailure(String libraryVersion, boolean isResponse) {
+		String errorMessage = String.format("Library versions don't match! This Version: %s, Connection Version: %s",
+				Resources.LIBRARY_VERSION, libraryVersion);
+
+		logger.severe(errorMessage);
+
+		try {
+			this.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -168,10 +203,6 @@ public class Connection {
 		socket.close();
 	}
 
-	/**
-	 * Peacefully ends the stream. Used when nothing went wrong but we need to end
-	 * the connection
-	 */
 	public void endConnection() {
 		sendMessage(ArchetypalMessages.terminatedConnection());
 
@@ -182,11 +213,6 @@ public class Connection {
 		}
 	}
 
-	/**
-	 * Closes the socket and streams
-	 *
-	 * @throws IOException
-	 */
 	public void close() throws IOException {
 		stream.close();
 		socket.close();
@@ -211,17 +237,17 @@ public class Connection {
 
 	@Override
 	public String toString() {
-		return this.getConnectionName() == null ? this.getConnectionName() : "Unnamed Connection";
+		String unnamed = "Unnamed Connection";
+
+		try {
+			unnamed = socket.getInetAddress().toString();
+		} catch (NullPointerException e) {
+
+		}
+
+		return this.getConnectionName() == null ? this.getConnectionName() : unnamed;
 	}
 
-	/**
-	 * Creates a connection with the Socket and Listener provided
-	 *
-	 * @param socket
-	 *            the socket to handle
-	 * @param listener
-	 *            the listener to handle incoming messages
-	 */
 	public static Connection fromSocket(Socket s, ConnectionListener l) {
 		return new Connection(s, l);
 	}
