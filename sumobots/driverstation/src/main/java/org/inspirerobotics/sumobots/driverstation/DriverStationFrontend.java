@@ -81,8 +81,11 @@ public class DriverStationFrontend extends Application {
 				stage.setTitle("DS: " + newPeriod.toString());
 				controller.enterNewPeriod(newPeriod);
 				break;
-			case "conn_status":
-				controller.setConnectionStatus((boolean) m.getData());
+			case "field_conn_status":
+				controller.setFieldConnectionStatus((boolean) m.getData());
+				break;
+			case "robot_conn_status":
+				controller.setRobotConnectionStatus((boolean) m.getData());
 				break;
 			default:
 				log.warning("Unknown Message Recieved on Frontend: " + name);
