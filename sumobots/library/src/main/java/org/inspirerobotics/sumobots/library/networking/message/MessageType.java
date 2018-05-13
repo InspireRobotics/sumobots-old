@@ -1,7 +1,11 @@
 package org.inspirerobotics.sumobots.library.networking.message;
 
+import org.inspirerobotics.sumobots.library.InternalLog;
+
+import java.util.logging.Logger;
+
 public enum MessageType {
-	
+
 	PING("PING", "Pings the Client or Server", true), 
 	PONG("PONG", "Return form of a Ping message", true),
 	LIB_VERSION("LIB_VERSION", "Used to check the library version", true),
@@ -10,6 +14,8 @@ public enum MessageType {
 	SET_NAME("SET_NAME", "Sets the name of the socket connected", true),
 	UPDATE_NTWK_TABLE("UPDATE_NTWK_TABLE", "Updates the Network Table", true),
 	UNKNOWN("UNKNOWN", "A Malformed message", true);
+
+	private static final Logger logger = InternalLog.getLogger();
 
 	private final String name;
 
@@ -37,7 +43,8 @@ public enum MessageType {
 				return m;
 			}
 		}
-		
+
+		logger.warning("Unknown message type: " + message);
 		return MessageType.UNKNOWN;
 	}
 
