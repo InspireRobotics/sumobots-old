@@ -172,12 +172,7 @@ public class Connection {
 				Resources.LIBRARY_VERSION, libraryVersion);
 
 		logger.severe(errorMessage);
-
-		try {
-			this.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		endConnection();
 	}
 
 	public void writeRaw(String string) {

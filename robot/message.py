@@ -26,6 +26,12 @@ def set_name_message(new_name):
     message.add_data('name', new_name)
     return message
 
+def library_version_message(version):
+    message = Message('LIB_VERSION')
+    message.add_data('version', version)
+    message.add_data('is_response', "false")
+    return message
+
 def pong_message():
     return Message('PONG')
 
