@@ -1,33 +1,17 @@
 package org.inspirerobotics.sumobots.driverstation.gui;
 
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import org.inspirerobotics.sumobots.library.Resources;
-
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
+import org.inspirerobotics.sumobots.library.Resources;
+
+import java.util.logging.Logger;
 
 public class MainScene extends AnchorPane {
-
-	private static final String FXML_PATH = "/fxml/root.fxml";
 
 	private Logger log = Logger.getLogger(Resources.LOGGER_NAME);
 
 	public MainScene(GuiController controller) {
-		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(FXML_PATH));
-		fxmlLoader.setController(controller);
-		fxmlLoader.setRoot(this);
-
-		// Actually load the GUI
-		try {
-			fxmlLoader.load();
-			controller.init();
-		} catch (IOException e) {
-			log.log(Level.SEVERE, "Failed to load root.fxml", e);
-		}
+		FXMLFileLoader.load("root.fxml", controller, this);
 	}
 
 	public Scene toScene() {

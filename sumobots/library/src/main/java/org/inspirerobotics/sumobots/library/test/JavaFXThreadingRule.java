@@ -1,4 +1,4 @@
-package org.inspirerobotics.sumobots.field;
+package org.inspirerobotics.sumobots.library.test;
 
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;

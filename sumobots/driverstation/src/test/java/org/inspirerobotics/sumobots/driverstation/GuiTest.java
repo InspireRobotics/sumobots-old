@@ -1,7 +1,7 @@
-package org.inspirerobotics.sumobots.field;
+package org.inspirerobotics.sumobots.driverstation;
 
-import org.inspirerobotics.sumobots.field.gui.FXMLFileLoader;
-import org.inspirerobotics.sumobots.field.gui.RootGroup;
+import org.inspirerobotics.sumobots.driverstation.gui.FXMLFileLoader;
+import org.inspirerobotics.sumobots.driverstation.gui.MainScene;
 import org.inspirerobotics.sumobots.library.test.JavaFXThreadingRule;
 import org.junit.Rule;
 import org.junit.Test;
@@ -13,7 +13,7 @@ public class GuiTest {
 
 	@Test
 	public void testRootGroup() {
-		new RootGroup(null, false);
+		new MainScene(null);
 	}
 
 	@Test(expected = RuntimeException.class)
