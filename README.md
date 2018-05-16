@@ -3,9 +3,6 @@
 
 This repository has all of the code for the Inspire Robotics Sumobots competition. This includes the FMS code, driver station code, and robot code. 
 
-# Docs
-The documentation for the field is a WIP. The current documentation is located in the [docs folder.](https://github.com/InspireRobotics/sumobots/tree/master/Docs/)
-
 # Tests
 Please note the tests for the repository. Every time a commit is made to the master branch of the repository Travis CI will run a series of tests to verify the code. If a single one of these test fails the Travis the build will fail! These tests include
 
