@@ -4,6 +4,8 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.VBox;
+import org.inspirerobotics.sumobots.driverstation.DriverStationFrontend;
 import org.inspirerobotics.sumobots.driverstation.Settings;
 import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.TimePeriod;
@@ -14,6 +16,9 @@ import java.util.List;
  * The main controller for the gui
  */
 public class GuiController {
+
+	@FXML
+	public VBox centralVBox;
 
 	@FXML
 	public TextArea logConsole;
@@ -30,7 +35,15 @@ public class GuiController {
 	@FXML
 	public TextField robotLabel;
 
+	private DriverStationFrontend driverStationFrontend;
+
+	public GuiController(DriverStationFrontend dsf) {
+		this.driverStationFrontend = dsf;
+	}
+
 	public void init() {
+		centralVBox.getChildren().add(new ControlBar(driverStationFrontend));
+
 		statusLabel.setMinHeight(85);
 		statusLabel.setMaxHeight(85);
 		statusLabel.setFocusTraversable(false);
@@ -54,8 +67,10 @@ public class GuiController {
 	private void checkForLogUpdate() {
 		List<String> logLines = InternalLog.getInstance().getLogLines();
 
-		if (logLines.isEmpty())
+		if (logLines.isEmpty()) {
+			logConsole.clear();
 			return;
+		}
 
 		String lastLine = logLines.get(logLines.size() - 1);
 		if (logConsole.getText().endsWith(lastLine)) {
@@ -121,11 +136,5 @@ public class GuiController {
 			default:
 				break;
 		}
-	}
-
-	@FXML
-	public void clearLog() {
-		InternalLog.getInstance().clear();
-		logConsole.clear();
 	}
 }

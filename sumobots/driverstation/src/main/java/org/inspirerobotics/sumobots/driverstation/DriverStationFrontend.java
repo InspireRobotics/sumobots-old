@@ -27,7 +27,7 @@ public class DriverStationFrontend extends Application {
 
 	private MainScene mainScene;
 
-	private GuiController controller = new GuiController();
+	private GuiController controller = new GuiController(this);
 
 	private static final boolean nonFieldMode = Settings.nonFieldMode;
 
@@ -114,25 +114,41 @@ public class DriverStationFrontend extends Application {
 		stage.addEventFilter(KeyEvent.KEY_PRESSED, k -> {
 			log.info("Key Pressed: " + k.getCode());
 			if (k.getCode() == KeyCode.DIGIT1 && nonFieldMode) {
-				threadChannel.add(new InterThreadMessage("new_state", TimePeriod.INIT));
+				attemptInit();
 				return;
 			}
 
 			if (k.getCode() == KeyCode.DIGIT2 && nonFieldMode) {
-				threadChannel.add(new InterThreadMessage("new_state", TimePeriod.GAME));
+				attemptGame();
 				return;
 			}
 
 			if (k.getCode() == KeyCode.SPACE) {
-				threadChannel.add(new InterThreadMessage("new_state", TimePeriod.ESTOPPED));
+				eStop();
 				return;
 			}
 
 			if (k.getCode() == KeyCode.ENTER) {
-				threadChannel.add(new InterThreadMessage("new_state", TimePeriod.DISABLED));
+				disable();
 				return;
 			}
 		});
+	}
+
+	public void attemptInit() {
+		threadChannel.add(new InterThreadMessage("new_state", TimePeriod.INIT));
+	}
+
+	public void attemptGame() {
+		threadChannel.add(new InterThreadMessage("new_state", TimePeriod.GAME));
+	}
+
+	public void eStop() {
+		threadChannel.add(new InterThreadMessage("new_state", TimePeriod.ESTOPPED));
+	}
+
+	public void disable() {
+		threadChannel.add(new InterThreadMessage("new_state", TimePeriod.DISABLED));
 	}
 
 	public static void main(String[] args) {
