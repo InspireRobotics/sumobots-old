@@ -1,5 +1,6 @@
 package org.inspirerobotics.sumobots.library.networking;
 
+import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.Resources;
 import org.inspirerobotics.sumobots.library.networking.connection.Connection;
 import org.inspirerobotics.sumobots.library.networking.connection.ConnectionListener;
@@ -18,7 +19,7 @@ import java.util.logging.Logger;
 
 public class Server {
 
-	private final Logger log = Logger.getLogger(Resources.LOGGER_NAME);
+	private final Logger log = InternalLog.getLogger();
 
 	private final ServerSocket serverSocket;
 

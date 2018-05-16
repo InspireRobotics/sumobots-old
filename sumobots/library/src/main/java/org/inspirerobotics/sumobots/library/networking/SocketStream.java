@@ -1,5 +1,6 @@
 package org.inspirerobotics.sumobots.library.networking;
 
+import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.Resources;
 
 import java.io.*;
@@ -20,7 +21,7 @@ public class SocketStream {
 
 	private boolean closed = false;
 
-	private final Logger logger = Logger.getLogger(Resources.LOGGER_NAME);
+	private final Logger logger = InternalLog.getLogger();
 
 	public SocketStream(InputStream reader, OutputStream writer, Socket socket) {
 		super();

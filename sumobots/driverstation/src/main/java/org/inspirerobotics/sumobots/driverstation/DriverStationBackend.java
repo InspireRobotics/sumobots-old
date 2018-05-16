@@ -2,7 +2,7 @@ package org.inspirerobotics.sumobots.driverstation;
 
 import org.inspirerobotics.sumobots.driverstation.field.Field;
 import org.inspirerobotics.sumobots.driverstation.robot.Robot;
-import org.inspirerobotics.sumobots.library.Resources;
+import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.TimePeriod;
 import org.inspirerobotics.sumobots.library.concurrent.InterThreadMessage;
 import org.inspirerobotics.sumobots.library.concurrent.ThreadChannel;
@@ -16,7 +16,7 @@ import java.util.logging.Logger;
 
 public class DriverStationBackend extends Thread {
 
-	private final Logger logger = Logger.getLogger(Resources.LOGGER_NAME);
+	private final Logger logger = InternalLog.getLogger();
 
 	private final Field field = new Field(this);
 

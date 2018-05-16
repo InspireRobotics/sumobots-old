@@ -1,14 +1,14 @@
 package org.inspirerobotics.sumobots.library.config;
 
 import me.grison.jtoml.impl.Toml;
-import org.inspirerobotics.sumobots.library.Resources;
+import org.inspirerobotics.sumobots.library.InternalLog;
 
 import java.io.IOException;
 import java.util.logging.Logger;
 
 public class Config {
 
-	private static final Logger logger = Logger.getLogger(Resources.LOGGER_NAME);
+	private static final Logger logger = InternalLog.getLogger();
 
 	private Toml toml;
 	private final String name;

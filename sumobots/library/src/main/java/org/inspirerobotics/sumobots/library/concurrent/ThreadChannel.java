@@ -1,13 +1,13 @@
 package org.inspirerobotics.sumobots.library.concurrent;
 
-import org.inspirerobotics.sumobots.library.Resources;
+import org.inspirerobotics.sumobots.library.InternalLog;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.logging.Logger;
 
 public class ThreadChannel {
 
-	private final Logger logger = Logger.getLogger(Resources.LOGGER_NAME);
+	private final Logger logger = InternalLog.getLogger();
 
 	private final ConcurrentLinkedQueue<InterThreadMessage> tx;
 

@@ -1,6 +1,7 @@
 package org.inspirerobotics.sumobots.driverstation.robot;
 
 import org.inspirerobotics.sumobots.driverstation.DriverStationBackend;
+import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.Resources;
 import org.inspirerobotics.sumobots.library.concurrent.InterThreadMessage;
 import org.inspirerobotics.sumobots.library.networking.connection.Connection;
@@ -15,7 +16,7 @@ import java.util.logging.Logger;
 
 public class Robot implements ConnectionListener {
 
-	private final Logger logger = Logger.getLogger(Resources.LOGGER_NAME);
+	private final Logger logger = InternalLog.getLogger();
 
 	private Connection robotConnection;
 	private final DriverStationBackend backend;
