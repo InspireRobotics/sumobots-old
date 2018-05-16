@@ -3,6 +3,7 @@ package org.inspirerobotics.sumobots.driverstation.gui;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import org.inspirerobotics.sumobots.library.Resources;
+import org.inspirerobotics.sumobots.library.gui.FXMLFileLoader;
 
 import java.util.logging.Logger;
 

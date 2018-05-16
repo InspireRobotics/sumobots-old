@@ -6,9 +6,9 @@ import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import org.inspirerobotics.sumobots.field.FieldFrontend;
-import org.inspirerobotics.sumobots.field.gui.FXMLFileLoader;
 import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.Resources;
+import org.inspirerobotics.sumobots.library.gui.FXMLFileLoader;
 
 import java.util.List;
 import java.util.logging.Logger;

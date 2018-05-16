@@ -8,6 +8,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import org.inspirerobotics.sumobots.library.InternalLog;
+import org.inspirerobotics.sumobots.library.gui.FXMLFileLoader;
 
 import java.util.List;
 import java.util.logging.Logger;
