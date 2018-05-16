@@ -44,25 +44,35 @@ public class GuiController {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				updateLog();
+				checkForLogUpdate();
 
 				Platform.runLater(this);
 			}
 		});
 	}
 
-	private void updateLog() {
+	private void checkForLogUpdate() {
 		List<String> logLines = InternalLog.getInstance().getLogLines();
 
+		if(logLines.isEmpty())
+			return;
+
+		String lastLine = logLines.get(logLines.size() - 1);
+		if(logConsole.getText().endsWith(lastLine)){
+			return;
+		}
+
+		updateLog(logLines);
+	}
+
+	private void updateLog(List<String> logLines) {
 		StringBuilder b = new StringBuilder();
 
 		for (Object line : logLines.toArray()) {
 			b.append(line);
 		}
 
-		// Probably bad
-		if (!b.toString().equals(logConsole.getText()))
-			logConsole.setText(b.toString());
+		logConsole.setText(b.toString());
 	}
 
 	public void setName(String newName) {
