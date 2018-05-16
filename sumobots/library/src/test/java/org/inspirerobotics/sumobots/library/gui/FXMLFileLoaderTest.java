@@ -13,7 +13,7 @@ public class FXMLFileLoaderTest {
 		FXMLFileLoader.load("test.fxml", null);
 	}
 
-	@Test(expected = RuntimeException.class)
+	@Test(expected = FXMLFileLoadException.class)
 	public void testUnexistantFile() {
 		FXMLFileLoader.load("foo.fxml", null);
 	}

@@ -22,7 +22,7 @@ public class FXMLFileLoader {
 		fxmlLoader.setRoot(root);
 
 		if (fxmlLoader.getLocation() == null)
-			throw new RuntimeException("Failed to load file: " + name);
+			throw new FXMLFileLoadException("Failed to find file: " + name);
 
 		try {
 			fxmlLoader.load();
