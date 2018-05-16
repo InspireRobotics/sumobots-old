@@ -54,11 +54,11 @@ public class GuiController {
 	private void checkForLogUpdate() {
 		List<String> logLines = InternalLog.getInstance().getLogLines();
 
-		if(logLines.isEmpty())
+		if (logLines.isEmpty())
 			return;
 
 		String lastLine = logLines.get(logLines.size() - 1);
-		if(logConsole.getText().endsWith(lastLine)){
+		if (logConsole.getText().endsWith(lastLine)) {
 			return;
 		}
 
@@ -123,4 +123,9 @@ public class GuiController {
 		}
 	}
 
+	@FXML
+	public void clearLog() {
+		InternalLog.getInstance().clear();
+		logConsole.clear();
+	}
 }
