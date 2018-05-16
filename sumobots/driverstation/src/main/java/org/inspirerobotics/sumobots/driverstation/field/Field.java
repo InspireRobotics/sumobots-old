@@ -3,6 +3,7 @@ package org.inspirerobotics.sumobots.driverstation.field;
 import org.inspirerobotics.sumobots.driverstation.DriverStationBackend;
 import org.inspirerobotics.sumobots.driverstation.Settings;
 import org.inspirerobotics.sumobots.driverstation.util.EmptyConnection;
+import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.Resources;
 import org.inspirerobotics.sumobots.library.TimePeriod;
 import org.inspirerobotics.sumobots.library.concurrent.InterThreadMessage;
@@ -19,7 +20,7 @@ import java.util.logging.Logger;
 
 public class Field implements ConnectionListener {
 
-	private final Logger logger = Logger.getLogger(Resources.LOGGER_NAME);
+	private final Logger logger = InternalLog.getLogger();
 
 	private Connection fieldConnection;
 	private TimePeriod currentPeriod;

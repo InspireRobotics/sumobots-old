@@ -7,7 +7,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import org.inspirerobotics.sumobots.field.FieldFrontend;
 import org.inspirerobotics.sumobots.library.InternalLog;
-import org.inspirerobotics.sumobots.library.Resources;
 import org.inspirerobotics.sumobots.library.gui.FXMLFileLoader;
 
 import java.util.List;
@@ -15,7 +14,7 @@ import java.util.logging.Logger;
 
 public class ControlPane extends AnchorPane {
 
-	private static final Logger logger = Logger.getLogger(Resources.LOGGER_NAME);
+	private static final Logger logger = InternalLog.getLogger();
 
 	private final FieldFrontend fieldFrontend;
 

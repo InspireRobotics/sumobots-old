@@ -4,7 +4,7 @@ public class Resources {
 
 	public static final String LIBRARY_VERSION = "0.2.1";
 
-	public static final String LOGGER_NAME = "com.inspirerobotics.sumobots";
+	static final String LOGGER_NAME = "com.inspirerobotics.sumobots";
 
 	public static final int SERVER_PORT = 4283;
 

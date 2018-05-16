@@ -2,17 +2,19 @@ package org.inspirerobotics.sumobots.driverstation.gui;
 
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
-import org.inspirerobotics.sumobots.library.Resources;
+import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.gui.FXMLFileLoader;
 
 import java.util.logging.Logger;
 
 public class MainScene extends AnchorPane {
 
-	private Logger log = Logger.getLogger(Resources.LOGGER_NAME);
+	private Logger log = InternalLog.getLogger();
 
 	public MainScene(GuiController controller) {
 		FXMLFileLoader.load("root.fxml", controller, this);
+
+		log.info("Main Scene initialized");
 	}
 
 	public Scene toScene() {

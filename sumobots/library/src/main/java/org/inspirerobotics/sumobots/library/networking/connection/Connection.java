@@ -1,5 +1,6 @@
 package org.inspirerobotics.sumobots.library.networking.connection;
 
+import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.Resources;
 import org.inspirerobotics.sumobots.library.networking.SocketStream;
 import org.inspirerobotics.sumobots.library.networking.message.ArchetypalMessages;
@@ -20,7 +21,7 @@ public class Connection {
 
 	private final ConnectionListener listener;
 
-	private final Logger logger = Logger.getLogger(Resources.LOGGER_NAME);
+	private final Logger logger = InternalLog.getLogger();
 
 	private boolean closed = false;
 
