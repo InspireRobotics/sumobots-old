@@ -1,4 +1,4 @@
-package org.inspirerobotics.sumobots.library.test;
+package org.inspirerobotics.sumobots.library.gui;
 
 import javafx.application.Platform;
 import javafx.embed.swing.JFXPanel;
@@ -9,7 +9,7 @@ import org.junit.runners.model.Statement;
 import javax.swing.*;
 import java.util.concurrent.CountDownLatch;
 
-public class JavaFXThreadingRule implements TestRule {
+public class JavaFXInitTestRule implements TestRule {
 
 	private static boolean jfxIsSetup;
 

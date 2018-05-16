@@ -8,6 +8,7 @@ import javafx.scene.layout.AnchorPane;
 import org.inspirerobotics.sumobots.field.FieldFrontend;
 import org.inspirerobotics.sumobots.field.gui.gametab.GameTab;
 import org.inspirerobotics.sumobots.library.InternalLog;
+import org.inspirerobotics.sumobots.library.gui.FXMLFileLoader;
 
 import java.util.logging.Logger;
 

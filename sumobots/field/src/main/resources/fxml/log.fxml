@@ -13,10 +13,10 @@
    <children>
       <BorderPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <center>
-            <TextArea fx:id="console" prefHeight="200.0" prefWidth="200.0" styleClass="controlConsole" stylesheets="@../css/styles.css" BorderPane.alignment="CENTER" />
+            <TextArea fx:id="console" prefHeight="200.0" prefWidth="200.0" styleClass="controlConsole" stylesheets="@../../../../../driverstation/src/main/resources/css/styles.css" BorderPane.alignment="CENTER" />
          </center>
          <bottom>
-            <HBox fx:id="controlBox" prefHeight="50.0" prefWidth="200.0" spacing="7.0" styleClass="controlPane" stylesheets="@../css/styles.css" BorderPane.alignment="CENTER">
+            <HBox fx:id="controlBox" prefHeight="50.0" prefWidth="200.0" spacing="7.0" styleClass="controlPane" stylesheets="@../../../../../driverstation/src/main/resources/css/styles.css" BorderPane.alignment="CENTER">
                <children>
                   <Button fx:id="errorButton" mnemonicParsing="false" onAction="#onErrorPressed" prefHeight="100.0" text="Error" HBox.hgrow="ALWAYS" />
                   <Button fx:id="warningButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" onAction="#onWarningPressed" prefHeight="100.0" text="Warning" HBox.hgrow="ALWAYS" />
@@ -31,7 +31,7 @@
             </HBox>
          </bottom>
          <top>
-            <Pane maxHeight="40.0" prefHeight="200.0" prefWidth="200.0" styleClass="controlPane" stylesheets="@../css/styles.css" BorderPane.alignment="CENTER">
+            <Pane maxHeight="40.0" prefHeight="200.0" prefWidth="200.0" styleClass="controlPane" stylesheets="@../../../../../driverstation/src/main/resources/css/styles.css" BorderPane.alignment="CENTER">
                <children>
                   <Text fx:id="levelLabel" fill="RED" layoutX="15.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Current Level:">
                      <font>
