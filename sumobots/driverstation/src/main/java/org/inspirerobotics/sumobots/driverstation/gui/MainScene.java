@@ -14,6 +14,7 @@ public class MainScene extends AnchorPane {
 	public MainScene(GuiController controller) {
 		FXMLFileLoader.load("root.fxml", controller, this);
 
+		controller.init();
 		log.info("Main Scene initialized");
 	}
 
