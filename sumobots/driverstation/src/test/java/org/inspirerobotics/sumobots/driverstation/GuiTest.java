@@ -1,5 +1,6 @@
 package org.inspirerobotics.sumobots.driverstation;
 
+import org.inspirerobotics.sumobots.driverstation.gui.GuiController;
 import org.inspirerobotics.sumobots.driverstation.gui.MainScene;
 import org.inspirerobotics.sumobots.library.gui.FXMLFileLoadException;
 import org.inspirerobotics.sumobots.library.gui.FXMLFileLoader;
@@ -14,7 +15,7 @@ public class GuiTest {
 
 	@Test
 	public void testRootGroup() {
-		new MainScene(null);
+		new MainScene(new GuiController(null));
 	}
 
 	@Test(expected = FXMLFileLoadException.class)
