@@ -23,7 +23,6 @@ public class Input extends Thread {
 
 		EventQueue queue = controller.getEventQueue();
 		Event event = new Event();
-
 		log.info("Using Controller: " + controller.getName());
 
 		while (true) {
@@ -41,7 +40,6 @@ public class Input extends Thread {
 	private void handleEvent(Event event, Controller c) {
 		StringBuffer buffer = new StringBuffer(c.getName());
 		buffer.append(" at ");
-		buffer.append(event.getNanos()).append(", ");
 		Component comp = event.getComponent();
 		buffer.append(comp.getName()).append(" changed to ");
 		float value = event.getValue();
