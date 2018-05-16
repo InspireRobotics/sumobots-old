@@ -2,14 +2,14 @@ package org.inspirerobotics.sumobots.field;
 
 import org.inspirerobotics.sumobots.field.gui.FXMLFileLoader;
 import org.inspirerobotics.sumobots.field.gui.RootGroup;
-import org.inspirerobotics.sumobots.library.test.JavaFXThreadingRule;
+import org.inspirerobotics.sumobots.library.gui.JavaFXInitTestRule;
 import org.junit.Rule;
 import org.junit.Test;
 
 public class GuiTest {
 
 	@Rule
-	public JavaFXThreadingRule javafxRule = new JavaFXThreadingRule();
+	public JavaFXInitTestRule javafxRule = new JavaFXInitTestRule();
 
 	@Test
 	public void testRootGroup() {
