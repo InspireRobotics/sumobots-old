@@ -31,3 +31,6 @@ If __spotless:check__ fails you can run the following command to format all code
 ```cmd
 $ mvn spotless:apply
 ```
+
+# Questions?
+If you have any questions you can email [inspirerobotics4283@gmail.com](mailto:inspirerobotics4283@gmail.com) or file a GitHub issue with the 'Question' label.
