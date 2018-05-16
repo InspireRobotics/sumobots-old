@@ -37,15 +37,14 @@ public enum MessageType {
 		return name;
 	}
 
-	public static MessageType fromString(String message){
+	public static MessageType fromString(String message) throws UnknownMessageTypeException{
 		for (MessageType m : MessageType.values()) {
 			if(m.getName().equals(message)) {
 				return m;
 			}
 		}
 
-		logger.warning("Unknown message type: " + message);
-		return MessageType.UNKNOWN;
+		throw new UnknownMessageTypeException("Unknown Message Type: " + message);
 	}
 
 	@Override
