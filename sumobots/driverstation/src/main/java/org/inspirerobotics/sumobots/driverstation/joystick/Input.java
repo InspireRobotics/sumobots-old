@@ -29,7 +29,7 @@ public class Input extends Thread {
 			controller.poll();
 
 			while (queue.getNextEvent(event)) {
-				handleEvent(event, controller);
+				printEventInfo(event, controller);
 			}
 
 			sleepCatchException(10);
@@ -37,7 +37,7 @@ public class Input extends Thread {
 
 	}
 
-	private void handleEvent(Event event, Controller c) {
+	private void printEventInfo(Event event, Controller c) {
 		StringBuffer buffer = new StringBuffer(c.getName());
 		buffer.append(" at ");
 		Component comp = event.getComponent();
