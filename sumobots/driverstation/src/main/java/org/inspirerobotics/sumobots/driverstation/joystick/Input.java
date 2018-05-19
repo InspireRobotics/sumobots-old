@@ -3,6 +3,7 @@ package org.inspirerobotics.sumobots.driverstation.joystick;
 import net.java.games.input.*;
 import org.inspirerobotics.sumobots.library.InternalLog;
 
+import java.lang.reflect.Constructor;
 import java.util.logging.Logger;
 
 public class Input extends Thread {
@@ -14,19 +15,28 @@ public class Input extends Thread {
 	}
 
 	public void run() {
-		Controller controller = getController();
+		while (true) {
+			Controller controller = getController();
 
-		if (controller == null) {
-			log.info("No Controller Found!");
-			return;
+			if (controller == null) {
+				log.info("No Controller Found!");
+				sleepCatchException(3000);
+			} else {
+				runMainLoop(controller);
+			}
 		}
+	}
 
+	private void runMainLoop(Controller controller) {
 		EventQueue queue = controller.getEventQueue();
 		Event event = new Event();
 		log.info("Using Controller: " + controller.getName());
 
 		while (true) {
-			controller.poll();
+			if (!controller.poll()) {
+				log.warning("Lost the controller!");
+				return;
+			}
 
 			while (queue.getNextEvent(event)) {
 				printEventInfo(event, controller);
@@ -93,7 +103,9 @@ public class Input extends Thread {
 	}
 
 	private Controller getController() {
-		Controller[] controllers = ControllerEnvironment.getDefaultEnvironment().getControllers();
+		ControllerEnvironment environment = getControllerEnvironment();
+
+		Controller[] controllers = environment.getControllers();
 		if (controllers.length == 0) {
 			System.out.println("Found no controllers.");
 			System.exit(0);
@@ -102,7 +114,6 @@ public class Input extends Thread {
 		Controller controller = null;
 
 		for (int i = 0; i < controllers.length; i++) {
-			log.fine("Found Controller: " + controllers[i]);
 			if (controllers[i].getName().equals("Controller (Gamepad F310)")) {
 				controller = controllers[i];
 				break;
@@ -110,5 +121,24 @@ public class Input extends Thread {
 		}
 
 		return controller;
+	}
+
+	private ControllerEnvironment getControllerEnvironment() {
+		try {
+			return rescan();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	private ControllerEnvironment rescan() throws Exception {
+		Constructor<ControllerEnvironment> constructor = (Constructor<ControllerEnvironment>) Class
+				.forName("net.java.games.input.DefaultControllerEnvironment").getDeclaredConstructors()[0];
+
+		constructor.setAccessible(true);
+
+		return constructor.newInstance();
 	}
 }
