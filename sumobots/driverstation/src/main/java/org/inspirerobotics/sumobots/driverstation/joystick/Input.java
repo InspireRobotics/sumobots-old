@@ -34,16 +34,46 @@ public class Input extends Thread {
 
 			sleepCatchException(10);
 		}
-
 	}
 
 	private void printEventInfo(Event event, Controller c) {
 		StringBuffer buffer = new StringBuffer(c.getName());
-		buffer.append(" at ");
+		buffer.append(": the ");
 		Component comp = event.getComponent();
-		buffer.append(comp.getName()).append(" changed to ");
+		buffer.append(getFormattedName(comp)).append(" changed to ");
 		float value = event.getValue();
-		if (comp.isAnalog()) {
+
+		addChangedValue(buffer, comp.isAnalog(), value);
+
+		log.finest(buffer.toString());
+	}
+
+	private String getFormattedName(Component c) {
+		if (c.getName().startsWith("Button")) {
+			return formatButtonName(c.getName());
+		} else {
+			return formatAxisName(c.getName());
+		}
+	}
+
+	private String formatButtonName(String id) {
+		try {
+			return ControllerButton.fromString(id).getName();
+		} catch (UnknownControllerElementException e) {
+			return id;
+		}
+	}
+
+	private String formatAxisName(String id) {
+		try {
+			return ControllerAxis.fromString(id).getName();
+		} catch (UnknownControllerElementException e) {
+			return id;
+		}
+	}
+
+	private void addChangedValue(StringBuffer buffer, boolean isAnalog, float value) {
+		if (isAnalog) {
 			buffer.append(value);
 		} else {
 			if (value == 1.0f) {
@@ -52,7 +82,6 @@ public class Input extends Thread {
 				buffer.append("Off");
 			}
 		}
-		log.finest(buffer.toString());
 	}
 
 	private static void sleepCatchException(long millis) {
