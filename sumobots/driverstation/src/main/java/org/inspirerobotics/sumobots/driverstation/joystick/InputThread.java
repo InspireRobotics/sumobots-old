@@ -13,12 +13,12 @@ import net.java.games.input.ControllerEnvironment;
 public class InputThread extends Thread {
 
 	private Logger log = InternalLog.getLogger();
-	
+
 	private ThreadChannel threadChannel;
-	
+
 	public InputThread(ThreadChannel threadChannel) {
 		this.setDaemon(true);
-		
+
 		this.setName("Joystick Thread");
 		this.threadChannel = threadChannel;
 	}
@@ -42,7 +42,7 @@ public class InputThread extends Thread {
 		log.info("Using Controller: " + controller.getName());
 
 		Gamepad gamepad = new Gamepad(controller);
-		
+
 		while (true) {
 			if (!gamepad.poll()) {
 				log.warning("Lost the controller!");

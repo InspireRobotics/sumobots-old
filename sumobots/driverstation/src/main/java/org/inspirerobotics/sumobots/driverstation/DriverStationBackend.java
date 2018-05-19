@@ -20,7 +20,7 @@ public class DriverStationBackend extends Thread {
 	private final Logger logger = InternalLog.getLogger();
 
 	private final JoystickThreadCommunicator joystickThreadCommunicator;
-	
+
 	private final Field field = new Field(this);
 
 	private final Robot robot = new Robot(this);
@@ -38,7 +38,7 @@ public class DriverStationBackend extends Thread {
 	public DriverStationBackend(ThreadChannel tc) {
 		this.setName("Backend Thread");
 		this.channel = tc;
-		
+
 		joystickThreadCommunicator = new JoystickThreadCommunicator(this);
 	}
 
@@ -210,13 +210,13 @@ public class DriverStationBackend extends Thread {
 	}
 
 	public void onJoysticksConnected(boolean data) {
-		if(data) {
+		if (data) {
 			sendMessageToFrontend(new InterThreadMessage("joystick_status", true));
-		}else {
+		} else {
 			sendMessageToFrontend(new InterThreadMessage("joystick_status", false));
 		}
 	}
-	
+
 	public void shutdown() {
 		field.shutdown();
 		if (robot.getRobotConnection() != null)

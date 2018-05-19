@@ -34,7 +34,7 @@ public class GuiController {
 
 	@FXML
 	public TextField robotLabel;
-	
+
 	@FXML
 	public TextField joystickLabel;
 
@@ -55,9 +55,9 @@ public class GuiController {
 		setJoystickStatus(false);
 
 		runLoop();
-		
+
 	}
-	
+
 	private void runLoop() {
 		Platform.runLater(new Runnable() {
 			@Override
@@ -138,7 +138,7 @@ public class GuiController {
 			joystickLabel.setStyle("-fx-background-color:red");
 		}
 	}
-	
+
 	public void enterNewPeriod(TimePeriod newPeriod) {
 		statusLabel.setText("State: " + newPeriod);
 

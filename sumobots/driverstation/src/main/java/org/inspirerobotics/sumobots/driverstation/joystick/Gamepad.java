@@ -10,29 +10,29 @@ import net.java.games.input.Event;
 import net.java.games.input.EventQueue;
 
 public class Gamepad {
-		
+
 	private final Logger log = InternalLog.getLogger();
 	private final Controller controller;
 	private final EventQueue eventQueue;
-	private final Event event; 
-	
+	private final Event event;
+
 	Gamepad(Controller controller) {
 		this.controller = controller;
-		
+
 		eventQueue = controller.getEventQueue();
 		event = new Event();
 	}
-	
-	boolean poll(){
+
+	boolean poll() {
 		return controller.poll();
 	}
-	
-	void update(){
+
+	void update() {
 		while (eventQueue.getNextEvent(event)) {
 			printEventInfo();
 		}
 	}
-	
+
 	private void printEventInfo() {
 		StringBuffer buffer = new StringBuffer(controller.getName());
 		buffer.append(": the ");
@@ -80,5 +80,5 @@ public class Gamepad {
 			}
 		}
 	}
-	
+
 }
