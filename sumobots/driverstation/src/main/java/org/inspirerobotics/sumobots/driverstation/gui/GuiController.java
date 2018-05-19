@@ -34,6 +34,9 @@ public class GuiController {
 
 	@FXML
 	public TextField robotLabel;
+	
+	@FXML
+	public TextField joystickLabel;
 
 	private DriverStationFrontend driverStationFrontend;
 
@@ -49,6 +52,7 @@ public class GuiController {
 		enterNewPeriod(TimePeriod.DISABLED);
 		setFieldConnectionStatus(false);
 		setRobotConnectionStatus(false);
+		setJoystickStatus(false);
 
 		runLoop();
 		
@@ -69,6 +73,7 @@ public class GuiController {
 		statusLabel.setFocusTraversable(false);
 		nameLabel.setFocusTraversable(false);
 		robotLabel.setFocusTraversable(false);
+		joystickLabel.setFocusTraversable(false);
 	}
 
 	private void checkForLogUpdate() {
@@ -124,6 +129,16 @@ public class GuiController {
 		}
 	}
 
+	public void setJoystickStatus(boolean connected) {
+		if (connected) {
+			joystickLabel.setText("Joystick: Connected!");
+			joystickLabel.setStyle("-fx-background-color:green");
+		} else {
+			joystickLabel.setText("Joystick: Not Connected!");
+			joystickLabel.setStyle("-fx-background-color:red");
+		}
+	}
+	
 	public void enterNewPeriod(TimePeriod newPeriod) {
 		statusLabel.setText("State: " + newPeriod);
 
@@ -134,15 +149,15 @@ public class GuiController {
 				break;
 			case GAME:
 				statusLabel.setStyle("-fx-background-color:green;");
-				nameLabel.setStyle("-fx-background-color:red;");
+				nameLabel.setStyle("-fx-background-color:green;");
 				break;
 			case INIT:
 				statusLabel.setStyle("-fx-background-color:orange;");
-				nameLabel.setStyle("-fx-background-color:red;");
+				nameLabel.setStyle("-fx-background-color:orange;");
 				break;
 			case ESTOPPED:
 				statusLabel.setStyle("-fx-background-color:black;");
-				nameLabel.setStyle("-fx-background-color:red;");
+				nameLabel.setStyle("-fx-background-color:black;");
 
 			default:
 				break;
