@@ -49,25 +49,25 @@ public class Input extends Thread {
 	}
 
 	private String getFormattedName(Component c) {
-		if(c.getName().startsWith("Button")){
+		if (c.getName().startsWith("Button")) {
 			return formatButtonName(c.getName());
-		}else{
+		} else {
 			return formatAxisName(c.getName());
 		}
 	}
 
 	private String formatButtonName(String id) {
-		try{
+		try {
 			return ControllerButton.fromString(id).getName();
-		}catch (UnknownControllerElementException e){
+		} catch (UnknownControllerElementException e) {
 			return id;
 		}
 	}
 
 	private String formatAxisName(String id) {
-		try{
+		try {
 			return ControllerAxis.fromString(id).getName();
-		}catch (UnknownControllerElementException e){
+		} catch (UnknownControllerElementException e) {
 			return id;
 		}
 	}
