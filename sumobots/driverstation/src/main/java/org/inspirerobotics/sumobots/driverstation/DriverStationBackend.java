@@ -1,6 +1,10 @@
 package org.inspirerobotics.sumobots.driverstation;
 
+import java.util.Random;
+import java.util.logging.Logger;
+
 import org.inspirerobotics.sumobots.driverstation.field.Field;
+import org.inspirerobotics.sumobots.driverstation.joystick.JoystickThreadCommunicator;
 import org.inspirerobotics.sumobots.driverstation.robot.Robot;
 import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.TimePeriod;
@@ -11,12 +15,11 @@ import org.inspirerobotics.sumobots.library.networking.connection.Connection;
 import org.inspirerobotics.sumobots.library.networking.message.ArchetypalMessages;
 import org.inspirerobotics.sumobots.library.networking.tables.NetworkTable;
 
-import java.util.Random;
-import java.util.logging.Logger;
-
 public class DriverStationBackend extends Thread {
 
 	private final Logger logger = InternalLog.getLogger();
+
+	private final JoystickThreadCommunicator joystickThreadCommunicator;
 
 	private final Field field = new Field(this);
 
@@ -35,6 +38,8 @@ public class DriverStationBackend extends Thread {
 	public DriverStationBackend(ThreadChannel tc) {
 		this.setName("Backend Thread");
 		this.channel = tc;
+
+		joystickThreadCommunicator = new JoystickThreadCommunicator(this);
 	}
 
 	@Override
@@ -64,6 +69,7 @@ public class DriverStationBackend extends Thread {
 	private void connectToField() {
 		while (running) {
 			pollMessages();
+			joystickThreadCommunicator.update();
 
 			boolean connectionCreated = field.tryToCreateConnection(getFieldIp());
 
@@ -124,6 +130,7 @@ public class DriverStationBackend extends Thread {
 		while (running) {
 			field.update();
 			robot.update();
+			joystickThreadCommunicator.update();
 
 			checkConnections();
 			updateNetworkTable();
@@ -199,6 +206,14 @@ public class DriverStationBackend extends Thread {
 			default:
 				logger.warning("Unknown Message Recieved on Backend: " + name);
 				break;
+		}
+	}
+
+	public void onJoysticksConnected(boolean data) {
+		if (data) {
+			sendMessageToFrontend(new InterThreadMessage("joystick_status", true));
+		} else {
+			sendMessageToFrontend(new InterThreadMessage("joystick_status", false));
 		}
 	}
 

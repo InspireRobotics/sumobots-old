@@ -7,7 +7,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import org.inspirerobotics.sumobots.driverstation.gui.GuiController;
 import org.inspirerobotics.sumobots.driverstation.gui.MainScene;
-import org.inspirerobotics.sumobots.driverstation.joystick.Input;
+import org.inspirerobotics.sumobots.driverstation.joystick.InputThread;
 import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.TimePeriod;
 import org.inspirerobotics.sumobots.library.concurrent.InterThreadMessage;
@@ -33,8 +33,6 @@ public class DriverStationFrontend extends Application {
 
 	@Override
 	public void start(Stage s) throws Exception {
-		new Input().start();
-
 		stage = s;
 
 		Thread.currentThread().setName("Frontend Thread");
@@ -86,6 +84,10 @@ public class DriverStationFrontend extends Application {
 				break;
 			case "robot_conn_status":
 				controller.setRobotConnectionStatus((boolean) m.getData());
+				break;
+			case "joystick_status":
+				boolean status = (boolean) m.getData();
+				controller.setJoystickStatus(status);
 				break;
 			default:
 				log.warning("Unknown Message Recieved on Frontend: " + name);

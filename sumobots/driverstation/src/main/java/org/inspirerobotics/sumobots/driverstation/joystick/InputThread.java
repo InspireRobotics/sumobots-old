@@ -1,17 +1,26 @@
 package org.inspirerobotics.sumobots.driverstation.joystick;
 
-import net.java.games.input.*;
-import org.inspirerobotics.sumobots.library.InternalLog;
-
 import java.lang.reflect.Constructor;
 import java.util.logging.Logger;
 
-public class Input extends Thread {
+import org.inspirerobotics.sumobots.library.InternalLog;
+import org.inspirerobotics.sumobots.library.concurrent.InterThreadMessage;
+import org.inspirerobotics.sumobots.library.concurrent.ThreadChannel;
+
+import net.java.games.input.Controller;
+import net.java.games.input.ControllerEnvironment;
+
+public class InputThread extends Thread {
 
 	private Logger log = InternalLog.getLogger();
 
-	public Input() {
+	private ThreadChannel threadChannel;
+
+	public InputThread(ThreadChannel threadChannel) {
 		this.setDaemon(true);
+
+		this.setName("Joystick Thread");
+		this.threadChannel = threadChannel;
 	}
 
 	public void run() {
@@ -22,75 +31,27 @@ public class Input extends Thread {
 				log.info("No Controller Found!");
 				sleepCatchException(3000);
 			} else {
+				threadChannel.add(new InterThreadMessage("joystick_status", true));
 				runMainLoop(controller);
+				threadChannel.add(new InterThreadMessage("joystick_status", false));
 			}
 		}
 	}
 
 	private void runMainLoop(Controller controller) {
-		EventQueue queue = controller.getEventQueue();
-		Event event = new Event();
 		log.info("Using Controller: " + controller.getName());
 
+		Gamepad gamepad = new Gamepad(controller);
+
 		while (true) {
-			if (!controller.poll()) {
+			if (!gamepad.poll()) {
 				log.warning("Lost the controller!");
 				return;
 			}
 
-			while (queue.getNextEvent(event)) {
-				printEventInfo(event, controller);
-			}
+			gamepad.update();
 
 			sleepCatchException(10);
-		}
-	}
-
-	private void printEventInfo(Event event, Controller c) {
-		StringBuffer buffer = new StringBuffer(c.getName());
-		buffer.append(": the ");
-		Component comp = event.getComponent();
-		buffer.append(getFormattedName(comp)).append(" changed to ");
-		float value = event.getValue();
-
-		addChangedValue(buffer, comp.isAnalog(), value);
-
-		log.finest(buffer.toString());
-	}
-
-	private String getFormattedName(Component c) {
-		if (c.getName().startsWith("Button")) {
-			return formatButtonName(c.getName());
-		} else {
-			return formatAxisName(c.getName());
-		}
-	}
-
-	private String formatButtonName(String id) {
-		try {
-			return ControllerButton.fromString(id).getName();
-		} catch (UnknownControllerElementException e) {
-			return id;
-		}
-	}
-
-	private String formatAxisName(String id) {
-		try {
-			return ControllerAxis.fromString(id).getName();
-		} catch (UnknownControllerElementException e) {
-			return id;
-		}
-	}
-
-	private void addChangedValue(StringBuffer buffer, boolean isAnalog, float value) {
-		if (isAnalog) {
-			buffer.append(value);
-		} else {
-			if (value == 1.0f) {
-				buffer.append("On");
-			} else {
-				buffer.append("Off");
-			}
 		}
 	}
 

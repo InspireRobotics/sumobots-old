@@ -35,6 +35,9 @@ public class GuiController {
 	@FXML
 	public TextField robotLabel;
 
+	@FXML
+	public TextField joystickLabel;
+
 	private DriverStationFrontend driverStationFrontend;
 
 	public GuiController(DriverStationFrontend dsf) {
@@ -44,16 +47,18 @@ public class GuiController {
 	public void init() {
 		centralVBox.getChildren().add(new ControlBar(driverStationFrontend));
 
-		statusLabel.setMinHeight(85);
-		statusLabel.setMaxHeight(85);
-		statusLabel.setFocusTraversable(false);
-		nameLabel.setFocusTraversable(false);
-		robotLabel.setFocusTraversable(false);
+		setFocusTravesable();
 
 		enterNewPeriod(TimePeriod.DISABLED);
 		setFieldConnectionStatus(false);
 		setRobotConnectionStatus(false);
+		setJoystickStatus(false);
 
+		runLoop();
+
+	}
+
+	private void runLoop() {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
@@ -62,6 +67,13 @@ public class GuiController {
 				Platform.runLater(this);
 			}
 		});
+	}
+
+	private void setFocusTravesable() {
+		statusLabel.setFocusTraversable(false);
+		nameLabel.setFocusTraversable(false);
+		robotLabel.setFocusTraversable(false);
+		joystickLabel.setFocusTraversable(false);
 	}
 
 	private void checkForLogUpdate() {
@@ -117,21 +129,35 @@ public class GuiController {
 		}
 	}
 
+	public void setJoystickStatus(boolean connected) {
+		if (connected) {
+			joystickLabel.setText("Joystick: Connected!");
+			joystickLabel.setStyle("-fx-background-color:green");
+		} else {
+			joystickLabel.setText("Joystick: Not Connected!");
+			joystickLabel.setStyle("-fx-background-color:red");
+		}
+	}
+
 	public void enterNewPeriod(TimePeriod newPeriod) {
 		statusLabel.setText("State: " + newPeriod);
 
 		switch (newPeriod) {
 			case DISABLED:
 				statusLabel.setStyle("-fx-background-color:red;");
+				nameLabel.setStyle("-fx-background-color:red;");
 				break;
 			case GAME:
 				statusLabel.setStyle("-fx-background-color:green;");
+				nameLabel.setStyle("-fx-background-color:green;");
 				break;
 			case INIT:
 				statusLabel.setStyle("-fx-background-color:orange;");
+				nameLabel.setStyle("-fx-background-color:orange;");
 				break;
 			case ESTOPPED:
 				statusLabel.setStyle("-fx-background-color:black;");
+				nameLabel.setStyle("-fx-background-color:black;");
 
 			default:
 				break;
