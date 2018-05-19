@@ -44,16 +44,17 @@ public class GuiController {
 	public void init() {
 		centralVBox.getChildren().add(new ControlBar(driverStationFrontend));
 
-		statusLabel.setMinHeight(85);
-		statusLabel.setMaxHeight(85);
-		statusLabel.setFocusTraversable(false);
-		nameLabel.setFocusTraversable(false);
-		robotLabel.setFocusTraversable(false);
+		setFocusTravesable();
 
 		enterNewPeriod(TimePeriod.DISABLED);
 		setFieldConnectionStatus(false);
 		setRobotConnectionStatus(false);
 
+		runLoop();
+		
+	}
+	
+	private void runLoop() {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
@@ -62,6 +63,12 @@ public class GuiController {
 				Platform.runLater(this);
 			}
 		});
+	}
+
+	private void setFocusTravesable() {
+		statusLabel.setFocusTraversable(false);
+		nameLabel.setFocusTraversable(false);
+		robotLabel.setFocusTraversable(false);
 	}
 
 	private void checkForLogUpdate() {
@@ -123,15 +130,19 @@ public class GuiController {
 		switch (newPeriod) {
 			case DISABLED:
 				statusLabel.setStyle("-fx-background-color:red;");
+				nameLabel.setStyle("-fx-background-color:red;");
 				break;
 			case GAME:
 				statusLabel.setStyle("-fx-background-color:green;");
+				nameLabel.setStyle("-fx-background-color:red;");
 				break;
 			case INIT:
 				statusLabel.setStyle("-fx-background-color:orange;");
+				nameLabel.setStyle("-fx-background-color:red;");
 				break;
 			case ESTOPPED:
 				statusLabel.setStyle("-fx-background-color:black;");
+				nameLabel.setStyle("-fx-background-color:red;");
 
 			default:
 				break;

@@ -16,14 +16,19 @@
    <children>
       <BorderPane id="root" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <top>
-            <TextField id="statusBar" fx:id="statusLabel" alignment="CENTER" editable="false" styleClass="stdTextfield" text="State: DISABLED" BorderPane.alignment="CENTER" />
+            <VBox>
+               <children>
+                  <TextField id="statusBar" fx:id="statusLabel" alignment="CENTER" editable="false" maxHeight="40.0" minHeight="40.0" prefHeight="40.0" styleClass="stdTextfield" text="State: DISABLED" BorderPane.alignment="CENTER" VBox.vgrow="SOMETIMES" />
+                  <TextField id="nameTextBox" fx:id="nameLabel" alignment="CENTER" styleClass="stdTextfield" text="Name: TEST" VBox.vgrow="NEVER" />
+               </children>
+            </VBox>
          </top>
          <bottom>
             <HBox alignment="CENTER_LEFT">
                <children>
-                  <TextField fx:id="robotLabel" alignment="CENTER" editable="false" styleClass="stdTextfield" text="No Robot Found" BorderPane.alignment="CENTER" HBox.hgrow="SOMETIMES" />
-                  <TextField fx:id="nameLabel" alignment="CENTER" editable="false" styleClass="stdTextfield" text="Name" BorderPane.alignment="CENTER" HBox.hgrow="ALWAYS" />
-                  <TextField fx:id="fieldLabel" alignment="CENTER" editable="false" layoutX="10.0" layoutY="10.0" styleClass="stdTextfield" text="No Field Found" HBox.hgrow="SOMETIMES" />
+                  <TextField fx:id="robotLabel" alignment="CENTER" editable="false" styleClass="stdTextfield" text="No Robot Found" BorderPane.alignment="CENTER" HBox.hgrow="ALWAYS" />
+                  <TextField fx:id="joystickLabel" alignment="CENTER" editable="false" styleClass="stdTextfield" text="Joystick Boi" BorderPane.alignment="CENTER" HBox.hgrow="ALWAYS" />
+                  <TextField fx:id="fieldLabel" alignment="CENTER" editable="false" layoutX="10.0" layoutY="10.0" styleClass="stdTextfield" text="No Field Found" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
          </bottom>
