@@ -43,7 +43,14 @@ public class Input extends Thread {
 		Component comp = event.getComponent();
 		buffer.append(comp.getName()).append(" changed to ");
 		float value = event.getValue();
-		if (comp.isAnalog()) {
+
+		addChangedValue(buffer, comp.isAnalog(), value);
+
+		log.finest(buffer.toString());
+	}
+
+	private void addChangedValue(StringBuffer buffer, boolean isAnalog, float value) {
+		if (isAnalog) {
 			buffer.append(value);
 		} else {
 			if (value == 1.0f) {
@@ -52,7 +59,6 @@ public class Input extends Thread {
 				buffer.append("Off");
 			}
 		}
-		log.finest(buffer.toString());
 	}
 
 	private static void sleepCatchException(long millis) {
