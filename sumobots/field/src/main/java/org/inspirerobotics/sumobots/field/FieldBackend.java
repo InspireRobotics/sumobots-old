@@ -141,13 +141,7 @@ public class FieldBackend extends Thread {
 	}
 
 	private void eStop() {
-		log.info("EStopping the Match!");
-		timePeriod = TimePeriod.ESTOPPED;
-
-		InterThreadMessage m = new InterThreadMessage("time_period_update", TimePeriod.ESTOPPED);
-		channel.add(m);
-
-		server.sendAll(ArchetypalMessages.enterNewMatchPeriod(TimePeriod.ESTOPPED));
+		updateTimePeriod(TimePeriod.ESTOPPED);
 	}
 
 	private void initMatch() {
@@ -156,13 +150,7 @@ public class FieldBackend extends Thread {
 			return;
 		}
 
-		log.info("Initializing the Match!");
-		timePeriod = TimePeriod.INIT;
-
-		InterThreadMessage m = new InterThreadMessage("time_period_update", TimePeriod.INIT);
-		channel.add(m);
-
-		server.sendAll(ArchetypalMessages.enterNewMatchPeriod(TimePeriod.INIT));
+		updateTimePeriod(TimePeriod.INIT);
 	}
 
 	private void endMatch() {
@@ -171,23 +159,7 @@ public class FieldBackend extends Thread {
 			return;
 		}
 
-		log.info("Ending the Match!");
-		timePeriod = TimePeriod.DISABLED;
-
-		InterThreadMessage m = new InterThreadMessage("time_period_update", TimePeriod.DISABLED);
-		channel.add(m);
-
-		server.sendAll(ArchetypalMessages.enterNewMatchPeriod(TimePeriod.DISABLED));
-	}
-
-	private void disableMatch() {
-		log.fine("Disabling the match!");
-		timePeriod = TimePeriod.DISABLED;
-
-		InterThreadMessage m = new InterThreadMessage("time_period_update", TimePeriod.DISABLED);
-		channel.add(m);
-
-		server.sendAll(ArchetypalMessages.enterNewMatchPeriod(TimePeriod.DISABLED));
+		updateTimePeriod(TimePeriod.DISABLED);
 	}
 
 	private void startMatch() {
@@ -196,19 +168,23 @@ public class FieldBackend extends Thread {
 			return;
 		}
 
-		log.info("Starting the Match!");
-		timePeriod = TimePeriod.GAME;
+		updateTimePeriod(TimePeriod.GAME);
+	}
 
-		InterThreadMessage m = new InterThreadMessage("time_period_update", TimePeriod.GAME);
+	private void updateTimePeriod(TimePeriod timePeriod) {
+		log.info("Entering new period: " + timePeriod);
+		this.timePeriod = timePeriod;
+
+		InterThreadMessage m = new InterThreadMessage("time_period_update", timePeriod);
 		channel.add(m);
 
-		server.sendAll(ArchetypalMessages.enterNewMatchPeriod(TimePeriod.GAME));
+		server.sendAll(ArchetypalMessages.enterNewMatchPeriod(timePeriod));
 	}
 
 	private void init() {
 		server = new DriverStationServer();
 
-		disableMatch();
+		endMatch();
 	}
 
 	public TimePeriod getTimePeriod() {
