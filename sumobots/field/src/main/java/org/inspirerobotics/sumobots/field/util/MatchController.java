@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 
 public class MatchController {
 
-	private final Logger log = InternalLog.getLogger();
+	private static final Logger log = InternalLog.getLogger();
 	private TimePeriod currentTimePeriod;
 	private FieldBackend fieldBackend;
 
@@ -20,7 +20,7 @@ public class MatchController {
 	}
 
 	public void attemptStateChange(TimePeriod newPeriod) {
-		if (!verifyStateChange(newPeriod))
+		if (!verifyStateChange(currentTimePeriod, newPeriod))
 			return;
 
 		changeState(newPeriod);
@@ -35,14 +35,14 @@ public class MatchController {
 		fieldBackend.getServer().sendAll(ArchetypalMessages.enterNewMatchPeriod(newPeriod));
 	}
 
-	private boolean verifyStateChange(TimePeriod newPeriod) {
-		if (newPeriod == TimePeriod.INIT && currentTimePeriod != TimePeriod.DISABLED) {
+	public static boolean verifyStateChange(TimePeriod oldPeriod, TimePeriod newPeriod) {
+		if (newPeriod == TimePeriod.INIT && oldPeriod != TimePeriod.DISABLED) {
 			log.warning("Match cannot be initialized from a non-disabled state!");
 			return false;
-		} else if (newPeriod == TimePeriod.DISABLED && currentTimePeriod == TimePeriod.ESTOPPED) {
-			log.warning("Match cannot be ended from e-stop!");
+		} else if (newPeriod != TimePeriod.ESTOPPED && oldPeriod == TimePeriod.ESTOPPED) {
+			log.warning("Match state cannot be changed from e-stop!");
 			return false;
-		} else if (newPeriod == TimePeriod.GAME && currentTimePeriod != TimePeriod.INIT) {
+		} else if (newPeriod == TimePeriod.GAME && oldPeriod != TimePeriod.INIT) {
 			log.warning("Match cannot be started from a non-initialized state!");
 			return false;
 		}
