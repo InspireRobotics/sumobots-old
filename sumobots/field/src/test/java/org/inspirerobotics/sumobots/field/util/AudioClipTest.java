@@ -1,4 +1,4 @@
-package org.inspirerobotics.sumobots.field;
+package org.inspirerobotics.sumobots.field.util;
 
 import org.inspirerobotics.sumobots.field.util.AudioEffect;
 import org.junit.Test;
