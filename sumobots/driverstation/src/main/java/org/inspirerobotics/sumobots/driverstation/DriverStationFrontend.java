@@ -36,6 +36,7 @@ public class DriverStationFrontend extends Application {
 	@Override
 	public void start(Stage s) throws Exception {
 		stage = s;
+		log.setLevel(settings.logLevel());
 
 		Thread.currentThread().setName("Frontend Thread");
 		createBackendThread();

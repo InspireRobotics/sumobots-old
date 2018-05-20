@@ -45,7 +45,6 @@ public class DriverStationBackend extends Thread {
 
 	@Override
 	public void run() {
-		logger.setLevel(settings.logLevel());
 		generateDriverStationName();
 		field.setDriverStationName(name);
 
