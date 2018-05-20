@@ -29,8 +29,10 @@ public class ControlBar extends AnchorPane {
 
 		FXMLFileLoader.load("controlBar.fxml", this, this);
 
-		if (!driverStationFrontend.isNonFieldMode())
-			disableTimePeriodButtons();
+		if (driverStationFrontend != null) {
+			if (!driverStationFrontend.isNonFieldMode())
+				disableTimePeriodButtons();
+		}
 	}
 
 	private void disableTimePeriodButtons() {

@@ -106,6 +106,10 @@ public class GuiController {
 	}
 
 	public void setFieldConnectionStatus(boolean connected) {
+		if (driverStationFrontend == null) {
+			return;
+		}
+
 		if (driverStationFrontend.isNonFieldMode()) {
 			fieldLabel.setText("Non Field Mode!");
 			fieldLabel.setStyle("-fx-background-color:blue");
