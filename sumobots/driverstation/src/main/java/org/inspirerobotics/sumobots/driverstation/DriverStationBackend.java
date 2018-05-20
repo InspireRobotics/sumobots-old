@@ -1,8 +1,5 @@
 package org.inspirerobotics.sumobots.driverstation;
 
-import java.util.Random;
-import java.util.logging.Logger;
-
 import org.inspirerobotics.sumobots.driverstation.config.Settings;
 import org.inspirerobotics.sumobots.driverstation.field.Field;
 import org.inspirerobotics.sumobots.driverstation.joystick.JoystickThreadCommunicator;
@@ -11,10 +8,12 @@ import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.TimePeriod;
 import org.inspirerobotics.sumobots.library.concurrent.InterThreadMessage;
 import org.inspirerobotics.sumobots.library.concurrent.ThreadChannel;
-import org.inspirerobotics.sumobots.library.config.Config;
 import org.inspirerobotics.sumobots.library.networking.connection.Connection;
 import org.inspirerobotics.sumobots.library.networking.message.ArchetypalMessages;
 import org.inspirerobotics.sumobots.library.networking.tables.NetworkTable;
+
+import java.util.Random;
+import java.util.logging.Logger;
 
 public class DriverStationBackend extends Thread {
 
@@ -26,7 +25,7 @@ public class DriverStationBackend extends Thread {
 
 	private final Robot robot = new Robot(this);
 
-	private Config config;
+	private final Settings settings;
 
 	private ThreadChannel channel;
 
@@ -36,17 +35,17 @@ public class DriverStationBackend extends Thread {
 
 	private NetworkTable table = new NetworkTable();
 
-	public DriverStationBackend(ThreadChannel tc) {
+	public DriverStationBackend(ThreadChannel tc, Settings settings) {
 		this.setName("Backend Thread");
 		this.channel = tc;
+		this.settings = settings;
 
 		joystickThreadCommunicator = new JoystickThreadCommunicator(this);
 	}
 
 	@Override
 	public void run() {
-		logger.setLevel(Settings.LOG_LEVEL);
-		loadConfig();
+		logger.setLevel(settings.logLevel());
 		generateDriverStationName();
 		field.setDriverStationName(name);
 
@@ -63,16 +62,12 @@ public class DriverStationBackend extends Thread {
 		runMainLoop();
 	}
 
-	private void loadConfig() {
-		config = new Config("DriverStation");
-	}
-
 	private void connectToField() {
 		while (running) {
 			pollMessages();
 			joystickThreadCommunicator.update();
 
-			boolean connectionCreated = field.tryToCreateConnection(getFieldIp());
+			boolean connectionCreated = field.tryToCreateConnection(getFieldIp(), settings.nonFieldMode());
 
 			if (connectionCreated) {
 				break;
@@ -105,22 +100,13 @@ public class DriverStationBackend extends Thread {
 	}
 
 	private String getFieldIp() {
-		if (config != null) {
-			if (config.getString("fieldIP") != null) {
-				return config.getString("fieldIP");
-			}
-		}
-		return "localhost";
+		return settings.fieldIP();
 	}
 
 	private void generateDriverStationName() {
-		if (config != null) {
-			if (config.getString("name") != null) {
-				setDriverStationName("DS-" + config.getString("name"));
-				return;
-			}
-		}
-		setDriverStationName("DS-" + new Random().nextInt(10000));
+		String name = settings.dsName("DS-" + new Random().nextInt(10000));
+
+		setDriverStationName(name);
 	}
 
 	public void sendMessageToFrontend(InterThreadMessage m) {

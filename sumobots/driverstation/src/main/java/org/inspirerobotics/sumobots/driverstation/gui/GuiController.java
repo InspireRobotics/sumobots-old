@@ -6,7 +6,6 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import org.inspirerobotics.sumobots.driverstation.DriverStationFrontend;
-import org.inspirerobotics.sumobots.driverstation.config.Settings;
 import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.TimePeriod;
 
@@ -107,7 +106,7 @@ public class GuiController {
 	}
 
 	public void setFieldConnectionStatus(boolean connected) {
-		if (Settings.nonFieldMode) {
+		if (driverStationFrontend.isNonFieldMode()) {
 			fieldLabel.setText("Non Field Mode!");
 			fieldLabel.setStyle("-fx-background-color:blue");
 		} else if (connected) {

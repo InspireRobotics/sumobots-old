@@ -1,7 +1,6 @@
 package org.inspirerobotics.sumobots.driverstation.field;
 
 import org.inspirerobotics.sumobots.driverstation.DriverStationBackend;
-import org.inspirerobotics.sumobots.driverstation.config.Settings;
 import org.inspirerobotics.sumobots.driverstation.util.EmptyConnection;
 import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.Resources;
@@ -31,8 +30,8 @@ public class Field implements ConnectionListener {
 		backend = b;
 	}
 
-	public boolean tryToCreateConnection(String ip) {
-		if (Settings.nonFieldMode) {
+	public boolean tryToCreateConnection(String ip, boolean nonFieldMode) {
+		if (nonFieldMode) {
 			setFieldConnection(new EmptyConnection());
 			return true;
 		}
