@@ -1,11 +1,10 @@
 package org.inspirerobotics.sumobots.field;
 
+import org.inspirerobotics.sumobots.field.driverstation.DriverStationServer;
 import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.TimePeriod;
 import org.inspirerobotics.sumobots.library.concurrent.InterThreadMessage;
 import org.inspirerobotics.sumobots.library.concurrent.ThreadChannel;
-import org.inspirerobotics.sumobots.library.networking.Server;
-import org.inspirerobotics.sumobots.library.networking.connection.Connection;
 import org.inspirerobotics.sumobots.library.networking.message.ArchetypalMessages;
 import org.inspirerobotics.sumobots.library.networking.tables.NetworkTable;
 
@@ -13,7 +12,7 @@ import java.util.logging.Logger;
 
 public class FieldBackend extends Thread {
 
-	private Server server;
+	private DriverStationServer server;
 
 	private ThreadChannel channel;
 
@@ -82,8 +81,7 @@ public class FieldBackend extends Thread {
 	}
 
 	private void updateInternalTable(long loopTime) {
-		internalNetworkTable.put("IP", "" + server.getServerSocket().getLocalSocketAddress());
-		internalNetworkTable.put("Port", "" + server.getServerSocket().getLocalPort());
+		server.updateNetworkingTable(internalNetworkTable);
 		internalNetworkTable.put("Backend Loop Time", loopTime + "ms");
 	}
 
@@ -113,7 +111,7 @@ public class FieldBackend extends Thread {
 				server.removeAll();
 				break;
 			case "disable_ds":
-				disableDS((String) m.getData());
+				server.disableDS((String) m.getData());
 				break;
 			default:
 				log.warning("Unknown Message Recieved on Backend: " + name);
@@ -140,14 +138,6 @@ public class FieldBackend extends Thread {
 				break;
 		}
 
-	}
-
-	private void disableDS(String name) {
-		for (Connection c : server.getConnections()) {
-			if (c.getConnectionName().equals(name)) {
-				c.sendMessage(ArchetypalMessages.enterNewMatchPeriod(TimePeriod.DISABLED));
-			}
-		}
 	}
 
 	private void eStop() {
@@ -216,7 +206,7 @@ public class FieldBackend extends Thread {
 	}
 
 	private void init() {
-		server = new Server((message, connection) -> log.info("Recieved Message: " + message), "Field");
+		server = new DriverStationServer();
 
 		disableMatch();
 	}
