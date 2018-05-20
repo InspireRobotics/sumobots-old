@@ -6,7 +6,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 import org.inspirerobotics.sumobots.driverstation.DriverStationFrontend;
-import org.inspirerobotics.sumobots.driverstation.Settings;
+import org.inspirerobotics.sumobots.driverstation.config.Settings;
 import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.TimePeriod;
 

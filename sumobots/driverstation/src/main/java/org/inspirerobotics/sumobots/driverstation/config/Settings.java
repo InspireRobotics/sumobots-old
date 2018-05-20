@@ -1,4 +1,4 @@
-package org.inspirerobotics.sumobots.driverstation;
+package org.inspirerobotics.sumobots.driverstation.config;
 
 import java.util.logging.Level;
 

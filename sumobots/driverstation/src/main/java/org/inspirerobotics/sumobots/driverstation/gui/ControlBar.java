@@ -5,7 +5,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ToolBar;
 import javafx.scene.layout.AnchorPane;
 import org.inspirerobotics.sumobots.driverstation.DriverStationFrontend;
-import org.inspirerobotics.sumobots.driverstation.Settings;
+import org.inspirerobotics.sumobots.driverstation.config.Settings;
 import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.gui.FXMLFileLoader;
 

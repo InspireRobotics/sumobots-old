@@ -3,6 +3,7 @@ package org.inspirerobotics.sumobots.driverstation;
 import java.util.Random;
 import java.util.logging.Logger;
 
+import org.inspirerobotics.sumobots.driverstation.config.Settings;
 import org.inspirerobotics.sumobots.driverstation.field.Field;
 import org.inspirerobotics.sumobots.driverstation.joystick.JoystickThreadCommunicator;
 import org.inspirerobotics.sumobots.driverstation.robot.Robot;

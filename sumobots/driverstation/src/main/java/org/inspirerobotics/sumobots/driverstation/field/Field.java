@@ -1,7 +1,7 @@
 package org.inspirerobotics.sumobots.driverstation.field;
 
 import org.inspirerobotics.sumobots.driverstation.DriverStationBackend;
-import org.inspirerobotics.sumobots.driverstation.Settings;
+import org.inspirerobotics.sumobots.driverstation.config.Settings;
 import org.inspirerobotics.sumobots.driverstation.util.EmptyConnection;
 import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.Resources;
