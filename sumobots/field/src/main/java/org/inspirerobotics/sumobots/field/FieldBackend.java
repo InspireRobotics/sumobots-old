@@ -1,24 +1,24 @@
 package org.inspirerobotics.sumobots.field;
 
 import org.inspirerobotics.sumobots.field.driverstation.DriverStationServer;
+import org.inspirerobotics.sumobots.field.util.MatchController;
 import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.TimePeriod;
 import org.inspirerobotics.sumobots.library.concurrent.InterThreadMessage;
 import org.inspirerobotics.sumobots.library.concurrent.ThreadChannel;
-import org.inspirerobotics.sumobots.library.networking.message.ArchetypalMessages;
 import org.inspirerobotics.sumobots.library.networking.tables.NetworkTable;
 
 import java.util.logging.Logger;
 
 public class FieldBackend extends Thread {
 
+	private final MatchController matchController;
+
 	private DriverStationServer server;
 
 	private ThreadChannel channel;
 
 	private final Logger log = InternalLog.getLogger();
-
-	private TimePeriod timePeriod;
 
 	private boolean running = true;
 
@@ -31,6 +31,8 @@ public class FieldBackend extends Thread {
 	public FieldBackend(ThreadChannel tc) {
 		this.setName("Backend Thread");
 		this.channel = tc;
+
+		matchController = new MatchController(this);
 	}
 
 	@Override
@@ -46,7 +48,7 @@ public class FieldBackend extends Thread {
 			updateLoopTime();
 			updateInternalTable(loopTime);
 
-			channel.add(new InterThreadMessage("update_internal_table", this.internalNetworkTable.clone()));
+			sendMessageToFrontend(new InterThreadMessage("update_internal_table", this.internalNetworkTable.clone()));
 
 			pollFrontendThreadMessages();
 		}
@@ -88,7 +90,11 @@ public class FieldBackend extends Thread {
 	private void sendConnectionsToFrontend() {
 		InterThreadMessage m = new InterThreadMessage("conn_update", server.getConnections());
 
-		channel.add(m);
+		sendMessageToFrontend(m);
+	}
+
+	public void sendMessageToFrontend(InterThreadMessage threadMessage) {
+		channel.add(threadMessage);
 	}
 
 	private void onFrontendMessageReceived(InterThreadMessage m) {
@@ -96,8 +102,8 @@ public class FieldBackend extends Thread {
 
 		log.fine("Recieved Message from Frontend: " + name);
 
-		if (name.endsWith("_match")) {
-			onMatchMessageReceived(name.split("_match")[0]);
+		if (name.equals("period_request")) {
+			matchController.attemptStateChange((TimePeriod) m.getData());
 			return;
 		}
 
@@ -119,76 +125,13 @@ public class FieldBackend extends Thread {
 		}
 	}
 
-	private void onMatchMessageReceived(String messageName) {
-		switch (messageName) {
-			case "start":
-				startMatch();
-				break;
-			case "end":
-				endMatch();
-				break;
-			case "init":
-				initMatch();
-				break;
-			case "e-stop":
-				eStop();
-				break;
-			default:
-				log.warning("Unknown Match Update Recieved on Backend: " + messageName);
-				break;
-		}
-
-	}
-
-	private void eStop() {
-		updateTimePeriod(TimePeriod.ESTOPPED);
-	}
-
-	private void initMatch() {
-		if (timePeriod != TimePeriod.DISABLED) {
-			log.warning("Match cannot be initialized from a non-disabled state!");
-			return;
-		}
-
-		updateTimePeriod(TimePeriod.INIT);
-	}
-
-	private void endMatch() {
-		if (timePeriod == TimePeriod.ESTOPPED) {
-			log.warning("Match cannot be ended from e-stop!");
-			return;
-		}
-
-		updateTimePeriod(TimePeriod.DISABLED);
-	}
-
-	private void startMatch() {
-		if (timePeriod != TimePeriod.INIT) {
-			log.warning("Match cannot be ended from a non-initialized state!");
-			return;
-		}
-
-		updateTimePeriod(TimePeriod.GAME);
-	}
-
-	private void updateTimePeriod(TimePeriod timePeriod) {
-		log.info("Entering new period: " + timePeriod);
-		this.timePeriod = timePeriod;
-
-		InterThreadMessage m = new InterThreadMessage("time_period_update", timePeriod);
-		channel.add(m);
-
-		server.sendAll(ArchetypalMessages.enterNewMatchPeriod(timePeriod));
-	}
-
 	private void init() {
 		server = new DriverStationServer();
 
-		endMatch();
+		matchController.attemptStateChange(TimePeriod.DISABLED);
 	}
 
-	public TimePeriod getTimePeriod() {
-		return timePeriod;
+	public DriverStationServer getServer() {
+		return server;
 	}
-
 }
