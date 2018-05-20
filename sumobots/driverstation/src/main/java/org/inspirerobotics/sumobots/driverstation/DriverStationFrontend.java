@@ -5,9 +5,9 @@ import javafx.application.Platform;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
+import org.inspirerobotics.sumobots.driverstation.config.Settings;
 import org.inspirerobotics.sumobots.driverstation.gui.GuiController;
 import org.inspirerobotics.sumobots.driverstation.gui.MainScene;
-import org.inspirerobotics.sumobots.driverstation.joystick.InputThread;
 import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.TimePeriod;
 import org.inspirerobotics.sumobots.library.concurrent.InterThreadMessage;
@@ -21,6 +21,10 @@ public class DriverStationFrontend extends Application {
 
 	private ThreadChannel threadChannel;
 
+	private final Settings settings = Settings.load();
+
+	private final boolean nonFieldMode = settings.nonFieldMode();
+
 	private DriverStationBackend backend;
 
 	private Stage stage;
@@ -29,21 +33,13 @@ public class DriverStationFrontend extends Application {
 
 	private GuiController controller = new GuiController(this);
 
-	private static final boolean nonFieldMode = Settings.nonFieldMode;
-
 	@Override
 	public void start(Stage s) throws Exception {
 		stage = s;
+		log.setLevel(settings.logLevel());
 
 		Thread.currentThread().setName("Frontend Thread");
-
-		threadChannel = new ThreadChannel();
-
-		log.fine("Starting field thread");
-		backend = new DriverStationBackend(threadChannel.createPair());
-		backend.start();
-		log.fine("Finished starting field thread");
-
+		createBackendThread();
 		initGui();
 
 		Platform.runLater(new Runnable() {
@@ -55,6 +51,15 @@ public class DriverStationFrontend extends Application {
 			}
 
 		});
+	}
+
+	private void createBackendThread() {
+		threadChannel = new ThreadChannel();
+
+		log.fine("Starting field thread");
+		backend = new DriverStationBackend(threadChannel.createPair(), (Settings) settings.clone());
+		backend.start();
+		log.fine("Finished starting field thread");
 	}
 
 	protected void update() {
@@ -151,6 +156,10 @@ public class DriverStationFrontend extends Application {
 
 	public void disable() {
 		threadChannel.add(new InterThreadMessage("new_state", TimePeriod.DISABLED));
+	}
+
+	public boolean isNonFieldMode() {
+		return nonFieldMode;
 	}
 
 	public static void main(String[] args) {
