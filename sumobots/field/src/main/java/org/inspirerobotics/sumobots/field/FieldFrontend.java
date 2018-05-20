@@ -151,23 +151,27 @@ public class FieldFrontend extends Application {
 	}
 
 	public void startMatch() {
-		threadChannel.add(new InterThreadMessage("start_match"));
+		sendTimePeriodRequestToBackend(TimePeriod.GAME);
 	}
 
 	public void initMatch() {
-		threadChannel.add(new InterThreadMessage("init_match"));
+		sendTimePeriodRequestToBackend(TimePeriod.INIT);
 	}
 
 	public void endMatch() {
-		threadChannel.add(new InterThreadMessage("end_match"));
+		sendTimePeriodRequestToBackend(TimePeriod.DISABLED);
 	}
 
 	public void eStop() {
-		threadChannel.add(new InterThreadMessage("e-stop_match"));
+		sendTimePeriodRequestToBackend(TimePeriod.ESTOPPED);
 	}
 
 	public void disable(String name) {
 		threadChannel.add(new InterThreadMessage("disable_ds", name));
+	}
+
+	private void sendTimePeriodRequestToBackend(TimePeriod timePeriod) {
+		threadChannel.add(new InterThreadMessage("period_request", timePeriod));
 	}
 
 	public TimePeriod getTimePeriod() {

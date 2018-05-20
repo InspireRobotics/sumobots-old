@@ -1,25 +1,24 @@
 package org.inspirerobotics.sumobots.field;
 
+import org.inspirerobotics.sumobots.field.driverstation.DriverStationServer;
+import org.inspirerobotics.sumobots.field.util.MatchController;
 import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.TimePeriod;
 import org.inspirerobotics.sumobots.library.concurrent.InterThreadMessage;
 import org.inspirerobotics.sumobots.library.concurrent.ThreadChannel;
-import org.inspirerobotics.sumobots.library.networking.Server;
-import org.inspirerobotics.sumobots.library.networking.connection.Connection;
-import org.inspirerobotics.sumobots.library.networking.message.ArchetypalMessages;
 import org.inspirerobotics.sumobots.library.networking.tables.NetworkTable;
 
 import java.util.logging.Logger;
 
 public class FieldBackend extends Thread {
 
-	private Server server;
+	private final MatchController matchController;
+
+	private DriverStationServer server;
 
 	private ThreadChannel channel;
 
 	private final Logger log = InternalLog.getLogger();
-
-	private TimePeriod timePeriod;
 
 	private boolean running = true;
 
@@ -32,6 +31,8 @@ public class FieldBackend extends Thread {
 	public FieldBackend(ThreadChannel tc) {
 		this.setName("Backend Thread");
 		this.channel = tc;
+
+		matchController = new MatchController(this);
 	}
 
 	@Override
@@ -47,7 +48,7 @@ public class FieldBackend extends Thread {
 			updateLoopTime();
 			updateInternalTable(loopTime);
 
-			channel.add(new InterThreadMessage("update_internal_table", this.internalNetworkTable.clone()));
+			sendMessageToFrontend(new InterThreadMessage("update_internal_table", this.internalNetworkTable.clone()));
 
 			pollFrontendThreadMessages();
 		}
@@ -82,15 +83,18 @@ public class FieldBackend extends Thread {
 	}
 
 	private void updateInternalTable(long loopTime) {
-		internalNetworkTable.put("IP", "" + server.getServerSocket().getLocalSocketAddress());
-		internalNetworkTable.put("Port", "" + server.getServerSocket().getLocalPort());
+		server.updateNetworkingTable(internalNetworkTable);
 		internalNetworkTable.put("Backend Loop Time", loopTime + "ms");
 	}
 
 	private void sendConnectionsToFrontend() {
 		InterThreadMessage m = new InterThreadMessage("conn_update", server.getConnections());
 
-		channel.add(m);
+		sendMessageToFrontend(m);
+	}
+
+	public void sendMessageToFrontend(InterThreadMessage threadMessage) {
+		channel.add(threadMessage);
 	}
 
 	private void onFrontendMessageReceived(InterThreadMessage m) {
@@ -98,8 +102,8 @@ public class FieldBackend extends Thread {
 
 		log.fine("Recieved Message from Frontend: " + name);
 
-		if (name.endsWith("_match")) {
-			onMatchMessageReceived(name.split("_match")[0]);
+		if (name.equals("period_request")) {
+			matchController.attemptStateChange((TimePeriod) m.getData());
 			return;
 		}
 
@@ -113,7 +117,7 @@ public class FieldBackend extends Thread {
 				server.removeAll();
 				break;
 			case "disable_ds":
-				disableDS((String) m.getData());
+				server.disableDS((String) m.getData());
 				break;
 			default:
 				log.warning("Unknown Message Recieved on Backend: " + name);
@@ -121,108 +125,13 @@ public class FieldBackend extends Thread {
 		}
 	}
 
-	private void onMatchMessageReceived(String messageName) {
-		switch (messageName) {
-			case "start":
-				startMatch();
-				break;
-			case "end":
-				endMatch();
-				break;
-			case "init":
-				initMatch();
-				break;
-			case "e-stop":
-				eStop();
-				break;
-			default:
-				log.warning("Unknown Match Update Recieved on Backend: " + messageName);
-				break;
-		}
-
-	}
-
-	private void disableDS(String name) {
-		for (Connection c : server.getConnections()) {
-			if (c.getConnectionName().equals(name)) {
-				c.sendMessage(ArchetypalMessages.enterNewMatchPeriod(TimePeriod.DISABLED));
-			}
-		}
-	}
-
-	private void eStop() {
-		log.info("EStopping the Match!");
-		timePeriod = TimePeriod.ESTOPPED;
-
-		InterThreadMessage m = new InterThreadMessage("time_period_update", TimePeriod.ESTOPPED);
-		channel.add(m);
-
-		server.sendAll(ArchetypalMessages.enterNewMatchPeriod(TimePeriod.ESTOPPED));
-	}
-
-	private void initMatch() {
-		if (timePeriod != TimePeriod.DISABLED) {
-			log.warning("Match cannot be initialized from a non-disabled state!");
-			return;
-		}
-
-		log.info("Initializing the Match!");
-		timePeriod = TimePeriod.INIT;
-
-		InterThreadMessage m = new InterThreadMessage("time_period_update", TimePeriod.INIT);
-		channel.add(m);
-
-		server.sendAll(ArchetypalMessages.enterNewMatchPeriod(TimePeriod.INIT));
-	}
-
-	private void endMatch() {
-		if (timePeriod == TimePeriod.ESTOPPED) {
-			log.warning("Match cannot be ended from e-stop!");
-			return;
-		}
-
-		log.info("Ending the Match!");
-		timePeriod = TimePeriod.DISABLED;
-
-		InterThreadMessage m = new InterThreadMessage("time_period_update", TimePeriod.DISABLED);
-		channel.add(m);
-
-		server.sendAll(ArchetypalMessages.enterNewMatchPeriod(TimePeriod.DISABLED));
-	}
-
-	private void disableMatch() {
-		log.fine("Disabling the match!");
-		timePeriod = TimePeriod.DISABLED;
-
-		InterThreadMessage m = new InterThreadMessage("time_period_update", TimePeriod.DISABLED);
-		channel.add(m);
-
-		server.sendAll(ArchetypalMessages.enterNewMatchPeriod(TimePeriod.DISABLED));
-	}
-
-	private void startMatch() {
-		if (timePeriod != TimePeriod.INIT) {
-			log.warning("Match cannot be ended from a non-initialized state!");
-			return;
-		}
-
-		log.info("Starting the Match!");
-		timePeriod = TimePeriod.GAME;
-
-		InterThreadMessage m = new InterThreadMessage("time_period_update", TimePeriod.GAME);
-		channel.add(m);
-
-		server.sendAll(ArchetypalMessages.enterNewMatchPeriod(TimePeriod.GAME));
-	}
-
 	private void init() {
-		server = new Server((message, connection) -> log.info("Recieved Message: " + message), "Field");
+		server = new DriverStationServer();
 
-		disableMatch();
+		matchController.attemptStateChange(TimePeriod.DISABLED);
 	}
 
-	public TimePeriod getTimePeriod() {
-		return timePeriod;
+	public DriverStationServer getServer() {
+		return server;
 	}
-
 }

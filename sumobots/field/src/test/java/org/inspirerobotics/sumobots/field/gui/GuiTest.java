@@ -1,4 +1,4 @@
-package org.inspirerobotics.sumobots.field;
+package org.inspirerobotics.sumobots.field.gui;
 
 import org.inspirerobotics.sumobots.field.gui.RootGroup;
 import org.inspirerobotics.sumobots.library.gui.FXMLFileLoadException;
