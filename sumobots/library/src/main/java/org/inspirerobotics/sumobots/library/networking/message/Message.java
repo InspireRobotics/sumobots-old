@@ -40,7 +40,7 @@ public class Message {
 		try {
 			return MessageType.fromString(data.get("message_type"));
 		} catch (UnknownMessageTypeException e) {
-			logger.severe("Failed to recognize message type! Exception: " + e);
+			logger.severe("Failed to recognize message type! Exception: " + e.getMessage());
 		}
 
 		return MessageType.UNKNOWN;

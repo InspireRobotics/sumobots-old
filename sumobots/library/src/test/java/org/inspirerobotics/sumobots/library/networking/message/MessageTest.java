@@ -1,20 +1,26 @@
 package org.inspirerobotics.sumobots.library.networking.message;
 
-import org.inspirerobotics.sumobots.library.networking.message.Message;
-import org.inspirerobotics.sumobots.library.networking.message.MessageType;
+import com.google.gson.JsonSyntaxException;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class MessageTest {
 
+	@Test(expected = JsonSyntaxException.class)
+	public void invalidJSONTest() {
+		Message.fromString("GG");
+	}
+
+	@Test
+	public void parseJSONWithNoMessageTypeTest() {
+		Assert.assertEquals(Message.fromString("{}").getType(), MessageType.UNKNOWN);
+	}
+
 	@Test
 	public void messageTypeFormatTest() {
-		for (MessageType type : MessageType.values()) {
-			Message original = new Message(type);
-			Message parsed = Message.fromString(original.toJSONString());
+		Message m = new Message(MessageType.PING);
 
-			Assert.assertEquals(original.getType(), parsed.getType());
-		}
+		Assert.assertEquals("{\"message_type\":\"PING\"}", m.toJSONString());
 	}
 
 	@Test
