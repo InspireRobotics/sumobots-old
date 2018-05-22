@@ -6,6 +6,7 @@ import org.inspirerobotics.sumobots.driverstation.DriverStationBackend;
 import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.concurrent.InterThreadMessage;
 import org.inspirerobotics.sumobots.library.concurrent.ThreadChannel;
+import org.inspirerobotics.sumobots.library.networking.tables.NetworkTable;
 
 public class JoystickThreadCommunicator {
 
@@ -13,6 +14,8 @@ public class JoystickThreadCommunicator {
 	private final ThreadChannel threadChannel;
 	private final InputThread thread;
 	private final DriverStationBackend driverStationBackend;
+
+	private boolean joystickStatus = false;
 
 	public JoystickThreadCommunicator(DriverStationBackend dsBack) {
 		threadChannel = new ThreadChannel();
@@ -24,6 +27,15 @@ public class JoystickThreadCommunicator {
 
 	public void update() {
 		pollMessages();
+	}
+
+	public void updateNetworkingTable(NetworkTable networkTable) {
+		if (joystickStatus == false) {
+			networkTable.put("Joysticks", "Not Connected");
+			return;
+		}
+
+		networkTable.put("Joysticks", "Connected");
 	}
 
 	private void pollMessages() {
@@ -40,7 +52,12 @@ public class JoystickThreadCommunicator {
 
 		switch (name) {
 			case "joystick_status":
-				driverStationBackend.onJoysticksConnected((boolean) m.getData());
+				joystickStatus = (boolean) m.getData();
+
+				driverStationBackend.onJoysticksConnected(joystickStatus);
+
+				break;
+			case "input_values":
 				break;
 			default:
 				logger.warning("Unknown Message Recieved on Backend: " + name);

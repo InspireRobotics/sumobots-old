@@ -163,7 +163,7 @@ public class DriverStationBackend extends Thread {
 		table.put("Time Period", "" + getTimePeriod());
 
 		robot.addStatsToNetworkTable(table);
-
+		joystickThreadCommunicator.updateNetworkingTable(table);
 		field.setNetworkingTable(table);
 	}
 

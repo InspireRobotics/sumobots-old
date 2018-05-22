@@ -1,5 +1,6 @@
 package org.inspirerobotics.sumobots.driverstation.joystick;
 
+import java.util.HashMap;
 import java.util.logging.Logger;
 
 import org.inspirerobotics.sumobots.library.InternalLog;
@@ -11,13 +12,17 @@ import net.java.games.input.EventQueue;
 
 public class Gamepad {
 
+	private final HashMap<String, Float> inputValues = new HashMap<String, Float>();
+
+	private final JoystickListener listener;
 	private final Logger log = InternalLog.getLogger();
 	private final Controller controller;
 	private final EventQueue eventQueue;
 	private final Event event;
 
-	Gamepad(Controller controller) {
+	Gamepad(Controller controller, JoystickListener l) {
 		this.controller = controller;
+		this.listener = l;
 
 		eventQueue = controller.getEventQueue();
 		event = new Event();
@@ -29,8 +34,19 @@ public class Gamepad {
 
 	void update() {
 		while (eventQueue.getNextEvent(event)) {
-			printEventInfo();
+			handleEvent();
 		}
+	}
+
+	private void handleEvent() {
+		printEventInfo();
+		updateValueMap();
+		listener.onValueUpdated(this);
+	}
+
+	private void updateValueMap() {
+		String name = getFormattedName(event.getComponent());
+		inputValues.put(name, event.getValue());
 	}
 
 	private void printEventInfo() {
@@ -79,6 +95,10 @@ public class Gamepad {
 				buffer.append("Off");
 			}
 		}
+	}
+
+	public HashMap<String, Float> getInputValues() {
+		return inputValues;
 	}
 
 }

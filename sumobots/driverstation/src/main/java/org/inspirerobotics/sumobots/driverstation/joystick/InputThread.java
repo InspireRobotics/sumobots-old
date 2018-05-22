@@ -10,7 +10,7 @@ import org.inspirerobotics.sumobots.library.concurrent.ThreadChannel;
 import net.java.games.input.Controller;
 import net.java.games.input.ControllerEnvironment;
 
-public class InputThread extends Thread {
+public class InputThread extends Thread implements JoystickListener {
 
 	private Logger log = InternalLog.getLogger();
 
@@ -41,11 +41,12 @@ public class InputThread extends Thread {
 	private void runMainLoop(Controller controller) {
 		log.info("Using Controller: " + controller.getName());
 
-		Gamepad gamepad = new Gamepad(controller);
+		Gamepad gamepad = new Gamepad(controller, this);
 
 		while (true) {
 			if (!gamepad.poll()) {
 				log.warning("Lost the controller!");
+				threadChannel.add(new InterThreadMessage("input_values", null));
 				return;
 			}
 
@@ -53,6 +54,11 @@ public class InputThread extends Thread {
 
 			sleepCatchException(10);
 		}
+	}
+
+	@Override
+	public void onValueUpdated(Gamepad p) {
+		threadChannel.add(new InterThreadMessage("input_values", p.getInputValues()));
 	}
 
 	private static void sleepCatchException(long millis) {
