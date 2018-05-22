@@ -13,7 +13,7 @@ import net.java.games.input.EventQueue;
 public class Gamepad {
 
 	private final HashMap<String, Float> inputValues = new HashMap<String, Float>();
-	
+
 	private final JoystickListener listener;
 	private final Logger log = InternalLog.getLogger();
 	private final Controller controller;
@@ -37,7 +37,7 @@ public class Gamepad {
 			handleEvent();
 		}
 	}
-	
+
 	private void handleEvent() {
 		printEventInfo();
 		updateValueMap();
@@ -96,7 +96,7 @@ public class Gamepad {
 			}
 		}
 	}
-	
+
 	public HashMap<String, Float> getInputValues() {
 		return inputValues;
 	}

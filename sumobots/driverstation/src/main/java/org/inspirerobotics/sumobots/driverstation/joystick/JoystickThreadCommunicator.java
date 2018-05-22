@@ -16,7 +16,7 @@ public class JoystickThreadCommunicator {
 	private final DriverStationBackend driverStationBackend;
 
 	private boolean joystickStatus = false;
-	
+
 	public JoystickThreadCommunicator(DriverStationBackend dsBack) {
 		threadChannel = new ThreadChannel();
 		thread = new InputThread(threadChannel.createPair());
@@ -28,13 +28,13 @@ public class JoystickThreadCommunicator {
 	public void update() {
 		pollMessages();
 	}
-	
+
 	public void updateNetworkingTable(NetworkTable networkTable) {
-		if(joystickStatus == false) {
+		if (joystickStatus == false) {
 			networkTable.put("Joysticks", "Not Connected");
 			return;
 		}
-		
+
 		networkTable.put("Joysticks", "Connected");
 	}
 
@@ -53,9 +53,9 @@ public class JoystickThreadCommunicator {
 		switch (name) {
 			case "joystick_status":
 				joystickStatus = (boolean) m.getData();
-				
+
 				driverStationBackend.onJoysticksConnected(joystickStatus);
-				
+
 				break;
 			case "input_values":
 				break;

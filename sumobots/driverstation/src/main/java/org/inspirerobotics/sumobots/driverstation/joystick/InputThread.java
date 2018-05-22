@@ -49,8 +49,7 @@ public class InputThread extends Thread implements JoystickListener {
 				threadChannel.add(new InterThreadMessage("input_values", null));
 				return;
 			}
-			
-			
+
 			gamepad.update();
 
 			sleepCatchException(10);
@@ -59,9 +58,9 @@ public class InputThread extends Thread implements JoystickListener {
 
 	@Override
 	public void onValueUpdated(Gamepad p) {
-		threadChannel.add(new InterThreadMessage("input_values", p.getInputValues()));		
+		threadChannel.add(new InterThreadMessage("input_values", p.getInputValues()));
 	}
-	
+
 	private static void sleepCatchException(long millis) {
 		try {
 			Thread.sleep(millis);
