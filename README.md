@@ -21,7 +21,7 @@ Please note the tests for the repository. Every time a commit is made to the mas
 
 In addition to any commits, Travis CI will also run the same checks on every pull request. GitHub will not allow a merge to be made unless all checks pass!
 
-### How Do I make sure my code will pass the test?
+### How Do I make sure my code will pass the tests?
 Open the root directory of the repository then run:
 
 ```cmd
