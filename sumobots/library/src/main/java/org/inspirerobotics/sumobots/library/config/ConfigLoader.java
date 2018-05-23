@@ -23,8 +23,11 @@ public class ConfigLoader {
 		return Toml.parse(file);
 	}
 
-	private static String getPath(String name) {
-		return System.getenv("userprofile") + "/Desktop/" + name + ".toml";
+	public static String getPath(String name) {
+		return getPath(name, System.getenv("userprofile") + "/Desktop/");
 	}
 
+	public static String getPath(String name, String rootDirectory) {
+		return rootDirectory + name + ".toml";
+	}
 }
