@@ -24,9 +24,9 @@ public class Config {
 
 	}
 
-	public Config(Toml t) {
+	public Config(Toml t, String name) {
 		this.toml = t;
-		name = null;
+		this.name = name;
 	}
 
 	public String getString(String key) {
