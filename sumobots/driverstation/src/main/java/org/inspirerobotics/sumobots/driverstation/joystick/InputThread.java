@@ -3,6 +3,8 @@ package org.inspirerobotics.sumobots.driverstation.joystick;
 import java.lang.reflect.Constructor;
 import java.util.logging.Logger;
 
+import org.inspirerobotics.sumobots.driverstation.joystick.gamepad.Gamepad;
+import org.inspirerobotics.sumobots.driverstation.joystick.gamepad.JoystickListener;
 import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.concurrent.InterThreadMessage;
 import org.inspirerobotics.sumobots.library.concurrent.ThreadChannel;

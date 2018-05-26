@@ -1,5 +1,6 @@
 package org.inspirerobotics.sumobots.driverstation.joystick;
 
+import java.util.HashMap;
 import java.util.logging.Logger;
 
 import org.inspirerobotics.sumobots.driverstation.DriverStationBackend;
@@ -15,6 +16,11 @@ public class JoystickThreadCommunicator {
 	private final InputThread thread;
 	private final DriverStationBackend driverStationBackend;
 
+	private boolean valuesUpdated;
+	private long nextRobotTime;
+
+	private HashMap<String, Float> inputValues = new HashMap<String, Float>();
+
 	private boolean joystickStatus = false;
 
 	public JoystickThreadCommunicator(DriverStationBackend dsBack) {
@@ -26,6 +32,12 @@ public class JoystickThreadCommunicator {
 	}
 
 	public void update() {
+		if (nextRobotTime < System.currentTimeMillis() && valuesUpdated) {
+			nextRobotTime = System.currentTimeMillis() + 20;
+			valuesUpdated = false;
+			driverStationBackend.updateJoystickValues(inputValues);
+		}
+
 		pollMessages();
 	}
 
@@ -45,10 +57,9 @@ public class JoystickThreadCommunicator {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void onFrontendMessageReceived(InterThreadMessage m) {
 		String name = m.getName();
-
-		logger.fine("Recieved Message from Input Thread: " + name);
 
 		switch (name) {
 			case "joystick_status":
@@ -58,6 +69,8 @@ public class JoystickThreadCommunicator {
 
 				break;
 			case "input_values":
+				valuesUpdated = true;
+				inputValues = (HashMap<String, Float>) m.getData();
 				break;
 			default:
 				logger.warning("Unknown Message Recieved on Backend: " + name);

@@ -12,6 +12,7 @@ def bytes_to_json(data):
     json_string = str(data[2:-1], 'utf-8')
     return json.loads(json_string)
 
+
 def handle_non_ping_message(type, json, connection):
     if type == 'LIB_VERSION':
         version = json['version'];
@@ -28,7 +29,29 @@ def handle_non_ping_message(type, json, connection):
         print("Client terminated connection!")
         exit(0)
 
+    if type == "JOY_UPDATE":
+        handle_joystick(json)
 
+def handle_joystick(json):
+    leftX = 0
+    leftY = 0
+    rightX = 0
+    rightY = 0
+
+
+    if "Right Y Axis" in json:
+        rightY = json["Right Y Axis"]
+
+    if "Right X Axis" in json:
+        rightX = json["Right X Axis"]
+
+    if "Left Y Axis" in json:
+        leftY = json["Left Y Axis"]
+
+    if "Left X Axis" in json:
+        leftX = json["Left X Axis"]
+
+    print("Joystick Values: RX: {}, RY: {}, LX: {}, LY: {}".format(rightX, rightY, leftX, leftY))
 
 def handle_message(json, connection):
     message_type = json['message_type']

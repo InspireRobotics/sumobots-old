@@ -6,6 +6,7 @@ sumobots/.settings/
 # Intellij
 robot/.idea
 robot/.idea
+robot/venv
 **.pyc
 sumobots/.idea
 sumobots/.idea
