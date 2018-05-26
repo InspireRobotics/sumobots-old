@@ -200,18 +200,18 @@ public class DriverStationBackend extends Thread {
 	}
 
 	public void updateJoystickValues(HashMap<String, Float> inputValues) {
-		if(robot.connected()) {
+		if (robot.connected()) {
 			Message m = new Message(MessageType.JOYSTICK_UPDATE);
-//			m.addData("values", inputValues.toString());
-			
+			// m.addData("values", inputValues.toString());
+
 			for (Entry<String, Float> entry : inputValues.entrySet()) {
-				m.addData(entry.getKey(), ""+entry.getValue());
+				m.addData(entry.getKey(), "" + entry.getValue());
 			}
-			
+
 			robot.getRobotConnection().sendMessage(m);
 		}
 	}
-	
+
 	public void onJoysticksConnected(boolean data) {
 		if (data) {
 			sendMessageToFrontend(new InterThreadMessage("joystick_status", true));

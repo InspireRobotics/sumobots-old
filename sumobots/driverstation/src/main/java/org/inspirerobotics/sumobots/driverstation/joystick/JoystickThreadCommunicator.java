@@ -15,12 +15,12 @@ public class JoystickThreadCommunicator {
 	private final ThreadChannel threadChannel;
 	private final InputThread thread;
 	private final DriverStationBackend driverStationBackend;
-	
+
 	private boolean valuesUpdated;
 	private long nextRobotTime;
 
 	private HashMap<String, Float> inputValues = new HashMap<String, Float>();
-	
+
 	private boolean joystickStatus = false;
 
 	public JoystickThreadCommunicator(DriverStationBackend dsBack) {
@@ -32,12 +32,12 @@ public class JoystickThreadCommunicator {
 	}
 
 	public void update() {
-		if(nextRobotTime < System.currentTimeMillis() && valuesUpdated) {
+		if (nextRobotTime < System.currentTimeMillis() && valuesUpdated) {
 			nextRobotTime = System.currentTimeMillis() + 20;
 			valuesUpdated = false;
 			driverStationBackend.updateJoystickValues(inputValues);
 		}
-		
+
 		pollMessages();
 	}
 
