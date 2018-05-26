@@ -35,6 +35,12 @@ def library_version_message(version):
 def pong_message():
     return Message('PONG')
 
+def ping_message():
+    return Message('PING')
+
+def stream_terminated():
+    return Message('STREAM_TERMINATED')
+
 def format_message_to_bytes(string):
     xs = bytearray(1);
     xs.append(utf8len(string) + 1)
