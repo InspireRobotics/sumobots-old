@@ -2,6 +2,28 @@ import socket
 import sys
 import message
 from message import Message
+import json
+
+def bytes_to_json(data):
+    # Remove the first two bytes and last byte which are details about the message
+    json_string = str(data[2:-1], 'utf-8')
+    return json.loads(json_string)
+
+def handle_message(json, connection):
+    message_type = json['message_type']
+
+    print("Message Type:", message_type)
+
+    if(message == 'PING'):
+        message.pong_message().send_from(connection)
+    else:
+        print("NOT PING")
+
+def on_data_received(data, connection):
+    print('received {!r}'.format(data))
+    json = bytes_to_json(data)
+
+    handle_message(json, connection)
 
 library_version = "0.2.1"
 name = "pybot"
@@ -31,9 +53,9 @@ while True:
         # Receive the data in small chunks and retransmit it
         while True:
             data = connection.recv(512)
-            print('received {!r}'.format(data))
-            message.pong_message().send_from(connection)
+            on_data_received(data, connection);
 
     finally:
         # Clean up the connection
         connection.close()
+
