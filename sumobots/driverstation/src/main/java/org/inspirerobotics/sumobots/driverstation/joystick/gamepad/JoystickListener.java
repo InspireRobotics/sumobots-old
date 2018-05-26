@@ -1,4 +1,4 @@
-package org.inspirerobotics.sumobots.driverstation.joystick;
+package org.inspirerobotics.sumobots.driverstation.joystick.gamepad;
 
 public interface JoystickListener {
 

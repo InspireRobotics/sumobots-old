@@ -1,5 +1,6 @@
 package org.inspirerobotics.sumobots.driverstation.joystick;
 
+import org.inspirerobotics.sumobots.driverstation.joystick.gamepad.ControllerButton;
 import org.junit.Assert;
 import org.junit.Test;
 

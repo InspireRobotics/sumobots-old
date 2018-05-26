@@ -1,8 +1,9 @@
-package org.inspirerobotics.sumobots.driverstation.joystick;
+package org.inspirerobotics.sumobots.driverstation.joystick.gamepad;
 
 import java.util.HashMap;
 import java.util.logging.Logger;
 
+import org.inspirerobotics.sumobots.driverstation.joystick.UnknownControllerElementException;
 import org.inspirerobotics.sumobots.library.InternalLog;
 
 import net.java.games.input.Component;
@@ -20,7 +21,7 @@ public class Gamepad {
 	private final EventQueue eventQueue;
 	private final Event event;
 
-	Gamepad(Controller controller, JoystickListener l) {
+	public Gamepad(Controller controller, JoystickListener l) {
 		this.controller = controller;
 		this.listener = l;
 
@@ -28,11 +29,11 @@ public class Gamepad {
 		event = new Event();
 	}
 
-	boolean poll() {
+	public boolean poll() {
 		return controller.poll();
 	}
 
-	void update() {
+	public void update() {
 		while (eventQueue.getNextEvent(event)) {
 			handleEvent();
 		}

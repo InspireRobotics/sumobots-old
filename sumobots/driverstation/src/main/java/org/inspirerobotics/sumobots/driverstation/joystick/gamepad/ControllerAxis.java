@@ -1,4 +1,6 @@
-package org.inspirerobotics.sumobots.driverstation.joystick;
+package org.inspirerobotics.sumobots.driverstation.joystick.gamepad;
+
+import org.inspirerobotics.sumobots.driverstation.joystick.UnknownControllerElementException;
 
 public enum ControllerAxis {
 
