@@ -13,6 +13,7 @@ public enum MessageType {
 	STREAM_TERMINATED("STREAM_TERMINATED", "Used to terminate the stream", true),
 	SET_NAME("SET_NAME", "Sets the name of the socket connected", true),
 	UPDATE_NTWK_TABLE("UPDATE_NTWK_TABLE", "Updates the Network Table", true),
+	JOYSTICK_UPDATE("JOY_UPDATE", "Updates a joystick value", false),
 	UNKNOWN("UNKNOWN", "A Malformed message", true);
 
 	private static final Logger logger = InternalLog.getLogger();

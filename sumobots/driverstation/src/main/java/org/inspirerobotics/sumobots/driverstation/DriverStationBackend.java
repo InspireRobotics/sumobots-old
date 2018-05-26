@@ -1,5 +1,10 @@
 package org.inspirerobotics.sumobots.driverstation;
 
+import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.Random;
+import java.util.logging.Logger;
+
 import org.inspirerobotics.sumobots.driverstation.config.Settings;
 import org.inspirerobotics.sumobots.driverstation.field.Field;
 import org.inspirerobotics.sumobots.driverstation.joystick.JoystickThreadCommunicator;
@@ -10,10 +15,9 @@ import org.inspirerobotics.sumobots.library.concurrent.InterThreadMessage;
 import org.inspirerobotics.sumobots.library.concurrent.ThreadChannel;
 import org.inspirerobotics.sumobots.library.networking.connection.Connection;
 import org.inspirerobotics.sumobots.library.networking.message.ArchetypalMessages;
+import org.inspirerobotics.sumobots.library.networking.message.Message;
+import org.inspirerobotics.sumobots.library.networking.message.MessageType;
 import org.inspirerobotics.sumobots.library.networking.tables.NetworkTable;
-
-import java.util.Random;
-import java.util.logging.Logger;
 
 public class DriverStationBackend extends Thread {
 
@@ -195,6 +199,19 @@ public class DriverStationBackend extends Thread {
 		}
 	}
 
+	public void updateJoystickValues(HashMap<String, Float> inputValues) {
+		if(robot.connected()) {
+			Message m = new Message(MessageType.JOYSTICK_UPDATE);
+//			m.addData("values", inputValues.toString());
+			
+			for (Entry<String, Float> entry : inputValues.entrySet()) {
+				m.addData(entry.getKey(), ""+entry.getValue());
+			}
+			
+			robot.getRobotConnection().sendMessage(m);
+		}
+	}
+	
 	public void onJoysticksConnected(boolean data) {
 		if (data) {
 			sendMessageToFrontend(new InterThreadMessage("joystick_status", true));
