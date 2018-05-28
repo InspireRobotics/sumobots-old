@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 
 public class ConsoleTab extends AnchorPane {
 
-	private enum GuiLogLevel
+	public enum GuiLogLevel
 	{
 		ERROR, WARNING, INFO, DEBUG, TRACE
 	}
@@ -56,18 +56,18 @@ public class ConsoleTab extends AnchorPane {
 	 */
 	void update() {
 		updateButtons();
-		
+
 		List<String> list = InternalLog.getInstance().getLogLines();
 		StringBuilder sb = new StringBuilder();
-	
+
 		levelLabel.setText("Current Level: " + currentLevel.toString());
-		
-		String[] levelsToRemove = getLevelsToRemove();
-		
+
+		String[] levelsToRemove = getLevelsToRemove(currentLevel);
+
 		for (Object obj : list.toArray()) {
 			String string = (String) obj;
-			
-			if(!containsAny(string, levelsToRemove))
+
+			if (!containsAny(string, levelsToRemove))
 				sb.append(string);
 		}
 
@@ -78,7 +78,7 @@ public class ConsoleTab extends AnchorPane {
 
 	}
 
-	private boolean containsAny(String string, String[] levelsToRemove) {
+	public static boolean containsAny(String string, String[] levelsToRemove) {
 		if (levelsToRemove == null)
 			return false;
 
@@ -89,18 +89,19 @@ public class ConsoleTab extends AnchorPane {
 		return false;
 	}
 
-	private String[] getLevelsToRemove() {
+	public static String[] getLevelsToRemove(GuiLogLevel currentLevel) {
 		// NOTE: We need the colons or "Fine" will pop if a string has "FINER"
 		if (currentLevel == GuiLogLevel.ERROR) {
-			return new String[] { "WARNING:", "INFO:", "FINE:", "FINER:" };
+			return new String[] { "WARNING:", "INFO:", "FINE:", "FINER:", "FINEST:" };
 		} else if (currentLevel == GuiLogLevel.WARNING) {
-			return new String[] { "INFO:", "FINE:", "FINER:" };
+			return new String[] { "INFO:", "FINE:", "FINER:", "FINEST:" };
 		} else if (currentLevel == GuiLogLevel.INFO) {
-			return new String[] { "FINE:", "FINER:" };
+			return new String[] { "FINE:", "FINER:", "FINEST:" };
 		} else if (currentLevel == GuiLogLevel.DEBUG) {
-			return new String[] { "FINER:" };
+			return new String[] { "FINER:", "FINEST:" };
 		}
-		return null;
+
+		return new String[]{};
 	}
 
 	private void updateButtons() {
