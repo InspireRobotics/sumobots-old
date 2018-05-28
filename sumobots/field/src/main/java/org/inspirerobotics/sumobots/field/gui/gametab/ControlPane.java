@@ -47,19 +47,30 @@ public class ControlPane extends AnchorPane {
 		controlConsole.setMinWidth(this.getWidth() - controlButtonPane.getWidth() - 20);
 		controlConsole.setMaxWidth(this.getWidth() - controlButtonPane.getWidth() - 20);
 
+		updateLog();
+
+	}
+
+	private void updateLog() {
 		List<String> list = InternalLog.getInstance().getLogLines();
-		StringBuilder sb = new StringBuilder();
+		StringBuilder builder = logToStringBuffer(list);
+
+		if (!builder.toString().equals(controlConsole.getText())) {
+			controlConsole.setText(builder.toString());
+			controlConsole.setScrollTop(Double.MAX_VALUE);
+		}
+	}
+
+	private StringBuilder logToStringBuffer(List<String> list) {
+		StringBuilder builder = new StringBuilder();
 
 		for (Object obj : list.toArray()) {
 			String string = (String) obj;
 			if (!string.contains("FINE") && !string.contains("FINER"))
-				sb.append(string);
+				builder.append(string);
 		}
 
-		if (!sb.toString().equals(controlConsole.getText())) {
-			controlConsole.setText(sb.toString());
-			controlConsole.setScrollTop(Double.MAX_VALUE);
-		}
+		return builder;
 	}
 
 	@FXML
