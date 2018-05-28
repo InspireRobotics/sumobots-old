@@ -21,6 +21,11 @@ public class ConsoleTabTest {
 	}
 
 	@Test
+	public void containsAnyMultiTest() {
+		Assert.assertTrue(ConsoleTab.containsAny("FooBarFizzBuzz", new String[] { "This", "FooBar" }));
+	}
+
+	@Test
 	public void containsAnyContainsNoneTest() {
 		Assert.assertFalse(ConsoleTab.containsAny("FooBarFizzBuzz", new String[] { "Fizzy" }));
 	}
