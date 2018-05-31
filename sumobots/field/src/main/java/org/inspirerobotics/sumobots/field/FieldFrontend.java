@@ -103,12 +103,12 @@ public class FieldFrontend extends Application {
 	}
 
 	private void initGUI() {
-		try{
+		try {
 			log.fine("Creating the GUI");
 			initStage(stage);
 			initGUIScene();
 			log.fine("Finished Creating the GUI");
-		}catch (Exception e){
+		} catch (Exception e) {
 			log.severe("Failed to load GUI: " + e.getMessage());
 			Alerts.exceptionAlert(Alerts.ShutdownLevel.JAVAFX, e);
 		}
