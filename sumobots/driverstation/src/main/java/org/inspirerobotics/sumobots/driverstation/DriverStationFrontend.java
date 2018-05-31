@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 import org.inspirerobotics.sumobots.driverstation.config.Settings;
 import org.inspirerobotics.sumobots.driverstation.gui.GuiController;
 import org.inspirerobotics.sumobots.driverstation.gui.MainScene;
+import org.inspirerobotics.sumobots.driverstation.joystick.JInputVerifier;
 import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.TimePeriod;
 import org.inspirerobotics.sumobots.library.concurrent.InterThreadMessage;
@@ -17,11 +18,11 @@ import java.util.logging.Logger;
 
 public class DriverStationFrontend extends Application {
 
-	private Logger log = InternalLog.getLogger();
+	private static final Settings settings = Settings.load();
+
+	private static final Logger log = InternalLog.getLogger();
 
 	private ThreadChannel threadChannel;
-
-	private final Settings settings = Settings.load();
 
 	private final boolean nonFieldMode = settings.nonFieldMode();
 
@@ -37,6 +38,9 @@ public class DriverStationFrontend extends Application {
 	public void start(Stage s) throws Exception {
 		stage = s;
 		log.setLevel(settings.logLevel());
+		log.info("Starting the driver station!");
+
+		JInputVerifier.checkLibrary();
 
 		Thread.currentThread().setName("Frontend Thread");
 		createBackendThread();
