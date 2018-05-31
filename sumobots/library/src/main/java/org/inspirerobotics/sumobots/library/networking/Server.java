@@ -2,6 +2,7 @@ package org.inspirerobotics.sumobots.library.networking;
 
 import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.Resources;
+import org.inspirerobotics.sumobots.library.gui.Alerts;
 import org.inspirerobotics.sumobots.library.networking.connection.Connection;
 import org.inspirerobotics.sumobots.library.networking.connection.ConnectionListener;
 import org.inspirerobotics.sumobots.library.networking.message.ArchetypalMessages;
@@ -86,6 +87,7 @@ public class Server {
 			return socket;
 		} catch (IOException e) {
 			log.log(Level.SEVERE, "Failed to create ServerSocket", e);
+			Alerts.exceptionAlert(Alerts.ShutdownLevel.ALL, e);
 		}
 		return null;
 	}

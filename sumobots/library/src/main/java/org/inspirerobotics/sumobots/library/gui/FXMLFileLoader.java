@@ -21,8 +21,10 @@ public class FXMLFileLoader {
 		fxmlLoader.setController(controller);
 		fxmlLoader.setRoot(root);
 
-		if (fxmlLoader.getLocation() == null)
-			throw new FXMLFileLoadException("Failed to find file: " + name);
+		if (fxmlLoader.getLocation() == null) {
+			RuntimeException e = new FXMLFileLoadException("Failed to find file " + name);
+			throw e;
+		}
 
 		try {
 			fxmlLoader.load();

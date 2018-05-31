@@ -11,6 +11,7 @@ import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.TimePeriod;
 import org.inspirerobotics.sumobots.library.concurrent.InterThreadMessage;
 import org.inspirerobotics.sumobots.library.concurrent.ThreadChannel;
+import org.inspirerobotics.sumobots.library.gui.Alerts;
 import org.inspirerobotics.sumobots.library.networking.connection.Connection;
 import org.inspirerobotics.sumobots.library.networking.tables.NetworkTable;
 
@@ -35,6 +36,7 @@ public class FieldFrontend extends Application {
 	@Override
 	public void start(Stage s) throws Exception {
 		Thread.currentThread().setName("Frontend Thread");
+		this.stage = s;
 
 		threadChannel = new ThreadChannel();
 
@@ -43,11 +45,7 @@ public class FieldFrontend extends Application {
 		fieldBackend.start();
 		log.fine("Finished starting field thread");
 
-		log.fine("Creating the GUI");
-		this.stage = s;
-		initStage(stage);
 		initGUI();
-		log.fine("Finished Creating the GUI");
 
 		stage.show();
 
@@ -105,8 +103,35 @@ public class FieldFrontend extends Application {
 	}
 
 	private void initGUI() {
+		try {
+			log.fine("Creating the GUI");
+			initStage(stage);
+			initGUIScene();
+			log.fine("Finished Creating the GUI");
+		} catch (Exception e) {
+			log.severe("Failed to load GUI: " + e.getMessage());
+			Alerts.exceptionAlert(Alerts.ShutdownLevel.JAVAFX, e);
+			throw e;
+		}
+	}
+
+	private void initGUIScene() {
 		root = new RootGroup(this, true);
 		stage.setScene(root.toScene());
+	}
+
+	private void initStage(Stage stage) {
+		stage.setTitle("SumoBots FMS");
+		stage.setAlwaysOnTop(false);
+		stage.setMinWidth(700);
+		stage.setMinHeight(400);
+
+		stage.setOnCloseRequest(event -> {
+			log.info("Application Window has been closed");
+			log.info("Closing down Frontend Thread...");
+			stage.hide();
+			Platform.exit();
+		});
 
 		stage.addEventFilter(KeyEvent.KEY_PRESSED, k -> {
 			log.finer("Key Pressed: " + k.getCode());
@@ -124,25 +149,11 @@ public class FieldFrontend extends Application {
 		});
 	}
 
-	private void initStage(Stage stage) {
-		stage.setTitle("SumoBots FMS");
-		stage.setAlwaysOnTop(false);
-		stage.setMinWidth(700);
-		stage.setMinHeight(400);
-
-		stage.setOnCloseRequest(event -> {
-			log.info("Application Window has been closed");
-			threadChannel.add(new InterThreadMessage("exit_app"));
-			log.info("Closing down Frontend Thread...");
-			stage.hide();
-			Platform.exit();
-		});
-	}
-
 	@Override
 	public void stop() throws Exception {
 		super.stop();
 
+		threadChannel.add(new InterThreadMessage("exit_app"));
 		fieldBackend.join();
 	}
 
