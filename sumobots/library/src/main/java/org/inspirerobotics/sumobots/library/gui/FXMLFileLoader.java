@@ -21,13 +21,16 @@ public class FXMLFileLoader {
 		fxmlLoader.setController(controller);
 		fxmlLoader.setRoot(root);
 
-		if (fxmlLoader.getLocation() == null)
-			throw new FXMLFileLoadException("Failed to find file: " + name);
+		if (fxmlLoader.getLocation() == null){
+			Alerts.exceptionAlert(Alerts.ShutdownLevel.ALL, new FXMLFileLoadException("Failed to find file " + name));
+		}
+
 
 		try {
 			fxmlLoader.load();
 		} catch (IOException e) {
 			logger.log(Level.SEVERE, "Failed to load " + name, e);
+			Alerts.exceptionAlert(Alerts.ShutdownLevel.ALL, e);
 		}
 
 		logger.fine("Loaded " + name);

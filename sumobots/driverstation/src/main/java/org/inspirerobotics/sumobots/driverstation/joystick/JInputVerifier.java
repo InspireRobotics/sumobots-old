@@ -29,6 +29,6 @@ public class JInputVerifier {
 			return;
 		}
 
-		Alerts.errorAlert(Alerts.ShutdownLevel.ALL, "Joystick Error", "Failed to load JInput", true);
+		Alerts.errorAlert(Alerts.ShutdownLevel.ALL, "Joystick Error", "Failed to load JInput");
 	}
 }

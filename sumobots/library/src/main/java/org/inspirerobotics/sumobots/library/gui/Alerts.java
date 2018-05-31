@@ -1,23 +1,35 @@
 package org.inspirerobotics.sumobots.library.gui;
 
 import javafx.application.Platform;
-import javafx.scene.control.Alert;
+
+import javax.swing.*;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 public class Alerts {
 
     public enum ShutdownLevel{ALL, JAVAFX, NONE}
 
-    public static void errorAlert(ShutdownLevel shutdownLevel, String name, String desc, boolean waitForShutdown){
-        Alert alert = new Alert(Alert.AlertType.ERROR, desc);
-        alert.setTitle(name);
-        alert.setHeaderText(name);
-
-        if (waitForShutdown)
-            alert.showAndWait();
-        else
-            alert.show();
+    public static void errorAlert(ShutdownLevel shutdownLevel, String name, String desc){
+        JOptionPane.showMessageDialog(null,
+                name + ": " + desc,
+                name,
+                JOptionPane.ERROR_MESSAGE);
 
         shutdown(shutdownLevel);
+    }
+
+    public static void exceptionAlert(ShutdownLevel shutdownLevel, Exception e){
+        errorAlert(shutdownLevel, e.getMessage(), traceToString(e));
+    }
+
+    /**
+     * TODO Test This
+     */
+    private static String traceToString(Exception e){
+        StringWriter sw = new StringWriter();
+        e.printStackTrace(new PrintWriter(sw));
+        return sw.toString();
     }
 
     private static void shutdown(ShutdownLevel shutdownLevel) {
