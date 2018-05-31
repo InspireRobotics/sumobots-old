@@ -1,7 +1,7 @@
 package org.inspirerobotics.sumobots.driverstation.joystick;
 
-import javafx.scene.control.Alert;
 import org.inspirerobotics.sumobots.library.InternalLog;
+import org.inspirerobotics.sumobots.library.gui.Alerts;
 
 import java.util.logging.Logger;
 
@@ -29,10 +29,6 @@ public class JInputVerifier {
 			return;
 		}
 
-		Alert alert = new Alert(Alert.AlertType.ERROR, "Failed to load JInput!");
-		alert.setTitle("Joystick Error");
-		alert.setHeaderText("Joystick Error");
-		alert.showAndWait();
-		System.exit(0);
+		Alerts.errorAlert(Alerts.ShutdownLevel.ALL, "Joystick Error", "Failed to load JInput", true);
 	}
 }
