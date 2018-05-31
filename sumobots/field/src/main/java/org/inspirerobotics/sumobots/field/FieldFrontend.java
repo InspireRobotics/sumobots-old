@@ -111,6 +111,7 @@ public class FieldFrontend extends Application {
 		} catch (Exception e) {
 			log.severe("Failed to load GUI: " + e.getMessage());
 			Alerts.exceptionAlert(Alerts.ShutdownLevel.JAVAFX, e);
+			throw e;
 		}
 	}
 

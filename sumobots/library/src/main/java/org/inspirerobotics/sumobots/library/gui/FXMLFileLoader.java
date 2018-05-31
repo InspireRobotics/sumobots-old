@@ -23,8 +23,6 @@ public class FXMLFileLoader {
 
 		if (fxmlLoader.getLocation() == null) {
 			RuntimeException e = new FXMLFileLoadException("Failed to find file " + name);
-
-			Alerts.exceptionAlert(Alerts.ShutdownLevel.JAVAFX, e);
 			throw e;
 		}
 
@@ -32,7 +30,6 @@ public class FXMLFileLoader {
 			fxmlLoader.load();
 		} catch (IOException e) {
 			logger.log(Level.SEVERE, "Failed to load " + name, e);
-			Alerts.exceptionAlert(Alerts.ShutdownLevel.JAVAFX, e);
 		}
 
 		logger.fine("Loaded " + name);
