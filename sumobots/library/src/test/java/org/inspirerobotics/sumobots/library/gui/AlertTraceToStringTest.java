@@ -6,9 +6,9 @@ import static org.inspirerobotics.sumobots.library.gui.Alerts.traceToString;
 
 public class AlertTraceToStringTest {
 
-    @Test(expected = IllegalArgumentException.class)
-    public void nullExceptionTraceToStringFailsTest(){
-        traceToString(null);
-    }
+	@Test(expected = IllegalArgumentException.class)
+	public void nullExceptionTraceToStringFailsTest() {
+		traceToString(null);
+	}
 
 }

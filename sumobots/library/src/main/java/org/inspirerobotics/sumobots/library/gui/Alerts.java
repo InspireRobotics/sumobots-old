@@ -21,7 +21,7 @@ public class Alerts {
 	}
 
 	public static String traceToString(Exception e) {
-		if(e == null)
+		if (e == null)
 			throw new IllegalArgumentException("Exception cannot be null!");
 
 		StringWriter sw = new StringWriter();
