@@ -20,7 +20,10 @@ public class Alerts {
 		errorAlert(shutdownLevel, e.getMessage(), traceToString(e));
 	}
 
-	private static String traceToString(Exception e) {
+	public static String traceToString(Exception e) {
+		if (e == null)
+			throw new IllegalArgumentException("Exception cannot be null!");
+
 		StringWriter sw = new StringWriter();
 		e.printStackTrace(new PrintWriter(sw));
 		return sw.toString();
