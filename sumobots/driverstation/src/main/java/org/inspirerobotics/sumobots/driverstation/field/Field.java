@@ -36,6 +36,8 @@ public class Field implements ConnectionListener {
 			return true;
 		}
 
+		logger.info("Attempting connection to field at " + ip);
+
 		try {
 			Socket socket = new Socket(ip, Resources.SERVER_PORT);
 			setFieldConnection(new Connection(socket, this));

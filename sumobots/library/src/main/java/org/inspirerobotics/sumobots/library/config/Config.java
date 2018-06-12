@@ -19,7 +19,7 @@ public class Config {
 		try {
 			toml = ConfigLoader.loadToml(name);
 		} catch (IOException e) {
-			logger.warning("Couldn't find config file: " + name);
+			logger.warning("Failed to load config file: " + name + ". Error: " + e.getMessage());
 		}
 
 	}
