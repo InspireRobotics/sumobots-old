@@ -30,21 +30,21 @@ public class InternalMessageHandlingTest {
 	}
 
 	@Test
-	public void pingResponseTest() throws InterruptedException {
+	public void pingResponseTest() {
 		testConnection.handleTestMessage(ArchetypalMessages.ping());
 
 		Assert.assertEquals(MessageType.PONG, testConnection.getLastSentMessage().getType());
 	}
 
 	@Test
-	public void setNameTest() throws InterruptedException {
+	public void setNameTest() {
 		testConnection.handleTestMessage(ArchetypalMessages.setName("Foo"));
 
 		Assert.assertEquals("Foo", testConnection.getConnectionName());
 	}
 
 	@Test
-	public void libraryVersionNonResponseTest() throws InterruptedException {
+	public void libraryVersionNonResponseTest() {
 		testConnection.handleTestMessage(ArchetypalMessages.libraryVersion(false));
 		Message m = testConnection.getLastSentMessage();
 
@@ -53,7 +53,7 @@ public class InternalMessageHandlingTest {
 	}
 
 	@Test
-	public void libraryVersionResponseTest() throws InterruptedException {
+	public void libraryVersionResponseTest() {
 		testConnection.handleTestMessage(ArchetypalMessages.libraryVersion(true));
 		Message m = testConnection.getLastSentMessage();
 
@@ -61,7 +61,7 @@ public class InternalMessageHandlingTest {
 	}
 
 	@Test
-	public void sendNetworkTableUpdateTest() throws InterruptedException {
+	public void sendNetworkTableUpdateTest() {
 		testConnection.setBindedTable(NetworkingTableTest.generateTestNetworkingTable());
 		testConnection.sendNetworkTableUpdates();
 		Message m = testConnection.getLastSentMessage();
@@ -72,7 +72,7 @@ public class InternalMessageHandlingTest {
 	}
 
 	@Test
-	public void networkTableUpdateReceivedTest() throws InterruptedException {
+	public void networkTableUpdateReceivedTest() {
 		testConnection.handleTestMessage(NetworkingTableTest.generateTestMessage());
 
 		Assert.assertEquals("Bar", testConnection.getTable().get("Foo"));
