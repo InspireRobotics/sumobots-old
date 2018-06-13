@@ -9,6 +9,7 @@
         <module>driverstation</module>
         <module>field</module>
         <module>library</module>
+        <module>display</module>
     </modules>
     <groupId>org.inspirerobotics</groupId>
     <artifactId>sumobots</artifactId>
