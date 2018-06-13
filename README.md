@@ -9,12 +9,13 @@ To build executable jars run the following command:
 ``` cmd
 $ build.bat
 ```
-This will build the executable jars, delete the unexecutable librarys, and rename the librarys to 'field.jar' and 'driverstation.jar' respectively.
+This will build the executable jars, delete the unexecutable librarys, and rename the librarys to 'field.jar', 'display.jar' and 'driverstation.jar' respectively.
 
 Once you have done that you can run each module by running the following command
 ``` cmd
 $ run field
 $ run driverstation
+$ run display
 ```
 # Versions
 There are multiple versions of the Sumobot code. __The current version, 0.2, is still being developed and is planned to be released by June 1st, 2018__. Following the 0.2 release will be the 0.3 release which is aimed for July 4th, 2018. To keep updated on the current version/future versions check the GitHub issue list. All of the green labels are version related! 
