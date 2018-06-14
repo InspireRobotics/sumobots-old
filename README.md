@@ -36,17 +36,10 @@ Please note the tests for the repository. Every time a commit is made to the mas
 In addition to any commits, Travis CI will also run the same checks on every pull request. GitHub will not allow a merge to be made unless all checks pass!
 
 ### How Do I make sure my code will pass the tests?
-Open the root directory of the repository then run:
+Open the root directory of the repository then run the verify commit script:
 
 ```cmd
-$ cd sumobots
-$ mvn test
-$ mvn spotless:check
-```
-
-If __spotless:check__ fails you can run the following command to format all code:
-```cmd
-$ mvn spotless:apply
+$ verifyc.bat
 ```
 
 # Questions?
