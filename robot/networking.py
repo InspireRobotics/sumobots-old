@@ -74,7 +74,7 @@ def on_data_received(data, connection):
 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 # Bind the socket to the port
-server_address = ('localhost', 10489)
+server_address = ('0.0.0.0', 10489)
 print('starting up on {} port {}'.format(*server_address))
 sock.bind(server_address)
 
