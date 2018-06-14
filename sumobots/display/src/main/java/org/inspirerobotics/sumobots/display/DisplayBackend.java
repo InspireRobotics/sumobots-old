@@ -8,56 +8,56 @@ import java.util.logging.Logger;
 
 public class DisplayBackend extends Thread {
 
-    private static final String threadName = "Display Backend";
-    private final Logger logger = InternalLog.getLogger();
-    private final ThreadChannel threadChannel;
+	private static final String threadName = "Display Backend";
+	private final Logger logger = InternalLog.getLogger();
+	private final ThreadChannel threadChannel;
 
-    private boolean running;
+	private boolean running;
 
-    public DisplayBackend(ThreadChannel threadChannel){
-        this.threadChannel = threadChannel;
-        this.setName(threadName);
-    }
+	public DisplayBackend(ThreadChannel threadChannel) {
+		this.threadChannel = threadChannel;
+		this.setName(threadName);
+	}
 
-    @Override
-    public void run() {
-        logger.info("Starting backend thread");
-        running = true;
+	@Override
+	public void run() {
+		logger.info("Starting backend thread");
+		running = true;
 
-        while(running){
-            update();
-        }
-    }
+		while (running) {
+			update();
+		}
+	}
 
-    private void shutdown(){
-        if(!running)
-            logger.severe("The backend thread was shutdown while it was running");
+	private void shutdown() {
+		if (!running)
+			logger.severe("The backend thread was shutdown while it was running");
 
-        logger.info("Shutting down backend...");
-        running = false;
-        return;
-    }
+		logger.info("Shutting down backend...");
+		running = false;
+		return;
+	}
 
-    private void update() {
-        handleIncomingMessages();
-    }
+	private void update() {
+		handleIncomingMessages();
+	}
 
-    private void handleIncomingMessages() {
-        InterThreadMessage message = null;
+	private void handleIncomingMessages() {
+		InterThreadMessage message = null;
 
-        while((message = threadChannel.poll()) != null && running){
-            logger.fine("Received message from frontend: " + formatMessageToString(message));
-            onMessageReceived(message);
-        }
-    }
+		while ((message = threadChannel.poll()) != null && running) {
+			logger.fine("Received message from frontend: " + formatMessageToString(message));
+			onMessageReceived(message);
+		}
+	}
 
-    private String formatMessageToString(InterThreadMessage message) {
-        return message.getName() + (message.getData() == null ? "":(": " + message.getData()));
-    }
+	private String formatMessageToString(InterThreadMessage message) {
+		return message.getName() + (message.getData() == null ? "" : (": " + message.getData()));
+	}
 
-    private void onMessageReceived(InterThreadMessage message) {
-        if(message.getName().equals("shutdown")){
-            shutdown();
-        }
-    }
+	private void onMessageReceived(InterThreadMessage message) {
+		if (message.getName().equals("shutdown")) {
+			shutdown();
+		}
+	}
 }
