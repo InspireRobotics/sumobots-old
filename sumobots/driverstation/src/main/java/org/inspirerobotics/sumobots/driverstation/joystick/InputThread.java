@@ -83,7 +83,7 @@ public class InputThread extends Thread implements JoystickListener {
 		Controller controller = null;
 
 		for (int i = 0; i < controllers.length; i++) {
-			if (controllers[i].getName().equals("Controller (Gamepad F310)")) {
+			if (controllers[i].getName().contains("F310")) {
 				controller = controllers[i];
 				break;
 			}
