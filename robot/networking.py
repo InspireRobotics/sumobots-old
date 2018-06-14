@@ -9,7 +9,12 @@ name = "pybot"
 
 def bytes_to_json(data):
     # Remove the first two bytes and last byte which are details about the message
-    json_string = str(data[2:-1], 'utf-8')
+    try:
+        json_string = str(data[2:-1], 'utf-8')
+    except UnicodeDecodeError:
+        print ("test");
+        return None;
+
     return json.loads(json_string)
 
 
@@ -65,7 +70,17 @@ def handle_message(json, connection):
 
 def on_data_received(data, connection):
     print('received {!r}'.format(data))
-    json = bytes_to_json(data)
+
+    json = None;
+
+    try:
+        json = bytes_to_json(data)
+    except ValueError:
+        json = None;
+
+    if json is None:
+        print("Couldn't format JSON:", data);
+        return;
 
     handle_message(json, connection)
 
