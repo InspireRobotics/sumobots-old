@@ -1,10 +1,5 @@
 package org.inspirerobotics.sumobots.driverstation;
 
-import java.util.HashMap;
-import java.util.Map.Entry;
-import java.util.Random;
-import java.util.logging.Logger;
-
 import org.inspirerobotics.sumobots.driverstation.config.Settings;
 import org.inspirerobotics.sumobots.driverstation.field.Field;
 import org.inspirerobotics.sumobots.driverstation.joystick.JoystickThreadCommunicator;
@@ -18,6 +13,11 @@ import org.inspirerobotics.sumobots.library.networking.message.ArchetypalMessage
 import org.inspirerobotics.sumobots.library.networking.message.Message;
 import org.inspirerobotics.sumobots.library.networking.message.MessageType;
 import org.inspirerobotics.sumobots.library.networking.tables.NetworkTable;
+
+import java.util.HashMap;
+import java.util.Map.Entry;
+import java.util.Random;
+import java.util.logging.Logger;
 
 public class DriverStationBackend extends Thread {
 
@@ -147,7 +147,7 @@ public class DriverStationBackend extends Thread {
 		if (robot.inConnectionAttemptTimeout())
 			return;
 
-		if (!robot.attemptConnection("localhost")) {
+		if (!robot.attemptConnection(settings.robotIP())) {
 			logger.info("Failed to connect to the robot! Waiting 3 seconds...");
 		}
 	}

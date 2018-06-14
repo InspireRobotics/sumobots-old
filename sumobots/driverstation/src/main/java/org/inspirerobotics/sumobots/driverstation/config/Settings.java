@@ -24,6 +24,10 @@ public class Settings {
 		return Level.parse(loadDefaultString("logLevel", "FINE"));
 	}
 
+	public String robotIP() {
+		return loadDefaultString("robotIP", "localhost");
+	}
+
 	public String fieldIP() {
 		return loadDefaultString("fieldIP", "localhost");
 	}
