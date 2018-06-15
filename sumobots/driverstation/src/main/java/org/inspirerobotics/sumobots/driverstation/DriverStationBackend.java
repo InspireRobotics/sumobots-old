@@ -221,6 +221,7 @@ public class DriverStationBackend extends Thread {
 	}
 
 	public void shutdown() {
+		joystickThreadCommunicator.shutdown();
 		field.shutdown();
 		if (robot.getRobotConnection() != null)
 			robot.getRobotConnection().endConnection();
