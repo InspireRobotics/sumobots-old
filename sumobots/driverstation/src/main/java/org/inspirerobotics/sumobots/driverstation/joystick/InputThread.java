@@ -67,7 +67,7 @@ public class InputThread extends Thread implements JoystickListener {
 	}
 
 	private void sleepCatchException(long millis) {
-		if(!running)
+		if (!running)
 			return;
 
 		try {

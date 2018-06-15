@@ -31,7 +31,7 @@ public class JoystickThreadCommunicator {
 		this.driverStationBackend = dsBack;
 	}
 
-	public void shutdown(){
+	public void shutdown() {
 		logger.fine("Interrupting joystick thread.");
 		thread.interrupt();
 	}
