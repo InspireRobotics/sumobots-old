@@ -1,32 +1,33 @@
 package org.inspirerobotics.sumobots.driverstation.joystick;
 
-import java.lang.reflect.Constructor;
-import java.util.logging.Logger;
-
+import net.java.games.input.Controller;
+import net.java.games.input.ControllerEnvironment;
 import org.inspirerobotics.sumobots.driverstation.joystick.gamepad.Gamepad;
 import org.inspirerobotics.sumobots.driverstation.joystick.gamepad.JoystickListener;
 import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.concurrent.InterThreadMessage;
 import org.inspirerobotics.sumobots.library.concurrent.ThreadChannel;
 
-import net.java.games.input.Controller;
-import net.java.games.input.ControllerEnvironment;
+import java.lang.reflect.Constructor;
+import java.util.logging.Logger;
 
 public class InputThread extends Thread implements JoystickListener {
 
 	private Logger log = InternalLog.getLogger();
-
+	private boolean running;
 	private ThreadChannel threadChannel;
 
 	public InputThread(ThreadChannel threadChannel) {
-		this.setDaemon(true);
+		this.setDaemon(false);
 
 		this.setName("Joystick Thread");
 		this.threadChannel = threadChannel;
 	}
 
 	public void run() {
-		while (true) {
+		running = true;
+
+		while (running) {
 			Controller controller = getController();
 
 			if (controller == null) {
@@ -38,6 +39,8 @@ public class InputThread extends Thread implements JoystickListener {
 				threadChannel.add(new InterThreadMessage("joystick_status", false));
 			}
 		}
+
+		log.info("Joystick thread shutdown");
 	}
 
 	private void runMainLoop(Controller controller) {
@@ -45,7 +48,7 @@ public class InputThread extends Thread implements JoystickListener {
 
 		Gamepad gamepad = new Gamepad(controller, this);
 
-		while (true) {
+		while (running) {
 			if (!gamepad.poll()) {
 				log.warning("Lost the controller!");
 				threadChannel.add(new InterThreadMessage("input_values", null));
@@ -63,11 +66,15 @@ public class InputThread extends Thread implements JoystickListener {
 		threadChannel.add(new InterThreadMessage("input_values", p.getInputValues()));
 	}
 
-	private static void sleepCatchException(long millis) {
+	private void sleepCatchException(long millis) {
+		if (!running)
+			return;
+
 		try {
 			Thread.sleep(millis);
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			running = false;
+			log.warning("Input thread shutdown while sleeping!");
 		}
 	}
 

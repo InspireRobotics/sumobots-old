@@ -1,13 +1,13 @@
 package org.inspirerobotics.sumobots.driverstation.joystick;
 
-import java.util.HashMap;
-import java.util.logging.Logger;
-
 import org.inspirerobotics.sumobots.driverstation.DriverStationBackend;
 import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.concurrent.InterThreadMessage;
 import org.inspirerobotics.sumobots.library.concurrent.ThreadChannel;
 import org.inspirerobotics.sumobots.library.networking.tables.NetworkTable;
+
+import java.util.HashMap;
+import java.util.logging.Logger;
 
 public class JoystickThreadCommunicator {
 
@@ -29,6 +29,11 @@ public class JoystickThreadCommunicator {
 		thread.start();
 
 		this.driverStationBackend = dsBack;
+	}
+
+	public void shutdown() {
+		logger.fine("Interrupting joystick thread.");
+		thread.interrupt();
 	}
 
 	public void update() {
