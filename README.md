@@ -1,5 +1,6 @@
 # Sumobots
 [![Build Status](https://travis-ci.org/InspireRobotics/sumobots.svg?branch=master)](https://travis-ci.org/InspireRobotics/sumobots)
+[![Build status](https://ci.appveyor.com/api/projects/status/1t9x73sn30a554pb/branch/master?svg=true)](https://ci.appveyor.com/project/DevOrc/sumobots/branch/master)
 
 This repository has all of the code for the Inspire Robotics Sumobots competition. This includes the FMS code, driver station code, and robot code. 
 
