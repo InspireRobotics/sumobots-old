@@ -14,61 +14,61 @@ import java.util.logging.Logger;
 
 public class Field implements ConnectionListener {
 
-    private final Logger logger = InternalLog.getLogger();
-    private final DisplayBackend displayBackend;
-    private Connection fieldConnection;
+	private final Logger logger = InternalLog.getLogger();
+	private final DisplayBackend displayBackend;
+	private Connection fieldConnection;
 
-    public Field(DisplayBackend displayBackend) {
-        this.displayBackend = displayBackend;
-    }
+	public Field(DisplayBackend displayBackend) {
+		this.displayBackend = displayBackend;
+	}
 
-    public boolean attemptConnection(String ip) {
-        logger.fine("Attempting Field Connection...");
+	public boolean attemptConnection(String ip) {
+		logger.fine("Attempting Field Connection...");
 
-        try {
-            Socket socket = createSocket(ip);
+		try {
+			Socket socket = createSocket(ip);
 
-            if (!socket.isConnected())
-                throw new IOException();
+			if (!socket.isConnected())
+				throw new IOException();
 
-            return true;
-        } catch (IOException e) {
-            logger.fine("E: " + e);
-        }
-        return false;
-    }
+			return true;
+		} catch (IOException e) {
+			logger.fine("E: " + e);
+		}
+		return false;
+	}
 
-    private Socket createSocket(String ip) throws IOException {
-        Socket socket = new Socket();
-        socket.setSoTimeout(Resources.SOCKET_TIMEOUT);
-        socket.connect(new InetSocketAddress(ip, Resources.DISPLAY_PORT), Resources.SOCKET_TIMEOUT);
+	private Socket createSocket(String ip) throws IOException {
+		Socket socket = new Socket();
+		socket.setSoTimeout(Resources.SOCKET_TIMEOUT);
+		socket.connect(new InetSocketAddress(ip, Resources.DISPLAY_PORT), Resources.SOCKET_TIMEOUT);
 
-        return socket;
-    }
+		return socket;
+	}
 
-    public void update(){
-        if(connected() == false)
-            return;
+	public void update() {
+		if (connected() == false)
+			return;
 
-        fieldConnection.update();
-    }
+		fieldConnection.update();
+	}
 
-    @Override
-    public void receivedMessage(Message message, Connection connection) {
+	@Override
+	public void receivedMessage(Message message, Connection connection) {
 
-    }
+	}
 
-    public void shutdown() {
-        if (fieldConnection != null)
-            fieldConnection.endConnection();
-    }
+	public void shutdown() {
+		if (fieldConnection != null)
+			fieldConnection.endConnection();
+	}
 
-    public boolean connected() {
-        if (fieldConnection == null) {
-            return false;
-        } else if (fieldConnection.isClosed()) {
-            return false;
-        }
-        return true;
-    }
+	public boolean connected() {
+		if (fieldConnection == null) {
+			return false;
+		} else if (fieldConnection.isClosed()) {
+			return false;
+		}
+		return true;
+	}
 }
