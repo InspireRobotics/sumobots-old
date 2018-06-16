@@ -1,6 +1,5 @@
 package org.inspirerobotics.sumobots.field.util;
 
-import org.inspirerobotics.sumobots.field.util.AudioEffect;
 import org.junit.Test;
 
 import java.io.FileNotFoundException;
@@ -16,6 +15,11 @@ public class AudioClipTest {
 	@Test
 	public void testStartSound() throws IOException {
 		AudioEffect.createAudioStream("start.wav");
+	}
+
+	@Test
+	public void testDisableRobotSound() throws IOException {
+		AudioEffect.createAudioStream("disable_robot.wav");
 	}
 
 	@Test(expected = FileNotFoundException.class)

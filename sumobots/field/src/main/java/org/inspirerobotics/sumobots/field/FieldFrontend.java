@@ -179,6 +179,8 @@ public class FieldFrontend extends Application {
 
 	public void disable(String name) {
 		threadChannel.add(new InterThreadMessage("disable_ds", name));
+
+		AudioEffect.play("disable_robot.wav");
 	}
 
 	private void sendTimePeriodRequestToBackend(TimePeriod timePeriod) {

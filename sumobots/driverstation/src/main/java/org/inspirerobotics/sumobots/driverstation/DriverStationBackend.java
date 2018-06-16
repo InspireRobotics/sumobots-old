@@ -157,7 +157,9 @@ public class DriverStationBackend extends Thread {
 		sendMessageToFrontend(new InterThreadMessage("robot_conn_status", false));
 
 		logger.info("Lost Connection to Field!");
-		robot.getRobotConnection().endConnection();
+
+		if (robot.getRobotConnection() != null)
+			robot.getRobotConnection().endConnection();
 		field.updateMatchStatus(ArchetypalMessages.enterNewMatchPeriod(TimePeriod.DISABLED));
 	}
 
