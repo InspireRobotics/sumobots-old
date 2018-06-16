@@ -5,6 +5,7 @@ import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import org.inspirerobotics.sumobots.display.gui.SceneManager;
 import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.Resources;
 import org.inspirerobotics.sumobots.library.concurrent.InterThreadMessage;
@@ -18,6 +19,7 @@ public class DisplayFrontend extends Application {
 	private final Logger logger = InternalLog.getLogger();
 	private final ThreadChannel threadChannel = new ThreadChannel();
 	private final DisplayBackend displayBackend = new DisplayBackend(threadChannel.createPair());
+	private SceneManager sceneManager;
 	private Stage stage;
 
 	@Override
@@ -26,6 +28,7 @@ public class DisplayFrontend extends Application {
 		logger.info("Initializing the display...");
 		this.displayBackend.start();
 		this.stage = primaryStage;
+		this.sceneManager = new SceneManager();
 
 		initStage(stage);
 		logger.info("Display initialization complete...");
@@ -34,6 +37,7 @@ public class DisplayFrontend extends Application {
 	private void initStage(Stage stage) {
 		stage.setTitle("FMS Display System: " + Resources.LIBRARY_VERSION);
 		stage.setOnCloseRequest(new FrontendShutdownHandler(this));
+		stage.setScene(sceneManager.getNoFieldScene());
 		stage.show();
 	}
 

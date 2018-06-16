@@ -1,5 +1,6 @@
 package org.inspirerobotics.sumobots.field;
 
+import org.inspirerobotics.sumobots.field.display.DisplayServer;
 import org.inspirerobotics.sumobots.field.driverstation.DriverStationServer;
 import org.inspirerobotics.sumobots.field.util.MatchController;
 import org.inspirerobotics.sumobots.library.InternalLog;
@@ -20,6 +21,8 @@ public class FieldBackend extends Thread {
 
 	private final Logger log = InternalLog.getLogger();
 
+	private final DisplayServer displayServer;
+
 	private boolean running = true;
 
 	private NetworkTable internalNetworkTable = new NetworkTable();
@@ -33,6 +36,7 @@ public class FieldBackend extends Thread {
 		this.channel = tc;
 
 		matchController = new MatchController(this);
+		displayServer = new DisplayServer(this);
 	}
 
 	@Override
@@ -43,6 +47,7 @@ public class FieldBackend extends Thread {
 
 		while (running) {
 			server.update();
+			displayServer.update();
 
 			sendConnectionsToFrontend();
 			updateLoopTime();

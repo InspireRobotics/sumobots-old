@@ -30,8 +30,8 @@ public class Server {
 
 	private final String name;
 
-	public Server(ConnectionListener cl, String name) {
-		serverSocket = createServerSocket();
+	public Server(ConnectionListener cl, String name, int port) {
+		serverSocket = createServerSocket(port);
 		log.info("Started Server on " + serverSocket.getInetAddress() + " on port " + serverSocket.getLocalPort());
 		this.cl = cl;
 		this.name = name;
@@ -80,9 +80,9 @@ public class Server {
 
 	}
 
-	private ServerSocket createServerSocket() {
+	private ServerSocket createServerSocket(int port) {
 		try {
-			ServerSocket socket = new ServerSocket(Resources.SERVER_PORT, 20, InetAddress.getByName("0.0.0.0"));
+			ServerSocket socket = new ServerSocket(port, 20, InetAddress.getByName("0.0.0.0"));
 			socket.setSoTimeout(Resources.SOCKET_TIMEOUT);
 			return socket;
 		} catch (IOException e) {

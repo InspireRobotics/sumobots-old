@@ -1,6 +1,7 @@
 package org.inspirerobotics.sumobots.field.driverstation;
 
 import org.inspirerobotics.sumobots.library.InternalLog;
+import org.inspirerobotics.sumobots.library.Resources;
 import org.inspirerobotics.sumobots.library.TimePeriod;
 import org.inspirerobotics.sumobots.library.networking.Server;
 import org.inspirerobotics.sumobots.library.networking.connection.Connection;
@@ -14,7 +15,7 @@ public class DriverStationServer extends Server {
 	private final Logger log = InternalLog.getLogger();
 
 	public DriverStationServer() {
-		super(new DriverStationListener(), "Field");
+		super(new DriverStationListener(), "Field", Resources.SERVER_PORT);
 	}
 
 	public void disableDS(String name) {
