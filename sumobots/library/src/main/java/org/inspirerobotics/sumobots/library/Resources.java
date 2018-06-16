@@ -10,6 +10,8 @@ public class Resources {
 
 	public static final int ROBOT_PORT = 10489;
 
+	public static final int DISPLAY_PORT = 14772;
+
 	public static final String EOT = String.valueOf((char) 4);
 
 	public static final int SOCKET_TIMEOUT = 1;
