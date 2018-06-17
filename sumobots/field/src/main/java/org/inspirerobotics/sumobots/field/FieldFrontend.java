@@ -96,6 +96,9 @@ public class FieldFrontend extends Application {
 			case "update_internal_table":
 				root.getGameTab().setInternalNetwTable((NetworkTable) m.getData());
 				break;
+			case "display_connection":
+				root.getGameTab().getDisplayPane().setConnectionStatus((boolean) m.getData());
+				break;
 			default:
 				log.warning("Unknown Message Recieved on Frontend: " + name);
 				break;
@@ -123,8 +126,8 @@ public class FieldFrontend extends Application {
 	private void initStage(Stage stage) {
 		stage.setTitle("SumoBots FMS");
 		stage.setAlwaysOnTop(false);
-		stage.setMinWidth(700);
-		stage.setMinHeight(400);
+		stage.setMinWidth(1000);
+		stage.setMinHeight(1000);
 
 		stage.setOnCloseRequest(event -> {
 			log.info("Application Window has been closed");

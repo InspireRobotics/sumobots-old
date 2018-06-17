@@ -306,4 +306,7 @@ public class GameTab extends AnchorPane {
 		this.internalNetwTable = internalNetwTable;
 	}
 
+	public DisplayPane getDisplayPane() {
+		return displayPane;
+	}
 }
