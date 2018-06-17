@@ -36,7 +36,7 @@
 								</TableView>
 							</bottom>
 							<center>
-								<SplitPane dividerPositions="0.5" styleClass="split-pane">
+								<SplitPane fx:id="centralSplitPane" dividerPositions="0.5" styleClass="split-pane">
 									<items>
 										<VBox styleClass="stdGrayBack">
 											<children>
@@ -55,7 +55,6 @@
 												</TableView>
 											</children>
 										</VBox>
-										<AnchorPane prefHeight="200.0" prefWidth="200.0" />
 									</items>
 								</SplitPane>
 							</center>

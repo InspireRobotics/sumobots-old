@@ -28,11 +28,16 @@ public class GameTab extends AnchorPane {
 
 	private ControlPane controlPane;
 
+	private DisplayPane displayPane;
+
 	@FXML
 	public BorderPane centralBorderPane;
 
 	@FXML
 	public BorderPane mainBorderPane;
+
+	@FXML
+	private SplitPane centralSplitPane;
 
 	public MatchStatusBar matchStatusBar;
 
@@ -66,10 +71,17 @@ public class GameTab extends AnchorPane {
 
 		initTables();
 		initStatBar();
+		initDisplayPane();
 
 		netwTableSelector.getItems().add("Internal Table");
 		netwTableSelector.getSelectionModel().select(0);
 		logger.fine("Initialized GameTab!");
+	}
+
+	private void initDisplayPane() {
+		displayPane = new DisplayPane();
+
+		centralSplitPane.getItems().add(displayPane);
 	}
 
 	private void initStatBar() {
