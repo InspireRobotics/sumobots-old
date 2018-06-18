@@ -11,39 +11,59 @@ import org.inspirerobotics.sumobots.library.networking.message.Message;
 
 import java.util.logging.Logger;
 
-public class DisplayServer implements ConnectionListener {
+public class DisplayServer extends Server {
 
 	private final Logger log = InternalLog.getLogger();
 	private final FieldBackend fieldBackend;
-	private final Server server;
 	private Connection connection;
 
 	public DisplayServer(FieldBackend fieldBackend) {
+		super(new DisplayListener(), "display_server", Resources.DISPLAY_PORT);
 		this.fieldBackend = fieldBackend;
-
-		this.server = new Server(this, "", Resources.DISPLAY_PORT);
 	}
+
+	@Override
+	protected void onConnectionCreated(Connection c) {
+		if (connection != null) {
+			log.severe("Two displays connected at once... Shutting down second connection!");
+			c.endConnection();
+			return;
+		}
+
+		super.onConnectionCreated(c);
+
+		connection = c;
+		sendConnectionStatusToFrontend();
+	}
+
+	public void update() {
+		super.update();
+
+		if (connection == null)
+			return;
+
+		if (connection.isClosed()) {
+			log.warning("Lost display connection....");
+			connection = null;
+			sendConnectionStatusToFrontend();
+		}
+	}
+
+	private void sendConnectionStatusToFrontend() {
+		if (connection != null) {
+			InterThreadMessage m = new InterThreadMessage("display_connection", true);
+			fieldBackend.sendMessageToFrontend(m);
+		} else {
+			InterThreadMessage m = new InterThreadMessage("display_connection", false);
+			fieldBackend.sendMessageToFrontend(m);
+		}
+	}
+}
+
+class DisplayListener implements ConnectionListener {
 
 	@Override
 	public void receivedMessage(Message message, Connection connection) {
 
-	}
-
-	public void update() {
-		server.update();
-
-		if (connection == null) {
-			if (!server.getConnections().isEmpty()) {
-				InterThreadMessage m = new InterThreadMessage("display_connection", true);
-				fieldBackend.sendMessageToFrontend(m);
-				connection = server.getConnections().get(0);
-			}
-		} else {
-			if (server.getConnections().isEmpty()) {
-				InterThreadMessage m = new InterThreadMessage("display_connection", false);
-				fieldBackend.sendMessageToFrontend(m);
-				connection = null;
-			}
-		}
 	}
 }

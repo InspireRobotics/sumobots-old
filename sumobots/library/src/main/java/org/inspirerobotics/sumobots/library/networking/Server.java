@@ -66,11 +66,10 @@ public class Server {
 			while ((s = serverSocket.accept()) != null) {
 				Connection c = Connection.fromSocket(s, cl);
 
-				// imediately send a request to verify the library version
-				c.sendMessage(ArchetypalMessages.libraryVersion(false));
-				c.sendMessage(ArchetypalMessages.setName(name));
+				// immediately send a request to verify the library version
 				connections.add(c);
 				log.info("Found Connection: " + s.getInetAddress() + "\t" + s.getLocalAddress());
+				onConnectionCreated(c);
 			}
 		} catch (SocketTimeoutException e) {
 			// If there is a timeout, then no connections are waiting to join...
@@ -78,6 +77,11 @@ public class Server {
 			log.log(Level.SEVERE, "Failed to Accept Connection:" + e.getMessage());
 		}
 
+	}
+
+	protected void onConnectionCreated(Connection c) {
+		c.sendMessage(ArchetypalMessages.libraryVersion(false));
+		c.sendMessage(ArchetypalMessages.setName(name));
 	}
 
 	private ServerSocket createServerSocket(int port) {
