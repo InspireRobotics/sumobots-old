@@ -4,6 +4,8 @@ import org.inspirerobotics.sumobots.display.field.Field;
 import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.concurrent.InterThreadMessage;
 import org.inspirerobotics.sumobots.library.concurrent.ThreadChannel;
+import org.inspirerobotics.sumobots.library.networking.message.Message;
+import org.inspirerobotics.sumobots.library.networking.message.MessageType;
 
 import java.util.logging.Logger;
 
@@ -67,7 +69,7 @@ public class DisplayBackend extends Thread {
 		sendMessageToFrontend(m);
 	}
 
-	private void sendMessageToFrontend(InterThreadMessage m) {
+	public void sendMessageToFrontend(InterThreadMessage m) {
 		threadChannel.add(m);
 	}
 
@@ -108,6 +110,21 @@ public class DisplayBackend extends Thread {
 	private void onMessageReceived(InterThreadMessage message) {
 		if (message.getName().equals("shutdown")) {
 			shutdown();
+		} else if (message.getName().equals("scenes")) {
+			sendScenes(message);
 		}
+	}
+
+	private void sendScenes(InterThreadMessage message) {
+		String[] scenes = (String[]) message.getData();
+
+		Message m = new Message(MessageType.SCENE_UPDATE);
+		m.addData("amount", "" + scenes.length);
+
+		for (int i = 0; i < scenes.length; i++) {
+			m.addData("scene" + i, scenes[i]);
+		}
+
+		field.send(m);
 	}
 }

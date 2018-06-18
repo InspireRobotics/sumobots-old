@@ -99,6 +99,10 @@ public class FieldFrontend extends Application {
 			case "display_connection":
 				root.getGameTab().getDisplayPane().setConnectionStatus((boolean) m.getData());
 				break;
+			case "scenes":
+				String[] scenes = (String[]) m.getData();
+				root.getGameTab().getDisplayPane().setScenes(scenes);
+				break;
 			default:
 				log.warning("Unknown Message Recieved on Frontend: " + name);
 				break;
@@ -150,6 +154,10 @@ public class FieldFrontend extends Application {
 				}
 			}
 		});
+	}
+
+	public void sendMessageToBackend(InterThreadMessage interThreadMessage) {
+		threadChannel.add(interThreadMessage);
 	}
 
 	@Override

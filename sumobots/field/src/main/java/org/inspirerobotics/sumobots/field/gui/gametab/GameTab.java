@@ -71,15 +71,15 @@ public class GameTab extends AnchorPane {
 
 		initTables();
 		initStatBar();
-		initDisplayPane();
+		initDisplayPane(ff);
 
 		netwTableSelector.getItems().add("Internal Table");
 		netwTableSelector.getSelectionModel().select(0);
 		logger.fine("Initialized GameTab!");
 	}
 
-	private void initDisplayPane() {
-		displayPane = new DisplayPane();
+	private void initDisplayPane(FieldFrontend ff) {
+		displayPane = new DisplayPane(ff);
 
 		centralSplitPane.getItems().add(displayPane);
 	}

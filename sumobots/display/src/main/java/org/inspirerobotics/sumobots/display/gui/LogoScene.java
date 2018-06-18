@@ -41,8 +41,6 @@ class LogoPane extends AnchorPane {
 	public void resize(double width, double height) {
 		super.resize(width, height);
 
-		System.out.println("width = [" + width + "], height = [" + height + "]");
-
 		if (width > 1000 && height > 1000) {
 			imageView.setImage(large);
 			imageView.setFitHeight(large.getHeight());

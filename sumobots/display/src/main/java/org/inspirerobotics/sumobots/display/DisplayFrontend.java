@@ -36,6 +36,11 @@ public class DisplayFrontend extends Application {
 		startUpdateLoop();
 	}
 
+	private void sendScenes(String[] sceneNameArray) {
+		InterThreadMessage message = new InterThreadMessage("scenes", sceneNameArray);
+		threadChannel.add(message);
+	}
+
 	private void startUpdateLoop() {
 		Platform.runLater(new Runnable() {
 			@Override
@@ -71,9 +76,12 @@ public class DisplayFrontend extends Application {
 				stage.setScene(sceneManager.getLogoScene());
 				stage.show();
 				logger.fine("Showing logo scene");
+				sendScenes(sceneManager.getSceneNameArray());
 			} else {
 				stage.setScene(sceneManager.getNoFieldScene());
 			}
+		} else if (message.getName().equals("select_scene")) {
+			sceneManager.showScene((String) message.getData(), stage);
 		}
 	}
 
