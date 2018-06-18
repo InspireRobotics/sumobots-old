@@ -31,6 +31,7 @@ public class Field implements ConnectionListener {
 			if (!socket.isConnected())
 				throw new IOException();
 
+			fieldConnection = Connection.fromSocket(socket, this);
 			return true;
 		} catch (IOException e) {
 			logger.fine("E: " + e);

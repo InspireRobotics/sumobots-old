@@ -32,6 +32,49 @@ public class DisplayFrontend extends Application {
 
 		initStage(stage);
 		logger.info("Display initialization complete...");
+
+		startUpdateLoop();
+	}
+
+	private void startUpdateLoop() {
+		Platform.runLater(new Runnable() {
+			@Override
+			public void run() {
+				update();
+				Platform.runLater(this);
+			}
+		});
+	}
+
+	private void update() {
+		handleIncomingMessages();
+	}
+
+	private void handleIncomingMessages() {
+		InterThreadMessage message = null;
+
+		while ((message = threadChannel.poll()) != null) {
+			logger.fine("Received message from backend: " + formatMessageToString(message));
+			onMessageReceived(message);
+		}
+	}
+
+	private String formatMessageToString(InterThreadMessage message) {
+		return message.getName() + (message.getData() == null ? "" : (": " + message.getData()));
+	}
+
+	private void onMessageReceived(InterThreadMessage message) {
+		if (message.getName().equals("conn_status")) {
+			boolean connected = (boolean) message.getData();
+
+			if (connected) {
+				stage.setScene(sceneManager.getLogoScene());
+				stage.show();
+				logger.fine("Showing logo scene");
+			} else {
+				stage.setScene(sceneManager.getNoFieldScene());
+			}
+		}
 	}
 
 	private void initStage(Stage stage) {

@@ -40,6 +40,7 @@ public class DisplayBackend extends Thread {
 
 			if (field.attemptConnection("localhost")) {
 				logger.info("Connected to the field... Starting main loop");
+				onFieldConnectionAccepted();
 				return;
 			}
 
@@ -55,6 +56,21 @@ public class DisplayBackend extends Thread {
 		}
 	}
 
+	private void onFieldConnectionAccepted() {
+		InterThreadMessage m = new InterThreadMessage("conn_status", true);
+		sendMessageToFrontend(m);
+	}
+
+	private void onFieldConnectionLost() {
+		logger.info("Lost field connection");
+		InterThreadMessage m = new InterThreadMessage("conn_status", false);
+		sendMessageToFrontend(m);
+	}
+
+	private void sendMessageToFrontend(InterThreadMessage m) {
+		threadChannel.add(m);
+	}
+
 	private void shutdown() {
 		if (!running)
 			logger.severe("The backend thread was shutdown while it wasn't running");
@@ -67,6 +83,12 @@ public class DisplayBackend extends Thread {
 
 	private void update() {
 		handleIncomingMessages();
+
+		if (field.connected() == false) {
+			onFieldConnectionLost();
+			connectToField();
+		}
+
 		field.update();
 	}
 
