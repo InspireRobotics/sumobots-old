@@ -22,7 +22,6 @@ public class DisplayFrontend extends Application {
 	private final ThreadChannel threadChannel = new ThreadChannel();
 	private final DisplayBackend displayBackend = new DisplayBackend(threadChannel.createPair());
 	private SceneManager sceneManager;
-	private boolean fullScreen = false;
 	private Stage stage;
 
 	@Override
@@ -31,7 +30,7 @@ public class DisplayFrontend extends Application {
 		logger.info("Initializing the display...");
 		this.displayBackend.start();
 		this.stage = primaryStage;
-		this.sceneManager = new SceneManager();
+		this.sceneManager = new SceneManager(stage);
 
 		initStage(stage);
 		logger.info("Display initialization complete...");
@@ -76,18 +75,14 @@ public class DisplayFrontend extends Application {
 			boolean connected = (boolean) message.getData();
 
 			if (connected) {
-				stage.setScene(sceneManager.getLogoScene());
-				stage.show();
+				sceneManager.showScene(sceneManager.getLogoScene());
 				logger.fine("Showing logo scene");
 				sendScenes(sceneManager.getSceneNameArray());
-				stage.setFullScreen(fullScreen);
 			} else {
-				stage.setScene(sceneManager.getNoFieldScene());
-				stage.setFullScreen(fullScreen);
+				sceneManager.showScene(sceneManager.getNoFieldScene());
 			}
 		} else if (message.getName().equals("select_scene")) {
-			sceneManager.showScene((String) message.getData(), stage);
-			stage.setFullScreen(fullScreen);
+			sceneManager.showScene((String) message.getData());
 		}
 	}
 
@@ -98,8 +93,11 @@ public class DisplayFrontend extends Application {
 		stage.addEventFilter(KeyEvent.KEY_PRESSED, k -> {
 			logger.finer("Key Pressed: " + k.getCode());
 			if (k.getCode() == KeyCode.F1) {
-				fullScreen = !fullScreen;
-				stage.setFullScreen(fullScreen);
+				sceneManager.setFullscreen(!sceneManager.isFullscreen());
+				logger.fine("Entering Full Screen Mode: " + sceneManager.isFullscreen());
+			} else if (k.getCode() == KeyCode.F2) {
+				logger.info("Showing debug screen!");
+				sceneManager.showScene(sceneManager.getDebugScene());
 			}
 		});
 
