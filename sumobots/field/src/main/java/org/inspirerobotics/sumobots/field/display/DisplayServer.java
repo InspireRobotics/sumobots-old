@@ -8,7 +8,9 @@ import org.inspirerobotics.sumobots.library.networking.Server;
 import org.inspirerobotics.sumobots.library.networking.connection.Connection;
 import org.inspirerobotics.sumobots.library.networking.connection.ConnectionListener;
 import org.inspirerobotics.sumobots.library.networking.message.Message;
+import org.inspirerobotics.sumobots.library.networking.message.MessageType;
 
+import java.util.Arrays;
 import java.util.logging.Logger;
 
 public class DisplayServer extends Server {
@@ -18,7 +20,7 @@ public class DisplayServer extends Server {
 	private Connection connection;
 
 	public DisplayServer(FieldBackend fieldBackend) {
-		super(new DisplayListener(), "display_server", Resources.DISPLAY_PORT);
+		super(new DisplayListener(fieldBackend), "display_server", Resources.DISPLAY_PORT);
 		this.fieldBackend = fieldBackend;
 	}
 
@@ -58,12 +60,45 @@ public class DisplayServer extends Server {
 			fieldBackend.sendMessageToFrontend(m);
 		}
 	}
+
+	public void selectScene(String data) {
+		if (connection != null) {
+			Message m = new Message(MessageType.SCENE_UPDATE);
+			m.addData("scene", data);
+			connection.sendMessage(m);
+		}
+	}
 }
 
 class DisplayListener implements ConnectionListener {
 
+	private final Logger log = InternalLog.getLogger();
+	private final FieldBackend fieldBackend;
+
+	public DisplayListener(FieldBackend fieldBackend) {
+		this.fieldBackend = fieldBackend;
+	}
+
 	@Override
 	public void receivedMessage(Message message, Connection connection) {
+		if (message.getType() == MessageType.SCENE_UPDATE) {
+			updateScenes(message);
+		}
+	}
 
+	private void updateScenes(Message m) {
+		log.info("Received scenes");
+		int amountOfScenes = Integer.parseInt((String) m.getData("amount"));
+
+		String[] scenes = new String[amountOfScenes];
+
+		for (int i = 0; i < scenes.length; i++) {
+			scenes[i] = (String) m.getData("scene" + i);
+		}
+
+		log.info("Received scene list: " + Arrays.toString(scenes));
+
+		InterThreadMessage interThreadMessage = new InterThreadMessage("scenes", scenes);
+		fieldBackend.sendMessageToFrontend(interThreadMessage);
 	}
 }

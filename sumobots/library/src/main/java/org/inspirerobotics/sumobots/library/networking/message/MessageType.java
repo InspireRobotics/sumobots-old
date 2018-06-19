@@ -14,6 +14,7 @@ public enum MessageType {
 	SET_NAME("SET_NAME", "Sets the name of the socket connected", true),
 	UPDATE_NTWK_TABLE("UPDATE_NTWK_TABLE", "Updates the Network Table", true),
 	JOYSTICK_UPDATE("JOY_UPDATE", "Updates a joystick value", false),
+	SCENE_UPDATE("SCENE_UPDATE", "Updates the current scene", false),
 	UNKNOWN("UNKNOWN", "A Malformed message", true);
 
 	private static final Logger logger = InternalLog.getLogger();

@@ -30,7 +30,7 @@
 }
 
 
-/* Spaltenköpfe
+/* Spaltenkï¿½pfe
     Struktur column-header-background -> column-header */
 
 .stdTable .column-header-background{
@@ -81,4 +81,9 @@
     -fx-background-color: gray;
     -fx-background-insets: 0, 0 0 1 0;
     -fx-padding: 0.0em; /* 0 */
+}
+
+.radio-button {
+    -fx-font-size: 18;
+    -fx-font-weight: bold;
 }

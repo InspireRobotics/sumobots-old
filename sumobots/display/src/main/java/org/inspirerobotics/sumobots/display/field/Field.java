@@ -3,9 +3,11 @@ package org.inspirerobotics.sumobots.display.field;
 import org.inspirerobotics.sumobots.display.DisplayBackend;
 import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.Resources;
+import org.inspirerobotics.sumobots.library.concurrent.InterThreadMessage;
 import org.inspirerobotics.sumobots.library.networking.connection.Connection;
 import org.inspirerobotics.sumobots.library.networking.connection.ConnectionListener;
 import org.inspirerobotics.sumobots.library.networking.message.Message;
+import org.inspirerobotics.sumobots.library.networking.message.MessageType;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -31,6 +33,7 @@ public class Field implements ConnectionListener {
 			if (!socket.isConnected())
 				throw new IOException();
 
+			fieldConnection = Connection.fromSocket(socket, this);
 			return true;
 		} catch (IOException e) {
 			logger.fine("E: " + e);
@@ -55,7 +58,12 @@ public class Field implements ConnectionListener {
 
 	@Override
 	public void receivedMessage(Message message, Connection connection) {
+		if (message.getType() != MessageType.SCENE_UPDATE) {
+			InternalLog.getLogger().warning("Unknown message type on display: " + message.getType());
+			return;
+		}
 
+		displayBackend.sendMessageToFrontend(new InterThreadMessage("select_scene", message.getData("scene")));
 	}
 
 	public void shutdown() {
@@ -70,5 +78,9 @@ public class Field implements ConnectionListener {
 			return false;
 		}
 		return true;
+	}
+
+	public void send(Message m) {
+		fieldConnection.sendMessage(m);
 	}
 }

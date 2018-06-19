@@ -99,6 +99,10 @@ public class FieldFrontend extends Application {
 			case "display_connection":
 				root.getGameTab().getDisplayPane().setConnectionStatus((boolean) m.getData());
 				break;
+			case "scenes":
+				String[] scenes = (String[]) m.getData();
+				root.getGameTab().getDisplayPane().setScenes(scenes);
+				break;
 			default:
 				log.warning("Unknown Message Recieved on Frontend: " + name);
 				break;
@@ -152,11 +156,15 @@ public class FieldFrontend extends Application {
 		});
 	}
 
+	public void sendMessageToBackend(InterThreadMessage interThreadMessage) {
+		threadChannel.add(interThreadMessage);
+	}
+
 	@Override
 	public void stop() throws Exception {
 		super.stop();
 
-		threadChannel.add(new InterThreadMessage("exit_app"));
+		sendMessageToBackend(new InterThreadMessage("exit_app"));
 		fieldBackend.join();
 	}
 
@@ -181,13 +189,13 @@ public class FieldFrontend extends Application {
 	}
 
 	public void disable(String name) {
-		threadChannel.add(new InterThreadMessage("disable_ds", name));
+		sendMessageToBackend(new InterThreadMessage("disable_ds", name));
 
 		AudioEffect.play("disable_robot.wav");
 	}
 
 	private void sendTimePeriodRequestToBackend(TimePeriod timePeriod) {
-		threadChannel.add(new InterThreadMessage("period_request", timePeriod));
+		sendMessageToBackend(new InterThreadMessage("period_request", timePeriod));
 	}
 
 	public TimePeriod getTimePeriod() {
