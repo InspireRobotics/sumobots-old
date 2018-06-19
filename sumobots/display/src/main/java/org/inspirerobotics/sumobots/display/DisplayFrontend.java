@@ -3,6 +3,8 @@ package org.inspirerobotics.sumobots.display;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.inspirerobotics.sumobots.display.gui.SceneManager;
@@ -20,6 +22,7 @@ public class DisplayFrontend extends Application {
 	private final ThreadChannel threadChannel = new ThreadChannel();
 	private final DisplayBackend displayBackend = new DisplayBackend(threadChannel.createPair());
 	private SceneManager sceneManager;
+	private boolean fullScreen = false;
 	private Stage stage;
 
 	@Override
@@ -77,17 +80,29 @@ public class DisplayFrontend extends Application {
 				stage.show();
 				logger.fine("Showing logo scene");
 				sendScenes(sceneManager.getSceneNameArray());
+				stage.setFullScreen(fullScreen);
 			} else {
 				stage.setScene(sceneManager.getNoFieldScene());
+				stage.setFullScreen(fullScreen);
 			}
 		} else if (message.getName().equals("select_scene")) {
 			sceneManager.showScene((String) message.getData(), stage);
+			stage.setFullScreen(fullScreen);
 		}
 	}
 
 	private void initStage(Stage stage) {
 		stage.setTitle("FMS Display System: " + Resources.LIBRARY_VERSION);
 		stage.setOnCloseRequest(new FrontendShutdownHandler(this));
+
+		stage.addEventFilter(KeyEvent.KEY_PRESSED, k -> {
+			logger.finer("Key Pressed: " + k.getCode());
+			if (k.getCode() == KeyCode.F1) {
+				fullScreen = !fullScreen;
+				stage.setFullScreen(fullScreen);
+			}
+		});
+
 		stage.setScene(sceneManager.getNoFieldScene());
 		stage.show();
 	}
