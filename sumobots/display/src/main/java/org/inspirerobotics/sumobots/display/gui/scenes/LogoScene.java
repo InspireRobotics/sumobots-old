@@ -1,17 +1,17 @@
-package org.inspirerobotics.sumobots.display.gui;
+package org.inspirerobotics.sumobots.display.gui.scenes;
 
 import javafx.fxml.FXML;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import org.inspirerobotics.sumobots.display.gui.DisplayScene;
 import org.inspirerobotics.sumobots.library.gui.FXMLFileLoader;
 
-public class LogoScene extends Scene {
+public class LogoScene extends DisplayScene {
 
 	public LogoScene() {
-		super(generateGroup());
+		super(generateGroup(), "Logo");
 	}
 
 	private static Parent generateGroup() {

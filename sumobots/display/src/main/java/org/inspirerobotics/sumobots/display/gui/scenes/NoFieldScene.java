@@ -1,14 +1,14 @@
-package org.inspirerobotics.sumobots.display.gui;
+package org.inspirerobotics.sumobots.display.gui.scenes;
 
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
+import org.inspirerobotics.sumobots.display.gui.DisplayScene;
 import org.inspirerobotics.sumobots.library.gui.FXMLFileLoader;
 
-public class NoFieldScene extends Scene {
+public class NoFieldScene extends DisplayScene {
 
 	public NoFieldScene() {
-		super(generateGroup());
+		super(generateGroup(), "No Field Found");
 	}
 
 	private static Parent generateGroup() {

@@ -164,7 +164,7 @@ public class FieldFrontend extends Application {
 	public void stop() throws Exception {
 		super.stop();
 
-		threadChannel.add(new InterThreadMessage("exit_app"));
+		sendMessageToBackend(new InterThreadMessage("exit_app"));
 		fieldBackend.join();
 	}
 
@@ -189,13 +189,13 @@ public class FieldFrontend extends Application {
 	}
 
 	public void disable(String name) {
-		threadChannel.add(new InterThreadMessage("disable_ds", name));
+		sendMessageToBackend(new InterThreadMessage("disable_ds", name));
 
 		AudioEffect.play("disable_robot.wav");
 	}
 
 	private void sendTimePeriodRequestToBackend(TimePeriod timePeriod) {
-		threadChannel.add(new InterThreadMessage("period_request", timePeriod));
+		sendMessageToBackend(new InterThreadMessage("period_request", timePeriod));
 	}
 
 	public TimePeriod getTimePeriod() {

@@ -126,6 +126,7 @@ public class FieldBackend extends Thread {
 				break;
 			case "select_scene":
 				displayServer.selectScene((String) m.getData());
+				break;
 			default:
 				log.warning("Unknown Message Recieved on Backend: " + name);
 				break;
