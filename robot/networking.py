@@ -1,6 +1,7 @@
 import socket
 import sys
 import message
+import time
 from message import Message
 import json
 
@@ -63,7 +64,8 @@ def handle_message(json, connection):
 
     print("Message Type:", message_type)
 
-    if(message == 'PING'):
+    if message_type == 'PING':
+        print("Sending pong")
         message.pong_message().send_from(connection)
     else:
         handle_non_ping_message(message_type, json, connection)
