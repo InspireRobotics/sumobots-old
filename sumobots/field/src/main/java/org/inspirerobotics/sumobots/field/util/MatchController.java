@@ -24,6 +24,7 @@ public class MatchController {
 			return;
 
 		changeState(newPeriod);
+		updateConnectionsAcceptance();
 	}
 
 	private void changeState(TimePeriod newPeriod) {
@@ -33,6 +34,14 @@ public class MatchController {
 		fieldBackend.sendMessageToFrontend(m);
 
 		fieldBackend.getServer().sendAll(ArchetypalMessages.enterNewMatchPeriod(newPeriod));
+	}
+
+	private void updateConnectionsAcceptance() {
+		if (currentTimePeriod == TimePeriod.DISABLED) {
+			fieldBackend.getServer().setShouldAcceptConnections(true);
+		} else {
+			fieldBackend.getServer().setShouldAcceptConnections(false);
+		}
 	}
 
 	public static boolean verifyStateChange(TimePeriod oldPeriod, TimePeriod newPeriod) {
