@@ -19,6 +19,8 @@ public class InternalLog extends Handler {
 	private static final MessageFormat messageFormat = new MessageFormat(
 			"[{3,date,hh:mm:ss:SS} {2} {6}.{5}()] {1}: {4}\t {7}\n");
 
+	private static boolean shouldStoreLog = true;
+
 	private InternalLog() {
 		logger.setLevel(Level.FINE);
 
@@ -39,7 +41,9 @@ public class InternalLog extends Handler {
 	@Override
 	public void publish(LogRecord record) {
 		String formattedString = format(record);
-		logLines.add(formattedString);
+
+		if (shouldStoreLog())
+			logLines.add(formattedString);
 
 		System.out.print(formattedString);
 	}
@@ -87,5 +91,13 @@ public class InternalLog extends Handler {
 		logger.removeHandler(INSTANCE);
 		logLines.clear();
 		INSTANCE = null;
+	}
+
+	public static void setShouldStoreLog(boolean shouldStoreLog) {
+		InternalLog.shouldStoreLog = shouldStoreLog;
+	}
+
+	public static boolean shouldStoreLog() {
+		return shouldStoreLog;
 	}
 }
