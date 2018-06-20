@@ -1,5 +1,6 @@
 package org.inspirerobotics.sumobots.driverstation.config;
 
+import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.config.Config;
 
 import java.util.logging.Level;
@@ -10,6 +11,8 @@ public class Settings {
 
 	private Settings() {
 		this(new Config("DriverStation"));
+
+		InternalLog.setShouldStoreLog(shouldStoreLog());
 	}
 
 	private Settings(Config c) {
@@ -22,6 +25,10 @@ public class Settings {
 
 	public Level logLevel() {
 		return Level.parse(loadDefaultString("logLevel", "FINE"));
+	}
+
+	public boolean shouldStoreLog() {
+		return Boolean.valueOf(loadDefaultString("storeLog", "true"));
 	}
 
 	public String robotIP() {

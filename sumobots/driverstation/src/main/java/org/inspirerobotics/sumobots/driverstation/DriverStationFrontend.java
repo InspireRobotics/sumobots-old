@@ -166,6 +166,10 @@ public class DriverStationFrontend extends Application {
 		return nonFieldMode;
 	}
 
+	public static Settings getSettings() {
+		return settings;
+	}
+
 	public static void main(String[] args) {
 		DriverStationFrontend.launch(args);
 	}

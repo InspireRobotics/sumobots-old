@@ -53,8 +53,10 @@ public class GuiController {
 		setRobotConnectionStatus(false);
 		setJoystickStatus(false);
 
-		runLoop();
-
+		if (DriverStationFrontend.getSettings().shouldStoreLog())
+			runLoop();
+		else
+			logConsole.setDisable(true);
 	}
 
 	private void runLoop() {
