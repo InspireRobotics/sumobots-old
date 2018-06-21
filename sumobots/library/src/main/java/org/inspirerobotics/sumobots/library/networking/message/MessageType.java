@@ -15,6 +15,7 @@ public enum MessageType {
 	UPDATE_NTWK_TABLE("UPDATE_NTWK_TABLE", "Updates the Network Table", true),
 	JOYSTICK_UPDATE("JOY_UPDATE", "Updates a joystick value", false),
 	SCENE_UPDATE("SCENE_UPDATE", "Updates the current scene", false),
+	MATCH_DATA("MATCH_DATA", "Match Data", false),
 	UNKNOWN("UNKNOWN", "A Malformed message", true);
 
 	private static final Logger logger = InternalLog.getLogger();

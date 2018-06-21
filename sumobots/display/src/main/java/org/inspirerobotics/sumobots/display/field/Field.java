@@ -58,12 +58,23 @@ public class Field implements ConnectionListener {
 
 	@Override
 	public void receivedMessage(Message message, Connection connection) {
-		if (message.getType() != MessageType.SCENE_UPDATE) {
+		if (message.getType() == MessageType.SCENE_UPDATE) {
+			displayBackend.sendMessageToFrontend(new InterThreadMessage("select_scene", message.getData("scene")));
+		} else if (message.getType() == MessageType.MATCH_DATA) {
+			int amountOfTeams = Integer.parseInt((String) message.getData("num_of_teams"));
+
+			String[] teams = new String[amountOfTeams];
+
+			for (int i = 0; i < teams.length; i++) {
+				teams[i] = (String) message.getData("team" + i);
+			}
+
+			displayBackend.sendMessageToFrontend(new InterThreadMessage("set_teams", teams));
+		} else {
 			InternalLog.getLogger().warning("Unknown message type on display: " + message.getType());
 			return;
 		}
 
-		displayBackend.sendMessageToFrontend(new InterThreadMessage("select_scene", message.getData("scene")));
 	}
 
 	public void shutdown() {

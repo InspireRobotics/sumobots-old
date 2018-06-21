@@ -8,6 +8,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import org.inspirerobotics.sumobots.display.gui.SceneManager;
+import org.inspirerobotics.sumobots.display.gui.scenes.GameScene;
 import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.Resources;
 import org.inspirerobotics.sumobots.library.concurrent.InterThreadMessage;
@@ -72,17 +73,24 @@ public class DisplayFrontend extends Application {
 
 	private void onMessageReceived(InterThreadMessage message) {
 		if (message.getName().equals("conn_status")) {
-			boolean connected = (boolean) message.getData();
-
-			if (connected) {
-				sceneManager.showScene(sceneManager.getLogoScene());
-				logger.fine("Showing logo scene");
-				sendScenes(sceneManager.getSceneNameArray());
-			} else {
-				sceneManager.showScene(sceneManager.getNoFieldScene());
-			}
+			updateConnectionStatus((boolean) message.getData());
 		} else if (message.getName().equals("select_scene")) {
 			sceneManager.showScene((String) message.getData());
+		} else if (message.getName().equals("set_teams")) {
+			String[] teams = (String[]) message.getData();
+			GameScene.setTeams(teams);
+		} else {
+			logger.warning("Received unknown message from backend: " + message);
+		}
+	}
+
+	private void updateConnectionStatus(boolean connected) {
+		if (connected) {
+			sceneManager.showScene(sceneManager.getLogoScene());
+			logger.fine("Showing logo scene");
+			sendScenes(sceneManager.getSceneNameArray());
+		} else {
+			sceneManager.showScene(sceneManager.getNoFieldScene());
 		}
 	}
 

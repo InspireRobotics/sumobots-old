@@ -13,6 +13,7 @@ public class MatchController {
 	private static final Logger log = InternalLog.getLogger();
 	private TimePeriod currentTimePeriod;
 	private FieldBackend fieldBackend;
+	private long lastDisplaySyncTime = 0;
 
 	public MatchController(FieldBackend fieldBackend) {
 		this.fieldBackend = fieldBackend;
@@ -58,4 +59,10 @@ public class MatchController {
 		return true;
 	}
 
+	public void syncDisplayData() {
+		if (lastDisplaySyncTime + 500 < System.currentTimeMillis()) {
+			lastDisplaySyncTime = System.currentTimeMillis();
+			fieldBackend.getDisplayServer().sendMatchData(fieldBackend.getServer().getConnections());
+		}
+	}
 }

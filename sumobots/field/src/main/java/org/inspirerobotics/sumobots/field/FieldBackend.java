@@ -49,6 +49,8 @@ public class FieldBackend extends Thread {
 			server.update();
 			displayServer.update();
 
+			matchController.syncDisplayData();
+
 			sendConnectionsToFrontend();
 			updateLoopTime();
 			updateInternalTable(loopTime);
@@ -141,5 +143,9 @@ public class FieldBackend extends Thread {
 
 	public DriverStationServer getServer() {
 		return server;
+	}
+
+	public DisplayServer getDisplayServer() {
+		return displayServer;
 	}
 }
