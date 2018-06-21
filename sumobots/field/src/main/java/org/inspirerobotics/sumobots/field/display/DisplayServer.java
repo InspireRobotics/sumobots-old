@@ -3,6 +3,7 @@ package org.inspirerobotics.sumobots.field.display;
 import org.inspirerobotics.sumobots.field.FieldBackend;
 import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.Resources;
+import org.inspirerobotics.sumobots.library.TimePeriod;
 import org.inspirerobotics.sumobots.library.concurrent.InterThreadMessage;
 import org.inspirerobotics.sumobots.library.networking.Server;
 import org.inspirerobotics.sumobots.library.networking.connection.Connection;
@@ -11,6 +12,7 @@ import org.inspirerobotics.sumobots.library.networking.message.Message;
 import org.inspirerobotics.sumobots.library.networking.message.MessageType;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Logger;
 
 public class DisplayServer extends Server {
@@ -67,6 +69,36 @@ public class DisplayServer extends Server {
 			m.addData("scene", data);
 			connection.sendMessage(m);
 		}
+	}
+
+	public void sendMatchData(List<Connection> connections) {
+		log.finer("Sending Match data");
+		Message m = new Message(MessageType.MATCH_DATA);
+
+		m.addData("num_of_teams", "" + connections.size());
+
+		for (int i = 0; i < connections.size(); i++) {
+			if (isConnectionDisabled(connections.get(i))) {
+				m.addData("team" + i, connections.get(i).getConnectionName() + "\teliminated");
+			} else {
+				m.addData("team" + i, connections.get(i).getConnectionName());
+			}
+		}
+
+		if (connection != null)
+			connection.sendMessage(m);
+	}
+
+	private boolean isConnectionDisabled(Connection c) {
+		TimePeriod t = TimePeriod.fromString(c.getTable().get("Time Period"));
+
+		if (t == null)
+			return false;
+
+		if (t == TimePeriod.DISABLED) {
+			return true;
+		}
+		return false;
 	}
 }
 

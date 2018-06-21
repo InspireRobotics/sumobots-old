@@ -14,6 +14,8 @@ public class DriverStationServer extends Server {
 
 	private final Logger log = InternalLog.getLogger();
 
+	private boolean shouldAcceptConnections = true;
+
 	public DriverStationServer() {
 		super(new DriverStationListener(), "Field", Resources.SERVER_PORT);
 	}
@@ -24,6 +26,20 @@ public class DriverStationServer extends Server {
 				c.sendMessage(ArchetypalMessages.enterNewMatchPeriod(TimePeriod.DISABLED));
 			}
 		}
+	}
+
+	public void setShouldAcceptConnections(boolean shouldAcceptConnections) {
+		this.shouldAcceptConnections = shouldAcceptConnections;
+
+		if (shouldAcceptConnections) {
+			this.reopenServer();
+		} else {
+			this.closeServer(false);
+		}
+	}
+
+	public boolean shouldAcceptConnections() {
+		return shouldAcceptConnections;
 	}
 
 	public void updateNetworkingTable(NetworkTable table) {

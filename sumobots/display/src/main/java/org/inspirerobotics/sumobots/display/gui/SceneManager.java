@@ -3,6 +3,7 @@ package org.inspirerobotics.sumobots.display.gui;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.inspirerobotics.sumobots.display.gui.scenes.DebugScene;
+import org.inspirerobotics.sumobots.display.gui.scenes.GameScene;
 import org.inspirerobotics.sumobots.display.gui.scenes.LogoScene;
 import org.inspirerobotics.sumobots.display.gui.scenes.NoFieldScene;
 
@@ -17,6 +18,7 @@ public class SceneManager {
 	private final DisplayScene noField;
 	private final DisplayScene logoScene;
 	private final DisplayScene debugScene;
+	private final DisplayScene gameScene;
 
 	private boolean fullscreen = false;
 
@@ -24,8 +26,9 @@ public class SceneManager {
 		stage = s;
 		noField = new NoFieldScene();
 		logoScene = new LogoScene();
+		gameScene = new GameScene();
 
-		registerScenes(noField, logoScene);
+		registerScenes(noField, logoScene, gameScene);
 
 		debugScene = new DebugScene(this);
 	}
@@ -62,6 +65,10 @@ public class SceneManager {
 
 	public DisplayScene getDebugScene() {
 		return debugScene;
+	}
+
+	public DisplayScene getGameScene() {
+		return gameScene;
 	}
 
 	public void setFullscreen(boolean fullscreen) {

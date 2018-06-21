@@ -22,7 +22,7 @@ public class Server {
 
 	private final Logger log = InternalLog.getLogger();
 
-	private final ServerSocket serverSocket;
+	private ServerSocket serverSocket;
 
 	private final List<Connection> connections = new ArrayList<Connection>();
 
@@ -44,8 +44,12 @@ public class Server {
 	}
 
 	public void update() {
-		acceptConnections();
+		if (!serverSocket.isClosed())
+			acceptConnections();
+		updateConnections();
+	}
 
+	protected void updateConnections() {
 		ArrayList<Connection> connectionsToClose = new ArrayList<Connection>();
 
 		for (Connection conn : connections) {
@@ -60,7 +64,7 @@ public class Server {
 		}
 	}
 
-	private void acceptConnections() {
+	protected void acceptConnections() {
 		try {
 			Socket s;
 			while ((s = serverSocket.accept()) != null) {
@@ -96,14 +100,32 @@ public class Server {
 		return null;
 	}
 
+	protected void reopenServer() {
+		if (!serverSocket.isClosed())
+			return;
+
+		log.info("Restarting server on " + serverSocket.getLocalPort());
+		serverSocket = createServerSocket(serverSocket.getLocalPort());
+	}
+
 	public void closeServer() {
+		closeServer(true);
+	}
+
+	public void closeServer(boolean closeConnections) {
 		try {
-			for (Connection socket : connections) {
-				socket.endConnection();
+			if (closeConnections) {
+				closeConnections();
 			}
 			serverSocket.close();
 		} catch (IOException e) {
 			log.warning("Failed to stop the Server!");
+		}
+	}
+
+	public void closeConnections() {
+		for (Connection socket : connections) {
+			socket.endConnection();
 		}
 	}
 
@@ -129,5 +151,4 @@ public class Server {
 	public List<Connection> getConnections() {
 		return connections;
 	}
-
 }

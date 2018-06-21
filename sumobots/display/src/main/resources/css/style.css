@@ -1,3 +1,14 @@
 #noFieldPane{
     -fx-background-color:#ff2b2b;
 }
+
+#timeLabel{
+    -fx-font-size: 70px;
+    -fx-background-color:navy;
+    -fx-text-fill:white;
+}
+
+#teamLabel{
+    -fx-font-size: 70px;
+    -fx-text-fill:white;
+}

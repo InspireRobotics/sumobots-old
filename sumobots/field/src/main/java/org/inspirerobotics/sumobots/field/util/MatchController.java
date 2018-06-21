@@ -13,6 +13,7 @@ public class MatchController {
 	private static final Logger log = InternalLog.getLogger();
 	private TimePeriod currentTimePeriod;
 	private FieldBackend fieldBackend;
+	private long lastDisplaySyncTime = 0;
 
 	public MatchController(FieldBackend fieldBackend) {
 		this.fieldBackend = fieldBackend;
@@ -24,6 +25,7 @@ public class MatchController {
 			return;
 
 		changeState(newPeriod);
+		updateConnectionsAcceptance();
 	}
 
 	private void changeState(TimePeriod newPeriod) {
@@ -33,6 +35,15 @@ public class MatchController {
 		fieldBackend.sendMessageToFrontend(m);
 
 		fieldBackend.getServer().sendAll(ArchetypalMessages.enterNewMatchPeriod(newPeriod));
+		fieldBackend.getDisplayServer().sendAll(ArchetypalMessages.enterNewMatchPeriod(newPeriod));
+	}
+
+	private void updateConnectionsAcceptance() {
+		if (currentTimePeriod == TimePeriod.DISABLED) {
+			fieldBackend.getServer().setShouldAcceptConnections(true);
+		} else {
+			fieldBackend.getServer().setShouldAcceptConnections(false);
+		}
 	}
 
 	public static boolean verifyStateChange(TimePeriod oldPeriod, TimePeriod newPeriod) {
@@ -49,4 +60,10 @@ public class MatchController {
 		return true;
 	}
 
+	public void syncDisplayData() {
+		if (lastDisplaySyncTime + 500 < System.currentTimeMillis()) {
+			lastDisplaySyncTime = System.currentTimeMillis();
+			fieldBackend.getDisplayServer().sendMatchData(fieldBackend.getServer().getConnections());
+		}
+	}
 }
