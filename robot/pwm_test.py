@@ -8,28 +8,22 @@ servo = PWM.Servo()
 def roundupTen(x):
     return int(math.ceil(x / 10.0)) * 10
 
-def set_speed(servo, speed, t):
+def set_speed(s, speed, t):
+    print(speed)
     print('Setting Speed: %f' % (speed))
     
-    speed /= 2
-    speed += .5
+##    speed /= 2
+##    speed += .5
     speed *= 500
-    speed += 500
+    speed += 1500
     
     print(speed)
     print(roundupTen(speed))
-    servo.set_servo(servo, roundupTen(speed))
+    servo.set_servo(s, roundupTen(speed))
     time.sleep(t)
 
-def stop_servo(servo):
-    servo.stop_servo(servo)
-
-set_speed(14, 1, 1)
-set_speed(14, 0.0, 1)
-set_speed(14, -1.0, 1)
-set_speed(14, .5, 1)
-stop_servo(14)
-
+def stop_servo(s):
+    servo.stop_servo(s)
     
     
 
