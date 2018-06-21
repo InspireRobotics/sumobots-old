@@ -11,6 +11,7 @@ import org.inspirerobotics.sumobots.display.gui.SceneManager;
 import org.inspirerobotics.sumobots.display.gui.scenes.GameScene;
 import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.Resources;
+import org.inspirerobotics.sumobots.library.TimePeriod;
 import org.inspirerobotics.sumobots.library.concurrent.InterThreadMessage;
 import org.inspirerobotics.sumobots.library.concurrent.ThreadChannel;
 
@@ -24,6 +25,7 @@ public class DisplayFrontend extends Application {
 	private final DisplayBackend displayBackend = new DisplayBackend(threadChannel.createPair());
 	private SceneManager sceneManager;
 	private Stage stage;
+	private TimePeriod timePeriod = TimePeriod.DISABLED;
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -56,6 +58,10 @@ public class DisplayFrontend extends Application {
 
 	private void update() {
 		handleIncomingMessages();
+
+		if (timePeriod == TimePeriod.GAME) {
+			GameScene.updateClock();
+		}
 	}
 
 	private void handleIncomingMessages() {
@@ -79,6 +85,14 @@ public class DisplayFrontend extends Application {
 		} else if (message.getName().equals("set_teams")) {
 			String[] teams = (String[]) message.getData();
 			GameScene.setTeams(teams);
+		} else if (message.getName().equals("set_time_period")) {
+			timePeriod = TimePeriod.fromString((String) message.getData());
+
+			if (timePeriod == TimePeriod.INIT) {
+				GameScene.resetClock();
+			}
+
+			logger.info("Entering time period: " + timePeriod);
 		} else {
 			logger.warning("Received unknown message from backend: " + message);
 		}

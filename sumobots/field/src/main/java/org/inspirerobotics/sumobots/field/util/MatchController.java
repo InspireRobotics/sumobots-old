@@ -35,6 +35,7 @@ public class MatchController {
 		fieldBackend.sendMessageToFrontend(m);
 
 		fieldBackend.getServer().sendAll(ArchetypalMessages.enterNewMatchPeriod(newPeriod));
+		fieldBackend.getDisplayServer().sendAll(ArchetypalMessages.enterNewMatchPeriod(newPeriod));
 	}
 
 	private void updateConnectionsAcceptance() {

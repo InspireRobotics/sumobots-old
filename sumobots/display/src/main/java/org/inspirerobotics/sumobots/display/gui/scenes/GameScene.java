@@ -12,11 +12,17 @@ import org.inspirerobotics.sumobots.display.gui.DisplayScene;
 import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.gui.FXMLFileLoader;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.TimeZone;
 
 public class GameScene extends DisplayScene {
 
 	private static final GamePane gamePane = new GamePane();
+
+	private static int clockTime = -1;
+	private static long lastClockUpdate;
 
 	public GameScene() {
 		super(generateGroup(), "Game");
@@ -31,12 +37,28 @@ public class GameScene extends DisplayScene {
 	public static void setTeams(String[] teams) {
 		gamePane.setTeams(teams);
 	}
+
+	public static void updateClock() {
+		if (lastClockUpdate + 1000 < System.currentTimeMillis()) {
+			clockTime++;
+			gamePane.setTime(clockTime);
+			lastClockUpdate = System.currentTimeMillis();
+		}
+	}
+
+	public static void resetClock() {
+		clockTime = -1;
+		gamePane.setTime(0);
+	}
 }
 
 class GamePane extends AnchorPane {
 
 	@FXML
 	private GridPane gridPane;
+
+	@FXML
+	private Label timeLabel;
 
 	GamePane() {
 		FXMLFileLoader.load("game.fxml", this);
@@ -77,6 +99,12 @@ class GamePane extends AnchorPane {
 		return null;
 	}
 
+	public void setTime(int time) {
+		SimpleDateFormat dateFormat = new SimpleDateFormat("m:ss");
+		dateFormat.setTimeZone(TimeZone.getTimeZone("EST"));
+		Date date = new Date(time * 1000);
+		timeLabel.setText(dateFormat.format(date));
+	}
 }
 
 class TeamPane extends AnchorPane {

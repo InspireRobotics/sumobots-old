@@ -70,6 +70,9 @@ public class Field implements ConnectionListener {
 			}
 
 			displayBackend.sendMessageToFrontend(new InterThreadMessage("set_teams", teams));
+		} else if (message.getType() == MessageType.MATCH_STATE_UPDATE) {
+			displayBackend
+					.sendMessageToFrontend(new InterThreadMessage("set_time_period", message.getData("new_period")));
 		} else {
 			InternalLog.getLogger().warning("Unknown message type on display: " + message.getType());
 			return;
