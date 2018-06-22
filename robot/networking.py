@@ -1,9 +1,9 @@
 import socket
 import sys
 import message
-import time
 from message import Message
 import json
+import pwm_test
 
 library_version = "0.2.1"
 name = "pybot"
@@ -39,10 +39,10 @@ def handle_non_ping_message(type, json, connection):
         handle_joystick(json)
 
 def handle_joystick(json):
-    leftX = 0
-    leftY = 0
-    rightX = 0
-    rightY = 0
+    leftX = 0.0
+    leftY = 0.0
+    rightX = 0.0
+    rightY = 0.0
 
 
     if "Right Y Axis" in json:
@@ -58,14 +58,20 @@ def handle_joystick(json):
         leftX = json["Left X Axis"]
 
     print("Joystick Values: RX: {}, RY: {}, LX: {}, LY: {}".format(rightX, rightY, leftX, leftY))
+    pwm_test.set_speed(14, float(leftY), 0)
+    pwm_test.set_speed(15, float(leftY), 0)
+    pwm_test.set_speed(18, float(leftY), 0)
+    
+    pwm_test.set_speed(23, float(rightY), 0)
+    pwm_test.set_speed(24, float(rightY), 0)
+    pwm_test.set_speed(25, float(rightY), 0)
 
 def handle_message(json, connection):
     message_type = json['message_type']
 
     print("Message Type:", message_type)
 
-    if message_type == 'PING':
-        print("Sending pong")
+    if(message == 'PING'):
         message.pong_message().send_from(connection)
     else:
         handle_non_ping_message(message_type, json, connection)
