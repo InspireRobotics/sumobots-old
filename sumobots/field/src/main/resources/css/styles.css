@@ -8,6 +8,11 @@
 	-fx-alignment:center;
 }
 
+.aboutLabel{
+    -fx-text-fill:white;
+    -fx-font-size:25px;
+}
+
 .controlConsole{
 	-fx-border-color:gray;
     -fx-border-width:3;
