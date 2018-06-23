@@ -13,15 +13,15 @@ def bytes_to_json(data):
     try:
         json_string = str(data[2:-1], 'utf-8')
     except UnicodeDecodeError:
-        print ("test");
-        return None;
+        print ("test")
+        return None
 
     return json.loads(json_string)
 
 
 def handle_non_ping_message(type, json, connection):
     if type == 'LIB_VERSION':
-        version = json['version'];
+        version = json['version']
         print("Client version:", version)
 
         if version == library_version:
@@ -79,16 +79,16 @@ def handle_message(json, connection):
 def on_data_received(data, connection):
     print('received {!r}'.format(data))
 
-    json = None;
+    json = None
 
     try:
         json = bytes_to_json(data)
     except ValueError:
-        json = None;
+        json = None
 
     if json is None:
-        print("Couldn't format JSON:", data);
-        return;
+        print("Couldn't format JSON:", data)
+        return
 
     handle_message(json, connection)
 
@@ -119,7 +119,7 @@ while True:
         # Receive the data in small chunks and retransmit it
         while True:
             data = connection.recv(512)
-            on_data_received(data, connection);
+            on_data_received(data, connection)
 
     finally:
         # Clean up the connection

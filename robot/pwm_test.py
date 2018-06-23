@@ -11,9 +11,7 @@ def roundupTen(x):
 def set_speed(s, speed, t):
     print(speed)
     print('Setting Speed: %f' % (speed))
-    
-##    speed /= 2
-##    speed += .5
+
     speed *= 500
     speed += 1500
     

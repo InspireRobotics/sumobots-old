@@ -2,7 +2,7 @@ class Message(object):
     data = {}
 
     def __init__(self, type):
-        self.type = type;
+        self.type = type
 
     def add_data(self, key, val):
         self.data[key] = val
@@ -42,12 +42,12 @@ def stream_terminated():
     return Message('STREAM_TERMINATED')
 
 def format_message_to_bytes(string):
-    xs = bytearray(1);
+    xs = bytearray(1)
     xs.append(utf8len(string) + 1)
     xs.extend(string.encode('utf-8'))
     xs.append(4)
     print('Formatted message: {}'.format(xs))
-    return xs;
+    return xs
 
 def utf8len(s):
     return len(s.encode('utf-8'))
