@@ -22,6 +22,8 @@ public class RootGroup extends TabPane {
 
 	private ConsoleTab consoleTab;
 
+	private AboutTab aboutTab;
+
 	public RootGroup(FieldFrontend ff, boolean startLoop) {
 		this.fieldFrontend = ff;
 
@@ -29,9 +31,11 @@ public class RootGroup extends TabPane {
 
 		gameTab = new GameTab(fieldFrontend);
 		consoleTab = new ConsoleTab();
+		aboutTab = new AboutTab();
 
 		addTab(gameTab, "Game");
 		addTab(consoleTab, "Console");
+		addTab(aboutTab, "About");
 
 		if (startLoop)
 			startUpdateLoop();
