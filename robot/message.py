@@ -21,10 +21,12 @@ class Message(object):
     def send_from(self, connection):
         connection.send(self.format_message())
 
+
 def set_name_message(new_name):
     message = Message('SET_NAME')
     message.add_data('name', new_name)
     return message
+
 
 def library_version_message(version):
     message = Message('LIB_VERSION')
@@ -32,14 +34,18 @@ def library_version_message(version):
     message.add_data('is_response', "false")
     return message
 
+
 def pong_message():
     return Message('PONG')
+
 
 def ping_message():
     return Message('PING')
 
+
 def stream_terminated():
     return Message('STREAM_TERMINATED')
+
 
 def format_message_to_bytes(string):
     xs = bytearray(1)
@@ -48,6 +54,7 @@ def format_message_to_bytes(string):
     xs.append(4)
     print('Formatted message: {}'.format(xs))
     return xs
+
 
 def utf8len(s):
     return len(s.encode('utf-8'))
