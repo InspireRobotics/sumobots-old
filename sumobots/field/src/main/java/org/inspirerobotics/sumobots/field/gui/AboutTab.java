@@ -8,13 +8,13 @@ import org.inspirerobotics.sumobots.library.gui.FXMLFileLoader;
 
 public class AboutTab extends AnchorPane {
 
-    @FXML
-    private Label versionLabel;
+	@FXML
+	private Label versionLabel;
 
-    public AboutTab() {
-        FXMLFileLoader.load("about.fxml", this);
+	public AboutTab() {
+		FXMLFileLoader.load("about.fxml", this);
 
-        versionLabel.setText("Version: " + Resources.LIBRARY_VERSION);
-    }
+		versionLabel.setText("Version: " + Resources.LIBRARY_VERSION);
+	}
 
 }

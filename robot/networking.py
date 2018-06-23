@@ -6,7 +6,7 @@ import json
 
 # import pwm_test
 
-library_version = "0.2.1"
+library_version = "0.3.0"
 name = "pybot"
 
 

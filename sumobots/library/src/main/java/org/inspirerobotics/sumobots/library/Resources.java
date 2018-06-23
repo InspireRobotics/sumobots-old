@@ -2,7 +2,7 @@ package org.inspirerobotics.sumobots.library;
 
 public class Resources {
 
-	public static final String LIBRARY_VERSION = "0.2.1";
+	public static final String LIBRARY_VERSION = "0.3.0";
 
 	static final String LOGGER_NAME = "com.inspirerobotics.sumobots";
 
