@@ -5,23 +5,24 @@ import javafx.scene.layout.AnchorPane;
 import org.inspirerobotics.sumobots.display.gui.DisplayScene;
 import org.inspirerobotics.sumobots.library.gui.FXMLFileLoader;
 
-public class FieldResetScene extends DisplayScene {
+public class EStopScene extends DisplayScene {
 
-	public FieldResetScene() {
-		super(generateGroup(), "Field Reset");
+	public EStopScene() {
+		super(generateGroup(), "EStop");
 	}
 
 	private static Parent generateGroup() {
 		AnchorPane anchorPane = new AnchorPane();
-		anchorPane.getChildren().add(new FieldResetPane());
+		anchorPane.getChildren().add(new EStopPane());
 		return anchorPane;
 	}
+
 }
 
-class FieldResetPane extends AnchorPane {
+class EStopPane extends AnchorPane {
 
-	public FieldResetPane() {
-		FXMLFileLoader.load("fieldReset.fxml", this);
+	EStopPane() {
+		FXMLFileLoader.load("estop.fxml", this);
 	}
 
 }

@@ -17,6 +17,7 @@ public class SceneManager {
 	private final DisplayScene debugScene;
 	private final DisplayScene gameScene;
 	private final DisplayScene fieldResetScene;
+	private final DisplayScene eStopScene;
 
 	private boolean fullscreen = false;
 
@@ -26,8 +27,9 @@ public class SceneManager {
 		logoScene = new LogoScene();
 		gameScene = new GameScene();
 		fieldResetScene = new FieldResetScene();
+		eStopScene = new EStopScene();
 
-		registerScenes(noField, logoScene, gameScene, fieldResetScene);
+		registerScenes(noField, logoScene, gameScene, fieldResetScene, eStopScene);
 
 		debugScene = new DebugScene(this);
 	}
@@ -77,6 +79,10 @@ public class SceneManager {
 	public void setFullscreen(boolean fullscreen) {
 		this.fullscreen = fullscreen;
 		stage.setFullScreen(fullscreen);
+	}
+
+	public DisplayScene getEStopScene() {
+		return eStopScene;
 	}
 
 	public boolean isFullscreen() {

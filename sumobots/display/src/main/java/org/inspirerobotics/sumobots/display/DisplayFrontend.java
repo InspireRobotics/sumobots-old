@@ -90,6 +90,8 @@ public class DisplayFrontend extends Application {
 
 			if (timePeriod == TimePeriod.INIT) {
 				GameScene.resetClock();
+			} else if (timePeriod == TimePeriod.ESTOPPED) {
+				sceneManager.showScene(sceneManager.getEStopScene());
 			}
 
 			logger.info("Entering time period: " + timePeriod);
