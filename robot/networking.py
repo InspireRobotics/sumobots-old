@@ -29,7 +29,8 @@ def handle_non_simple_message(type, json, connection):
         if version == library_version:
             print("Library versions match!")
         else:
-            print("VERSIONS DO NOT MATCH!!! Robot:", library_version, "\tClient:", version)
+            print("VERSIONS DO NOT MATCH!!! Robot:",
+                  library_version, "\tClient:", version)
             print("Terminated Robot Connection!")
             message.stream_terminated().send_from(connection)
 
@@ -55,7 +56,8 @@ def handle_joystick(json):
     if "Left X Axis" in json:
         leftX = json["Left X Axis"]
 
-    print("Joystick Values: RX: {}, RY: {}, LX: {}, LY: {}".format(rightX, rightY, leftX, leftY))
+    print("Joystick Values: RX: {}, RY: {}, LX: {}, LY: {}".format(
+        rightX, rightY, leftX, leftY))
     # pwm_test.set_speed(14, float(leftY), 0)
     # pwm_test.set_speed(15, float(leftY), 0)
     # pwm_test.set_speed(18, float(leftY), 0)
