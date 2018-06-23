@@ -25,7 +25,7 @@ public class Field implements ConnectionListener {
 	}
 
 	public boolean attemptConnection(String ip) {
-		logger.fine("Attempting Field Connection...");
+		logger.fine("Attempting Field Connection at " + ip);
 
 		try {
 			Socket socket = createSocket(ip);

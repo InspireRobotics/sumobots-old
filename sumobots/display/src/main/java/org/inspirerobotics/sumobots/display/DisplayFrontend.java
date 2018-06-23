@@ -7,6 +7,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
+import org.inspirerobotics.sumobots.display.config.Settings;
 import org.inspirerobotics.sumobots.display.gui.SceneManager;
 import org.inspirerobotics.sumobots.display.gui.scenes.GameScene;
 import org.inspirerobotics.sumobots.library.InternalLog;
@@ -20,9 +21,11 @@ import java.util.logging.Logger;
 public class DisplayFrontend extends Application {
 
 	private static final String threadName = "Display Frontend";
+	private final Settings settings = Settings.load();
 	private final Logger logger = InternalLog.getLogger();
 	private final ThreadChannel threadChannel = new ThreadChannel();
-	private final DisplayBackend displayBackend = new DisplayBackend(threadChannel.createPair());
+	private final DisplayBackend displayBackend = new DisplayBackend(threadChannel.createPair(),
+			(Settings) settings.clone());
 	private SceneManager sceneManager;
 	private Stage stage;
 	private TimePeriod timePeriod = TimePeriod.DISABLED;
@@ -31,6 +34,7 @@ public class DisplayFrontend extends Application {
 	public void start(Stage primaryStage) {
 		Thread.currentThread().setName(threadName);
 		logger.info("Initializing the display...");
+		logger.setLevel(settings.logLevel());
 		this.displayBackend.start();
 		this.stage = primaryStage;
 		this.sceneManager = new SceneManager(stage);
@@ -68,7 +72,7 @@ public class DisplayFrontend extends Application {
 		InterThreadMessage message = null;
 
 		while ((message = threadChannel.poll()) != null) {
-			logger.fine("Received message from backend: " + formatMessageToString(message));
+			logger.finer("Received message from backend: " + formatMessageToString(message));
 			onMessageReceived(message);
 		}
 	}
