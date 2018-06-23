@@ -1,5 +1,6 @@
 package org.inspirerobotics.sumobots.display;
 
+import org.inspirerobotics.sumobots.display.config.Settings;
 import org.inspirerobotics.sumobots.display.field.Field;
 import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.concurrent.InterThreadMessage;
@@ -13,13 +14,15 @@ public class DisplayBackend extends Thread {
 
 	private static final String threadName = "Display Backend";
 	private final Logger logger = InternalLog.getLogger();
+	private final Settings settings;
 	private final ThreadChannel threadChannel;
 	private final Field field;
 
 	private boolean running;
 
-	public DisplayBackend(ThreadChannel threadChannel) {
+	public DisplayBackend(ThreadChannel threadChannel, Settings settings) {
 		this.threadChannel = threadChannel;
+		this.settings = settings;
 		this.setName(threadName);
 		this.field = new Field(this);
 	}
@@ -40,7 +43,7 @@ public class DisplayBackend extends Thread {
 		while (running) {
 			handleIncomingMessages();
 
-			if (field.attemptConnection("localhost")) {
+			if (field.attemptConnection(settings.fieldIP())) {
 				logger.info("Connected to the field... Starting main loop");
 				onFieldConnectionAccepted();
 				return;

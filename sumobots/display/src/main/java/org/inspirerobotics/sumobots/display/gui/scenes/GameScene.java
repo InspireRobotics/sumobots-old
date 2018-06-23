@@ -80,7 +80,7 @@ class GamePane extends AnchorPane {
 			t.setText("No Team!");
 		}
 
-		InternalLog.getLogger().fine("Teams: " + Arrays.toString(teams));
+		InternalLog.getLogger().finer("Teams: " + Arrays.toString(teams));
 
 		for (int i = 0; i < teams.length; i++) {
 			getTeamPaneAt(i < 2 ? 0 : 1, i % 2).setText(teams[i]);
