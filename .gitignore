@@ -12,6 +12,9 @@ sumobots/.idea
 sumobots/.idea
 **/uiDesigner.xml 
 
+# VS Code 
+.vscode
+
 # Mac
 .DS_Store
  
