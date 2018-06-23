@@ -2,10 +2,7 @@ package org.inspirerobotics.sumobots.display.gui;
 
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.inspirerobotics.sumobots.display.gui.scenes.DebugScene;
-import org.inspirerobotics.sumobots.display.gui.scenes.GameScene;
-import org.inspirerobotics.sumobots.display.gui.scenes.LogoScene;
-import org.inspirerobotics.sumobots.display.gui.scenes.NoFieldScene;
+import org.inspirerobotics.sumobots.display.gui.scenes.*;
 
 import java.util.HashMap;
 import java.util.Set;
@@ -19,6 +16,8 @@ public class SceneManager {
 	private final DisplayScene logoScene;
 	private final DisplayScene debugScene;
 	private final DisplayScene gameScene;
+	private final DisplayScene fieldResetScene;
+	private final DisplayScene eStopScene;
 
 	private boolean fullscreen = false;
 
@@ -27,8 +26,10 @@ public class SceneManager {
 		noField = new NoFieldScene();
 		logoScene = new LogoScene();
 		gameScene = new GameScene();
+		fieldResetScene = new FieldResetScene();
+		eStopScene = new EStopScene();
 
-		registerScenes(noField, logoScene, gameScene);
+		registerScenes(noField, logoScene, gameScene, fieldResetScene, eStopScene);
 
 		debugScene = new DebugScene(this);
 	}
@@ -67,6 +68,10 @@ public class SceneManager {
 		return debugScene;
 	}
 
+	public DisplayScene getFieldResetScene() {
+		return fieldResetScene;
+	}
+
 	public DisplayScene getGameScene() {
 		return gameScene;
 	}
@@ -74,6 +79,10 @@ public class SceneManager {
 	public void setFullscreen(boolean fullscreen) {
 		this.fullscreen = fullscreen;
 		stage.setFullScreen(fullscreen);
+	}
+
+	public DisplayScene getEStopScene() {
+		return eStopScene;
 	}
 
 	public boolean isFullscreen() {
