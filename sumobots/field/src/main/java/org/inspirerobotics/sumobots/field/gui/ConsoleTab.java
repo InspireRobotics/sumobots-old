@@ -118,7 +118,6 @@ public class ConsoleTab extends AnchorPane {
 	@FXML
 	public void onArchivePressed() {
 		InternalLog.getInstance().clear();
-		logger.warning("Log Archiving is currently unimplemented. All this currently does is clear the log");
 	}
 
 }
