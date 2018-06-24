@@ -53,6 +53,8 @@ public class GameTab extends AnchorPane {
 
 	private Button emergencyStopTB;
 
+	private Button clearLogButton;
+
 	@FXML
 	private ChoiceBox<String> netwTableSelector;
 
@@ -87,8 +89,8 @@ public class GameTab extends AnchorPane {
 	private void initStatBar() {
 		matchStatusBar = new MatchStatusBar();
 
-		initToolbar();
-		toolbar = new ToolBar(emergencyStopTB);
+		initToolbarButtons();
+		toolbar = new ToolBar(emergencyStopTB, clearLogButton);
 		toolbar.setStyle("-fx-background-color:#2a2a2a");
 
 		VBox vbox = new VBox();
@@ -97,15 +99,12 @@ public class GameTab extends AnchorPane {
 		centralBorderPane.setTop(vbox);
 	}
 
-	private void initToolbar() {
+	private void initToolbarButtons() {
 		emergencyStopTB = new Button("Emergency Stop");
-		emergencyStopTB.setOnAction(new EventHandler<ActionEvent>() {
+		emergencyStopTB.setOnAction(arg0 -> fieldFrontend.eStop());
 
-			@Override
-			public void handle(ActionEvent arg0) {
-				fieldFrontend.eStop();
-			}
-		});
+		clearLogButton = new Button("Clear Log");
+		clearLogButton.setOnAction(event -> InternalLog.getInstance().clear());
 	}
 
 	private void initTables() {
@@ -175,14 +174,8 @@ public class GameTab extends AnchorPane {
 
 							btn.setText(item.split(";")[1]);
 							btn.setMaxHeight(10);
-							btn.setOnAction(new EventHandler<ActionEvent>() {
-
-								@Override
-								public void handle(ActionEvent e) {
-									handler.handle(new ActionEvent(item.split(";")[0], ActionEvent.NULL_SOURCE_TARGET));
-								}
-
-							});
+							btn.setOnAction(e -> handler
+									.handle(new ActionEvent(item.split(";")[0], ActionEvent.NULL_SOURCE_TARGET)));
 							btn.setMinWidth(minWidth - 8);
 							btn.setMaxWidth(minWidth - 8);
 							setGraphic(btn);

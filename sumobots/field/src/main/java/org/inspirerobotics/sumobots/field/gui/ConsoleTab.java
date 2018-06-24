@@ -4,14 +4,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.gui.FXMLFileLoader;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 public class ConsoleTab extends AnchorPane {
 
@@ -29,53 +26,45 @@ public class ConsoleTab extends AnchorPane {
 	public TextArea console;
 
 	@FXML
-	public HBox controlBox;
-
-	@FXML
 	public Button errorButton, warningButton, infoButton, fineButton, finerButton;
 
 	@FXML
 	public Button archiveButton;
 
-	private Logger logger = InternalLog.getLogger();
+	private int currentLogLength = 0;
 
 	public ConsoleTab() {
-
 		FXMLFileLoader.load("log.fxml", this);
 
-		archiveButton.setStyle("-fx-background-color:red");
-		errorButton.setStyle("-fx-background-color:red");
-		warningButton.setStyle("-fx-background-color:red");
-		infoButton.setStyle("-fx-background-color:red");
-		fineButton.setStyle("-fx-background-color:red");
-		finerButton.setStyle("-fx-background-color:red");
+		setCurrentLevel(GuiLogLevel.DEBUG);
 	}
 
-	/**
-	 * Updates certain aspects of the GUI
-	 */
 	void update() {
-		updateButtons();
-
 		List<String> list = InternalLog.getInstance().getLogLines();
-		StringBuilder sb = new StringBuilder();
 
-		levelLabel.setText("Current Level: " + currentLevel.toString());
+		if (list.size() != currentLogLength) {
+			updateLog(list);
+			currentLogLength = list.size();
+		}
+	}
+
+	private void updateLog(List<String> list) {
+		StringBuilder sb = new StringBuilder();
 
 		String[] levelsToRemove = getLevelsToRemove(currentLevel);
 
 		for (Object obj : list.toArray()) {
 			String string = (String) obj;
 
-			if (!containsAny(string, levelsToRemove))
+			string = string.replace("org.inspirerobotics.sumobots.", "");
+
+			if (!containsAny(string, levelsToRemove)){
 				sb.append(string);
+			}
 		}
 
-		if (!sb.toString().equals(console.getText())) {
-			console.setText(sb.toString());
-			console.setScrollTop(Double.MAX_VALUE);
-		}
-
+		console.setText(sb.toString());
+		console.setScrollTop(Double.MAX_VALUE);
 	}
 
 	public static boolean containsAny(String string, String[] levelsToRemove) {
@@ -104,55 +93,39 @@ public class ConsoleTab extends AnchorPane {
 		return new String[]{};
 	}
 
-	private void updateButtons() {
-		double buttonLength = ((controlBox.getWidth() - 20) / 7) - 6;
-		double fontSize = buttonLength / 6 > 20 ? 20 : buttonLength / 6;
-		Font font = Font.font(fontSize);
-
-		archiveButton.setFont(font);
-		errorButton.setFont(font);
-		warningButton.setFont(font);
-		infoButton.setFont(font);
-		fineButton.setFont(font);
-		finerButton.setFont(font);
-
-		archiveButton.setMinWidth(buttonLength * 2);
-		errorButton.setMinWidth(buttonLength);
-		warningButton.setMinWidth(buttonLength);
-		infoButton.setMinWidth(buttonLength);
-		fineButton.setMinWidth(buttonLength);
-		finerButton.setMinWidth(buttonLength);
-	}
-
 	@FXML
 	public void onErrorPressed() {
-		currentLevel = GuiLogLevel.ERROR;
+		setCurrentLevel(GuiLogLevel.ERROR);
 	}
 
 	@FXML
 	public void onWarningPressed() {
-		currentLevel = GuiLogLevel.WARNING;
+		setCurrentLevel(GuiLogLevel.WARNING);
 	}
 
 	@FXML
 	public void onInfoPressed() {
-		currentLevel = GuiLogLevel.INFO;
+		setCurrentLevel(GuiLogLevel.INFO);
 	}
 
 	@FXML
 	public void onDebugPressed() {
-		currentLevel = GuiLogLevel.DEBUG;
+		setCurrentLevel(GuiLogLevel.DEBUG);
 	}
 
 	@FXML
 	public void onTracePressed() {
-		currentLevel = GuiLogLevel.TRACE;
+		setCurrentLevel(GuiLogLevel.TRACE);
+	}
+
+	private void setCurrentLevel(GuiLogLevel currentLevel) {
+		this.currentLevel = currentLevel;
+		levelLabel.setText("Current Level: " + currentLevel.toString());
 	}
 
 	@FXML
 	public void onArchivePressed() {
 		InternalLog.getInstance().clear();
-		logger.warning("Log Archiving is currently unimplemented. All this currently does is clear the log");
 	}
 
 }

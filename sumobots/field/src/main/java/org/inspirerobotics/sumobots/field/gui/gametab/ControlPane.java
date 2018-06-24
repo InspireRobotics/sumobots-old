@@ -40,15 +40,7 @@ public class ControlPane extends AnchorPane {
 	}
 
 	void update() {
-		initMatch.setMinHeight(this.getHeight() - 10);
-		startMatch.setMinHeight(this.getHeight() - 10);
-		endMatch.setMinHeight(this.getHeight() - 10);
-
-		controlConsole.setMinWidth(this.getWidth() - controlButtonPane.getWidth() - 20);
-		controlConsole.setMaxWidth(this.getWidth() - controlButtonPane.getWidth() - 20);
-
 		updateLog();
-
 	}
 
 	private void updateLog() {
@@ -67,7 +59,7 @@ public class ControlPane extends AnchorPane {
 		for (Object obj : list.toArray()) {
 			String string = (String) obj;
 			if (!string.contains("FINE") && !string.contains("FINER"))
-				builder.append(string);
+				builder.append(string.replace("org.inspirerobotics.sumobots.", ""));
 		}
 
 		return builder;
