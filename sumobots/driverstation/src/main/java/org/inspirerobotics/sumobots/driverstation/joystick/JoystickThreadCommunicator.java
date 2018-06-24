@@ -39,11 +39,15 @@ public class JoystickThreadCommunicator {
 	public void update() {
 		if (nextRobotTime < System.currentTimeMillis() && valuesUpdated) {
 			nextRobotTime = System.currentTimeMillis() + 20;
-			valuesUpdated = false;
-			driverStationBackend.updateJoystickValues(inputValues);
+			sendValuesToRobot();
 		}
 
 		pollMessages();
+	}
+
+	public void sendValuesToRobot() {
+		valuesUpdated = false;
+		driverStationBackend.updateJoystickValues(inputValues);
 	}
 
 	public void updateNetworkingTable(NetworkTable networkTable) {
