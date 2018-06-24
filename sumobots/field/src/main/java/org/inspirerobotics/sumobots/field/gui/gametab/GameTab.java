@@ -174,7 +174,8 @@ public class GameTab extends AnchorPane {
 
 							btn.setText(item.split(";")[1]);
 							btn.setMaxHeight(10);
-							btn.setOnAction(e -> handler.handle(new ActionEvent(item.split(";")[0], ActionEvent.NULL_SOURCE_TARGET)));
+							btn.setOnAction(e -> handler
+									.handle(new ActionEvent(item.split(";")[0], ActionEvent.NULL_SOURCE_TARGET)));
 							btn.setMinWidth(minWidth - 8);
 							btn.setMaxWidth(minWidth - 8);
 							setGraphic(btn);

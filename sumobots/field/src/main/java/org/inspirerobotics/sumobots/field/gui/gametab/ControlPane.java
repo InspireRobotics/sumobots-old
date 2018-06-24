@@ -59,7 +59,7 @@ public class ControlPane extends AnchorPane {
 		for (Object obj : list.toArray()) {
 			String string = (String) obj;
 			if (!string.contains("FINE") && !string.contains("FINER"))
-				builder.append(string);
+				builder.append(string.replace("org.inspirerobotics.sumobots.", ""));
 		}
 
 		return builder;

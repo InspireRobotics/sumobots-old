@@ -4,13 +4,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.gui.FXMLFileLoader;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 public class ConsoleTab extends AnchorPane {
 
@@ -28,40 +26,45 @@ public class ConsoleTab extends AnchorPane {
 	public TextArea console;
 
 	@FXML
-	public HBox controlBox;
-
-	@FXML
 	public Button errorButton, warningButton, infoButton, fineButton, finerButton;
 
 	@FXML
 	public Button archiveButton;
 
-	private Logger logger = InternalLog.getLogger();
+	private int currentLogLength = 0;
 
 	public ConsoleTab() {
 		FXMLFileLoader.load("log.fxml", this);
+
+		setCurrentLevel(GuiLogLevel.DEBUG);
 	}
 
 	void update() {
 		List<String> list = InternalLog.getInstance().getLogLines();
-		StringBuilder sb = new StringBuilder();
 
-		levelLabel.setText("Current Level: " + currentLevel.toString());
+		if (list.size() != currentLogLength) {
+			updateLog(list);
+			currentLogLength = list.size();
+		}
+	}
+
+	private void updateLog(List<String> list) {
+		StringBuilder sb = new StringBuilder();
 
 		String[] levelsToRemove = getLevelsToRemove(currentLevel);
 
 		for (Object obj : list.toArray()) {
 			String string = (String) obj;
 
-			if (!containsAny(string, levelsToRemove))
+			string = string.replace("org.inspirerobotics.sumobots.", "");
+
+			if (!containsAny(string, levelsToRemove)){
 				sb.append(string);
+			}
 		}
 
-		if (!sb.toString().equals(console.getText())) {
-			console.setText(sb.toString());
-			console.setScrollTop(Double.MAX_VALUE);
-		}
-
+		console.setText(sb.toString());
+		console.setScrollTop(Double.MAX_VALUE);
 	}
 
 	public static boolean containsAny(String string, String[] levelsToRemove) {
@@ -92,27 +95,32 @@ public class ConsoleTab extends AnchorPane {
 
 	@FXML
 	public void onErrorPressed() {
-		currentLevel = GuiLogLevel.ERROR;
+		setCurrentLevel(GuiLogLevel.ERROR);
 	}
 
 	@FXML
 	public void onWarningPressed() {
-		currentLevel = GuiLogLevel.WARNING;
+		setCurrentLevel(GuiLogLevel.WARNING);
 	}
 
 	@FXML
 	public void onInfoPressed() {
-		currentLevel = GuiLogLevel.INFO;
+		setCurrentLevel(GuiLogLevel.INFO);
 	}
 
 	@FXML
 	public void onDebugPressed() {
-		currentLevel = GuiLogLevel.DEBUG;
+		setCurrentLevel(GuiLogLevel.DEBUG);
 	}
 
 	@FXML
 	public void onTracePressed() {
-		currentLevel = GuiLogLevel.TRACE;
+		setCurrentLevel(GuiLogLevel.TRACE);
+	}
+
+	private void setCurrentLevel(GuiLogLevel currentLevel) {
+		this.currentLevel = currentLevel;
+		levelLabel.setText("Current Level: " + currentLevel.toString());
 	}
 
 	@FXML
