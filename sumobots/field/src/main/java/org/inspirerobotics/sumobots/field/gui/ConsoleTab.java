@@ -5,7 +5,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.gui.FXMLFileLoader;
@@ -40,23 +39,10 @@ public class ConsoleTab extends AnchorPane {
 	private Logger logger = InternalLog.getLogger();
 
 	public ConsoleTab() {
-
 		FXMLFileLoader.load("log.fxml", this);
-
-		archiveButton.setStyle("-fx-background-color:red");
-		errorButton.setStyle("-fx-background-color:red");
-		warningButton.setStyle("-fx-background-color:red");
-		infoButton.setStyle("-fx-background-color:red");
-		fineButton.setStyle("-fx-background-color:red");
-		finerButton.setStyle("-fx-background-color:red");
 	}
 
-	/**
-	 * Updates certain aspects of the GUI
-	 */
 	void update() {
-		updateButtons();
-
 		List<String> list = InternalLog.getInstance().getLogLines();
 		StringBuilder sb = new StringBuilder();
 
@@ -102,26 +88,6 @@ public class ConsoleTab extends AnchorPane {
 		}
 
 		return new String[]{};
-	}
-
-	private void updateButtons() {
-		double buttonLength = ((controlBox.getWidth() - 20) / 7) - 6;
-		double fontSize = buttonLength / 6 > 20 ? 20 : buttonLength / 6;
-		Font font = Font.font(fontSize);
-
-		archiveButton.setFont(font);
-		errorButton.setFont(font);
-		warningButton.setFont(font);
-		infoButton.setFont(font);
-		fineButton.setFont(font);
-		finerButton.setFont(font);
-
-		archiveButton.setMinWidth(buttonLength * 2);
-		errorButton.setMinWidth(buttonLength);
-		warningButton.setMinWidth(buttonLength);
-		infoButton.setMinWidth(buttonLength);
-		fineButton.setMinWidth(buttonLength);
-		finerButton.setMinWidth(buttonLength);
 	}
 
 	@FXML

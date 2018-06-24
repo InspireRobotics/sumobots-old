@@ -40,15 +40,7 @@ public class ControlPane extends AnchorPane {
 	}
 
 	void update() {
-		initMatch.setMinHeight(this.getHeight() - 10);
-		startMatch.setMinHeight(this.getHeight() - 10);
-		endMatch.setMinHeight(this.getHeight() - 10);
-
-		controlConsole.setMinWidth(this.getWidth() - controlButtonPane.getWidth() - 20);
-		controlConsole.setMaxWidth(this.getWidth() - controlButtonPane.getWidth() - 20);
-
 		updateLog();
-
 	}
 
 	private void updateLog() {
