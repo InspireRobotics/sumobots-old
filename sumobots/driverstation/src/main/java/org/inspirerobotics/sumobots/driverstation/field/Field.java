@@ -80,6 +80,9 @@ public class Field implements ConnectionListener {
 		currentPeriod = TimePeriod.fromString(timePeriod);
 
 		logger.info("Field entering match period: " + currentPeriod.getName());
+		// Send the joystick values to the robot, so if we are disabled it will know to
+		// stop motors
+		backend.getJoystickThreadCommunicator().sendValuesToRobot();
 		backend.sendMessageToFrontend(new InterThreadMessage("new_period", currentPeriod));
 	}
 

@@ -107,8 +107,8 @@ public class Connection {
 	private void handleIncomingMessage() {
 		while (hasNextMessage()) {
 			String nextMessage = getNextMessage();
-			logger.finer(
-					"Received raw message: " + nextMessage + " to " + socket.getInetAddress() + ":" + socket.getPort());
+			logger.finer("Received raw message: " + nextMessage + " from " + socket.getInetAddress() + ":"
+					+ socket.getPort());
 			Message message = Message.fromString(nextMessage);
 			onMessageReceived(message);
 		}
@@ -133,7 +133,7 @@ public class Connection {
 			currentPing = System.currentTimeMillis() - lastPingTime;
 
 			if (currentPing > 25)
-				logger.info("High Ping on connection, " + connectionName);
+				logger.info("High Ping on connection, " + connectionName + ": " + getCurrentPing() + " ms");
 		} else if (messageType == MessageType.STREAM_TERMINATED) {
 			try {
 				close();

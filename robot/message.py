@@ -3,6 +3,7 @@ class Message(object):
 
     def __init__(self, type):
         self.type = type
+        self.data = {}
 
     def add_data(self, key, val):
         self.data[key] = val

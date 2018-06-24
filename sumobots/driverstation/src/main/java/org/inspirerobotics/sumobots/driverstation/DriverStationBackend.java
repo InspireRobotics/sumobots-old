@@ -204,10 +204,13 @@ public class DriverStationBackend extends Thread {
 	public void updateJoystickValues(HashMap<String, Float> inputValues) {
 		if (robot.connected()) {
 			Message m = new Message(MessageType.JOYSTICK_UPDATE);
-			// m.addData("values", inputValues.toString());
 
 			for (Entry<String, Float> entry : inputValues.entrySet()) {
-				m.addData(entry.getKey(), "" + entry.getValue());
+				if (field.getCurrentPeriod() == TimePeriod.GAME) {
+					m.addData(entry.getKey(), "" + entry.getValue());
+				} else {
+					m.addData(entry.getKey(), "" + 0f);
+				}
 			}
 
 			robot.getRobotConnection().sendMessage(m);
@@ -245,4 +248,7 @@ public class DriverStationBackend extends Thread {
 		return field.getCurrentPeriod();
 	}
 
+	public JoystickThreadCommunicator getJoystickThreadCommunicator() {
+		return joystickThreadCommunicator;
+	}
 }
