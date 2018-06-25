@@ -92,7 +92,7 @@ public class DisplayFrontend extends Application {
 		} else if (message.getName().equals("set_time_period")) {
 			timePeriod = TimePeriod.fromString((String) message.getData());
 
-			if (timePeriod == TimePeriod.INIT) {
+			if (timePeriod == TimePeriod.INIT || timePeriod == TimePeriod.GAME) {
 				GameScene.resetClock();
 			} else if (timePeriod == TimePeriod.ESTOPPED) {
 				sceneManager.showScene(sceneManager.getEStopScene());

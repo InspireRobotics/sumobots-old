@@ -10,6 +10,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import org.inspirerobotics.sumobots.display.gui.DisplayScene;
 import org.inspirerobotics.sumobots.library.InternalLog;
+import org.inspirerobotics.sumobots.library.Resources;
 import org.inspirerobotics.sumobots.library.gui.FXMLFileLoader;
 
 import java.text.SimpleDateFormat;
@@ -40,15 +41,19 @@ public class GameScene extends DisplayScene {
 
 	public static void updateClock() {
 		if (lastClockUpdate + 1000 < System.currentTimeMillis()) {
-			clockTime++;
+
+			if (clockTime > 0)
+				clockTime--;
+
 			gamePane.setTime(clockTime);
 			lastClockUpdate = System.currentTimeMillis();
 		}
 	}
 
 	public static void resetClock() {
-		clockTime = -1;
-		gamePane.setTime(0);
+		clockTime = Resources.MATCH_LENGTH_SECONDS;
+		lastClockUpdate = System.currentTimeMillis() - 250;// -250 counteracts delay of the field message getting here
+		gamePane.setTime(clockTime);
 	}
 }
 

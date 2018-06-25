@@ -1,9 +1,9 @@
 package org.inspirerobotics.sumobots.field.gui.gametab;
 
-import org.inspirerobotics.sumobots.library.TimePeriod;
-
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
+import org.inspirerobotics.sumobots.library.Resources;
+import org.inspirerobotics.sumobots.library.TimePeriod;
 
 public class MatchStatusBar extends HBox {
 
@@ -18,7 +18,8 @@ public class MatchStatusBar extends HBox {
 
 	private int matchNum = 0;
 
-	private long matchTime;
+	private long matchTime = 0;
+	private long lastClockUpdate;
 
 	private TimePeriod lastKnownTimePeriod;
 
@@ -60,18 +61,18 @@ public class MatchStatusBar extends HBox {
 
 		matchNumberBox.setText("#" + matchNum);
 
-		String time = "" + (System.currentTimeMillis() - matchTime) / 1000;
-		matchTimeBox.setMinWidth(time.length() * 20);
-		matchTimeBox.setText(time);
+		matchTimeBox.setText("" + matchTime);
 
 	}
 
 	private void enterNewPeriod(TimePeriod timePeriod) {
 		if (timePeriod == TimePeriod.INIT) {
 			matchNum++;
+			matchTime = Resources.MATCH_LENGTH_SECONDS;
+		} else if (timePeriod == TimePeriod.GAME) {
+			lastClockUpdate = System.currentTimeMillis() - 250; // -250 counteracts the time the message took to get
+																// here
 		}
-
-		matchTime = System.currentTimeMillis();
 	}
 
 	private void updateMatchStateBox(TimePeriod timePeriod) {
@@ -101,6 +102,13 @@ public class MatchStatusBar extends HBox {
 
 	public void updateGui() {
 		matchStateBox.setMinWidth(this.getWidth() - (cornerBoxSize * 2));
+
+		if (lastClockUpdate + 1000 < System.currentTimeMillis() && lastKnownTimePeriod == TimePeriod.GAME) {
+			lastClockUpdate = System.currentTimeMillis();
+
+			if (matchTime > 0)
+				matchTime--;
+		}
 	}
 
 }

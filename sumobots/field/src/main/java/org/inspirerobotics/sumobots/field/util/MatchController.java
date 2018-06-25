@@ -2,6 +2,7 @@ package org.inspirerobotics.sumobots.field.util;
 
 import org.inspirerobotics.sumobots.field.FieldBackend;
 import org.inspirerobotics.sumobots.library.InternalLog;
+import org.inspirerobotics.sumobots.library.Resources;
 import org.inspirerobotics.sumobots.library.TimePeriod;
 import org.inspirerobotics.sumobots.library.concurrent.InterThreadMessage;
 import org.inspirerobotics.sumobots.library.networking.message.ArchetypalMessages;
@@ -14,6 +15,7 @@ public class MatchController {
 	private TimePeriod currentTimePeriod;
 	private FieldBackend fieldBackend;
 	private long lastDisplaySyncTime = 0;
+	private long matchEndTime;
 
 	public MatchController(FieldBackend fieldBackend) {
 		this.fieldBackend = fieldBackend;
@@ -30,6 +32,10 @@ public class MatchController {
 
 	private void changeState(TimePeriod newPeriod) {
 		this.currentTimePeriod = newPeriod;
+
+		if (currentTimePeriod == TimePeriod.GAME) {
+			matchEndTime = System.currentTimeMillis() + (Resources.MATCH_LENGTH_SECONDS * 1000);
+		}
 
 		InterThreadMessage m = new InterThreadMessage("time_period_update", newPeriod);
 		fieldBackend.sendMessageToFrontend(m);
@@ -61,9 +67,18 @@ public class MatchController {
 	}
 
 	public void syncDisplayData() {
+		if (currentTimePeriod == TimePeriod.DISABLED || currentTimePeriod == TimePeriod.DISABLED)
+			return;
+
 		if (lastDisplaySyncTime + 500 < System.currentTimeMillis()) {
 			lastDisplaySyncTime = System.currentTimeMillis();
 			fieldBackend.getDisplayServer().sendMatchData(fieldBackend.getServer().getConnections());
+		}
+	}
+
+	public void updateMatchTime() {
+		if (currentTimePeriod == TimePeriod.GAME && matchEndTime < System.currentTimeMillis()) {
+			attemptStateChange(TimePeriod.DISABLED);
 		}
 	}
 }

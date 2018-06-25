@@ -50,6 +50,7 @@ public class FieldBackend extends Thread {
 			displayServer.update();
 
 			matchController.syncDisplayData();
+			matchController.updateMatchTime();
 
 			sendConnectionsToFrontend();
 			updateLoopTime();
