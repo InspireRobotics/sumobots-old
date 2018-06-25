@@ -67,6 +67,9 @@ public class MatchController {
 	}
 
 	public void syncDisplayData() {
+		if (currentTimePeriod == TimePeriod.DISABLED || currentTimePeriod == TimePeriod.DISABLED)
+			return;
+
 		if (lastDisplaySyncTime + 500 < System.currentTimeMillis()) {
 			lastDisplaySyncTime = System.currentTimeMillis();
 			fieldBackend.getDisplayServer().sendMatchData(fieldBackend.getServer().getConnections());
