@@ -16,7 +16,6 @@ public class JoystickThreadCommunicator {
 	private final InputThread thread;
 	private final DriverStationBackend driverStationBackend;
 
-	private boolean valuesUpdated;
 	private long nextRobotTime;
 
 	private HashMap<String, Float> inputValues = new HashMap<String, Float>();
@@ -37,8 +36,8 @@ public class JoystickThreadCommunicator {
 	}
 
 	public void update() {
-		if (nextRobotTime < System.currentTimeMillis() && valuesUpdated) {
-			nextRobotTime = System.currentTimeMillis() + 20;
+		if (nextRobotTime < System.currentTimeMillis()) {
+			nextRobotTime = System.currentTimeMillis() + 200;
 			sendValuesToRobot();
 		}
 
@@ -46,7 +45,6 @@ public class JoystickThreadCommunicator {
 	}
 
 	public void sendValuesToRobot() {
-		valuesUpdated = false;
 		driverStationBackend.updateJoystickValues(inputValues);
 	}
 
@@ -78,8 +76,8 @@ public class JoystickThreadCommunicator {
 
 				break;
 			case "input_values":
-				valuesUpdated = true;
 				inputValues = (HashMap<String, Float>) m.getData();
+				sendValuesToRobot();
 				break;
 			default:
 				logger.warning("Unknown Message Recieved on Backend: " + name);
