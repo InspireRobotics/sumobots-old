@@ -116,12 +116,17 @@ public class GameTab extends AnchorPane {
 		addSimpleConnColumn("DS Ping", 150, "dsPing");
 		addSimpleConnColumn("Robot IP", 200, "robotIP");
 		addSimpleConnColumn("Robot Ping", 150, "robotPing");
-		addButtonColumn("Disable", 125, "action", event -> {
+		addButtonColumn("Disable", 125, "disableAction", event -> {
 			String name = (String) event.getSource();
 			logger.info("Disabling " + name);
-			fieldFrontend.disable(name);
+			fieldFrontend.disableConnection(name);
 		});
-		addSimpleConnColumn("Status", 200, "status");
+		addButtonColumn("Kill", 125, "closeAction", event -> {
+			String name = (String) event.getSource();
+			logger.info("Killing " + name);
+			fieldFrontend.killConnection(name);
+		});
+		addSimpleConnColumn("Time Period", 200, "timePeriod");
 		ObservableList<TableConnection> data = FXCollections.observableArrayList();
 
 		connTable.setItems(data);
@@ -283,13 +288,14 @@ public class GameTab extends AnchorPane {
 			String dsPing = conn.getCurrentPing() + " ms";
 			String robotIP = conn.getTable().get("robot_ip");
 			String robotPing = conn.getTable().get("robot_ping");
-			String status = conn.isClosed() ? "Closed!" : "Open!";
-			TableConnection tc = new TableConnection(name, dsIP, dsPing, robotIP, robotPing, status, name + ";Disable");
+			String timePeriod = conn.getTable().get("Time Period");
+			TableConnection tc = new TableConnection(name, dsIP, dsPing, robotIP, robotPing, timePeriod,
+					name + ";Disable", name + ";Kill");
 			data.add(tc);
 		}
 
 		if (data.size() == 0) {
-			data.add(new TableConnection("", "", "", "", "", "", ""));
+			data.add(new TableConnection("", "", "", "", "", "", "", ""));
 		}
 
 		connTable.setItems(data);

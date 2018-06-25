@@ -22,7 +22,7 @@ public class Field implements ConnectionListener {
 	private final Logger logger = InternalLog.getLogger();
 
 	private Connection fieldConnection;
-	private TimePeriod currentPeriod;
+	private TimePeriod currentPeriod = TimePeriod.DISABLED;
 	private String driverStationName;
 	private final DriverStationBackend backend;
 

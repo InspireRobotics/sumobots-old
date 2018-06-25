@@ -47,4 +47,12 @@ public class DriverStationServer extends Server {
 		table.put("Port", "" + getServerSocket().getLocalPort());
 	}
 
+	public void killDS(String name) {
+		for (Connection c : this.getConnections()) {
+			if (c.getConnectionName().equals(name)) {
+				c.endConnection();
+				break;
+			}
+		}
+	}
 }
