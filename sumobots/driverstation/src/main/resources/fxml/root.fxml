@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
@@ -35,6 +36,15 @@
          <center>
             <VBox fx:id="centralVBox" BorderPane.alignment="CENTER">
                <children>
+                  <AnchorPane minHeight="100.0" VBox.vgrow="NEVER">
+                     <children>
+                        <Label fx:id="readyLabel" alignment="CENTER" text="Label" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <font>
+                              <Font size="40.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </AnchorPane>
                   <TextArea id="console" fx:id="logConsole" minHeight="-Infinity" VBox.vgrow="ALWAYS" />
                </children>
             </VBox>

@@ -2,6 +2,7 @@ package org.inspirerobotics.sumobots.driverstation.gui;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
@@ -37,7 +38,16 @@ public class GuiController {
 	@FXML
 	public TextField joystickLabel;
 
+	@FXML
+	public Label readyLabel;
+
 	private DriverStationFrontend driverStationFrontend;
+
+	private boolean robotReady;
+
+	private boolean fieldReady;
+
+	private boolean joysticksReady;
 
 	public GuiController(DriverStationFrontend dsf) {
 		this.driverStationFrontend = dsf;
@@ -53,21 +63,36 @@ public class GuiController {
 		setRobotConnectionStatus(false);
 		setJoystickStatus(false);
 
-		if (DriverStationFrontend.getSettings().shouldStoreLog())
-			runLoop();
-		else
-			logConsole.setDisable(true);
+		runLoop();
+
+	}
+
+	public boolean isReady() {
+		return fieldReady && robotReady && joysticksReady;
 	}
 
 	private void runLoop() {
 		Platform.runLater(new Runnable() {
 			@Override
 			public void run() {
-				checkForLogUpdate();
+				if (DriverStationFrontend.getSettings().shouldStoreLog())
+					checkForLogUpdate();
+				else
+					updateReadyScreen();
 
 				Platform.runLater(this);
 			}
 		});
+	}
+
+	private void updateReadyScreen() {
+		if (isReady()) {
+			readyLabel.setText("Ready!");
+			readyLabel.setStyle("-fx-background-color:green;-fx-text-fill:white;");
+		} else {
+			readyLabel.setText("Not Ready!");
+			readyLabel.setStyle("-fx-background-color:red;-fx-text-fill:white;");
+		}
 	}
 
 	private void setFocusTravesable() {
@@ -115,10 +140,13 @@ public class GuiController {
 		if (driverStationFrontend.isNonFieldMode()) {
 			fieldLabel.setText("Non Field Mode!");
 			fieldLabel.setStyle("-fx-background-color:blue");
+			fieldReady = true;
 		} else if (connected) {
+			fieldReady = true;
 			fieldLabel.setText("Field: Connected!");
 			fieldLabel.setStyle("-fx-background-color:green");
 		} else {
+			fieldReady = false;
 			fieldLabel.setText("Field: Not Connected!");
 			fieldLabel.setStyle("-fx-background-color:red");
 		}
@@ -126,9 +154,11 @@ public class GuiController {
 
 	public void setRobotConnectionStatus(boolean connected) {
 		if (connected) {
+			robotReady = true;
 			robotLabel.setText("Robot: Connected!");
 			robotLabel.setStyle("-fx-background-color:green");
 		} else {
+			robotReady = false;
 			robotLabel.setText("Robot: Not Connected!");
 			robotLabel.setStyle("-fx-background-color:red");
 		}
@@ -136,9 +166,11 @@ public class GuiController {
 
 	public void setJoystickStatus(boolean connected) {
 		if (connected) {
+			joysticksReady = true;
 			joystickLabel.setText("Joystick: Connected!");
 			joystickLabel.setStyle("-fx-background-color:green");
 		} else {
+			joysticksReady = false;
 			joystickLabel.setText("Joystick: Not Connected!");
 			joystickLabel.setStyle("-fx-background-color:red");
 		}
