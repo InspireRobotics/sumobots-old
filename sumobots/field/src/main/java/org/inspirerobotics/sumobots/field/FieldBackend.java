@@ -127,6 +127,9 @@ public class FieldBackend extends Thread {
 			case "disable_ds":
 				server.disableDS((String) m.getData());
 				break;
+			case "kill_ds":
+				server.killDS((String) m.getData());
+				break;
 			case "select_scene":
 				displayServer.selectScene((String) m.getData());
 				break;

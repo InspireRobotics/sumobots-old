@@ -14,19 +14,22 @@ public class TableConnection {
 
 	public SimpleStringProperty robotPing;
 
-	public SimpleStringProperty status;
+	public SimpleStringProperty timePeriod;
 
-	public SimpleStringProperty action;
+	public SimpleStringProperty disableAction;
 
-	public TableConnection(String name, String dsIP, String dsPing, String robotIP, String robotPing, String status,
-			String action) {
+	public SimpleStringProperty closeAction;
+
+	public TableConnection(String name, String dsIP, String dsPing, String robotIP, String robotPing, String timePeriod,
+			String disableAction, String closeAction) {
 		this.name = new SimpleStringProperty(name);
 		this.dsIP = new SimpleStringProperty(dsIP);
 		this.dsPing = new SimpleStringProperty(dsPing);
 		this.robotIP = new SimpleStringProperty(robotIP);
 		this.robotPing = new SimpleStringProperty(robotPing);
-		this.status = new SimpleStringProperty(status);
-		this.action = new SimpleStringProperty(action);
+		this.timePeriod = new SimpleStringProperty(timePeriod);
+		this.disableAction = new SimpleStringProperty(disableAction);
+		this.closeAction = new SimpleStringProperty(closeAction);
 	}
 
 	public String getName() {
@@ -49,12 +52,15 @@ public class TableConnection {
 		return robotPing.get();
 	}
 
-	public String getStatus() {
-		return status.get();
+	public String getTimePeriod() {
+		return timePeriod.get();
 	}
 
-	public String getAction() {
-		return action.get();
+	public String getDisableAction() {
+		return disableAction.get();
 	}
 
+	public String getCloseAction() {
+		return closeAction.get();
+	}
 }

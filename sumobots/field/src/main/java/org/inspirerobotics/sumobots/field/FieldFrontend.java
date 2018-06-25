@@ -188,10 +188,14 @@ public class FieldFrontend extends Application {
 		sendTimePeriodRequestToBackend(TimePeriod.ESTOPPED);
 	}
 
-	public void disable(String name) {
+	public void disableConnection(String name) {
 		sendMessageToBackend(new InterThreadMessage("disable_ds", name));
 
 		AudioEffect.play("disable_robot.wav");
+	}
+
+	public void killConnection(String name) {
+		sendMessageToBackend(new InterThreadMessage("kill_ds", name));
 	}
 
 	private void sendTimePeriodRequestToBackend(TimePeriod timePeriod) {
