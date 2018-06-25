@@ -14,6 +14,6 @@ public class Resources {
 
 	public static final String EOT = String.valueOf((char) 4);
 
-	public static final int SOCKET_TIMEOUT = 5;
+	public static final int SOCKET_TIMEOUT = 2;
 
 }
