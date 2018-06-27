@@ -92,8 +92,8 @@ public class Robot implements ConnectionListener {
 
 	private Socket createSocket(String ip) throws IOException {
 		Socket socket = new Socket();
+		socket.connect(new InetSocketAddress(ip, Resources.ROBOT_PORT), 10);
 		socket.setSoTimeout(Resources.SOCKET_TIMEOUT);
-		socket.connect(new InetSocketAddress(ip, Resources.ROBOT_PORT), Resources.SOCKET_TIMEOUT * 2);
 
 		return socket;
 	}
