@@ -22,8 +22,8 @@ public class GameScene extends DisplayScene {
 
 	private static final GamePane gamePane = new GamePane();
 
-	private static int clockTime = -1;
-	private static long lastClockUpdate;
+	private static long startTime = 0;
+	private static long clockTime = -1;
 
 	public GameScene() {
 		super(generateGroup(), "Game");
@@ -40,20 +40,15 @@ public class GameScene extends DisplayScene {
 	}
 
 	public static void updateClock() {
-		if (lastClockUpdate + 1000 < System.currentTimeMillis()) {
+		long matchTimeCountUpwards = (Math.round((double) (System.currentTimeMillis() - startTime) / 1000.0));
+		clockTime = (Resources.MATCH_LENGTH_SECONDS) - matchTimeCountUpwards;
 
-			if (clockTime > 0)
-				clockTime--;
-
-			gamePane.setTime(clockTime);
-			lastClockUpdate = System.currentTimeMillis();
-		}
+		gamePane.setTime((int) clockTime);
 	}
 
 	public static void resetClock() {
-		clockTime = Resources.MATCH_LENGTH_SECONDS;
-		lastClockUpdate = System.currentTimeMillis() - 250;// -250 counteracts delay of the field message getting here
-		gamePane.setTime(clockTime);
+		startTime = System.currentTimeMillis();
+		gamePane.setTime(Resources.MATCH_LENGTH_SECONDS);
 	}
 }
 
