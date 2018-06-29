@@ -16,6 +16,6 @@ public class Resources {
 
 	public static final int SOCKET_TIMEOUT = 2;
 
-	public static final int MATCH_LENGTH_SECONDS = 150;
+	public static final int MATCH_LENGTH_SECONDS = 60;
 
 }
