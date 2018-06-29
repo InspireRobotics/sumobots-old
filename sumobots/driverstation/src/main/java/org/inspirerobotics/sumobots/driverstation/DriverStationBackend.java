@@ -202,6 +202,11 @@ public class DriverStationBackend extends Thread {
 	}
 
 	public void updateJoystickValues(HashMap<String, Float> inputValues) {
+		if (inputValues == null) {
+			logger.warning("Input values are null! Aborting joystick value message!");
+			return;
+		}
+
 		if (robot.connected()) {
 			Message m = new Message(MessageType.JOYSTICK_UPDATE);
 
