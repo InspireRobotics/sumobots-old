@@ -77,8 +77,8 @@ public class GuiController {
 			public void run() {
 				if (DriverStationFrontend.getSettings().shouldStoreLog())
 					checkForLogUpdate();
-				else
-					updateReadyScreen();
+
+				updateReadyScreen();
 
 				Platform.runLater(this);
 			}
