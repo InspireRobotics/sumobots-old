@@ -1,6 +1,8 @@
 package org.inspirerobotics.sumobots.display.gui;
 
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.inspirerobotics.sumobots.display.gui.scenes.*;
 
@@ -46,8 +48,18 @@ public class SceneManager {
 
 	public void showScene(Scene scene) {
 		stage.setScene(scene);
+
+		if (fullscreen) {
+			Screen screen = Screen.getPrimary();
+			Rectangle2D bounds = screen.getVisualBounds();
+
+			stage.setX(bounds.getMinX());
+			stage.setY(bounds.getMinY());
+			stage.setWidth(bounds.getWidth());
+			stage.setHeight(bounds.getHeight());
+		}
+
 		stage.show();
-		stage.setFullScreen(fullscreen);
 	}
 
 	public String[] getSceneNameArray() {
@@ -78,7 +90,16 @@ public class SceneManager {
 
 	public void setFullscreen(boolean fullscreen) {
 		this.fullscreen = fullscreen;
-		stage.setFullScreen(fullscreen);
+
+		if (fullscreen) {
+			Screen screen = Screen.getPrimary();
+			Rectangle2D bounds = screen.getVisualBounds();
+
+			stage.setX(bounds.getMinX());
+			stage.setY(bounds.getMinY());
+			stage.setWidth(bounds.getWidth());
+			stage.setHeight(bounds.getHeight());
+		}
 	}
 
 	public DisplayScene getEStopScene() {
