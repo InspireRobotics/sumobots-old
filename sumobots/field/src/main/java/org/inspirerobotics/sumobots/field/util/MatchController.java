@@ -79,6 +79,7 @@ public class MatchController {
 	public void updateMatchTime() {
 		if (currentTimePeriod == TimePeriod.GAME && matchEndTime < System.currentTimeMillis()) {
 			attemptStateChange(TimePeriod.DISABLED);
+			AudioEffect.play("time_limit.wav");
 		}
 	}
 }
