@@ -1,13 +1,12 @@
 package org.inspirerobotics.sumobots.display.gui.scenes;
 
-import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
 import org.inspirerobotics.sumobots.display.gui.DisplayScene;
 import org.inspirerobotics.sumobots.library.InternalLog;
 import org.inspirerobotics.sumobots.library.Resources;
@@ -55,48 +54,28 @@ public class GameScene extends DisplayScene {
 class GamePane extends AnchorPane {
 
 	@FXML
-	private GridPane gridPane;
+	public VBox teamVBox;
 
 	@FXML
-	private Label timeLabel;
+	public Label timeLabel;
 
 	GamePane() {
 		FXMLFileLoader.load("game.fxml", this);
-
-		addTeamPanes();
-	}
-
-	private void addTeamPanes() {
-		for (int x = 0; x < 2; x++) {
-			for (int y = 0; y < 2; y++) {
-				gridPane.add(new TeamPane(), x, y);
-			}
-		}
+		setTeams(new String[0]);
 	}
 
 	public void setTeams(String[] teams) {
-		for (Node node : gridPane.getChildren()) {
-			TeamPane t = (TeamPane) node;
-			t.setText("No Team!");
-		}
-
 		InternalLog.getLogger().finer("Teams: " + Arrays.toString(teams));
+		teamVBox.getChildren().clear();
+
+		if (teams.length == 0) {
+			teamVBox.getChildren().add(new TeamPane("No Teams Playing!"));
+			return;
+		}
 
 		for (int i = 0; i < teams.length; i++) {
-			getTeamPaneAt(i < 2 ? 0 : 1, i % 2).setText(teams[i]);
+			teamVBox.getChildren().add(new TeamPane(teams[i]));
 		}
-	}
-
-	public TeamPane getTeamPaneAt(int row, int column) {
-		ObservableList<Node> children = gridPane.getChildren();
-
-		for (Node node : children.toArray(new Node[children.size()])) {
-			if (gridPane.getRowIndex(node) == row && gridPane.getColumnIndex(node) == column) {
-				return (TeamPane) node;
-			}
-		}
-
-		return null;
 	}
 
 	public void setTime(int time) {
@@ -111,8 +90,10 @@ class TeamPane extends AnchorPane {
 
 	private Label label;
 
-	TeamPane() {
-		label = new Label("No Team!");
+	TeamPane(String title) {
+		VBox.setVgrow(this, Priority.ALWAYS);
+		label = new Label("");
+		setText(title);
 		label.setId("teamLabel");
 		label.setAlignment(Pos.CENTER);
 
